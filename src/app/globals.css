@@ -4,6 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background: #ffffff;
+  --foreground: #000000;
+}
+
 /* HTML: <div class="wavy-line"></div> */
 .wavy-line-nav {
   --s: 10px; /* size of the wave */

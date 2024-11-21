@@ -59,6 +59,7 @@ const ProjectProvider = ({ children }) => {
       .then((res) => {
         console.log({ res });
         setUser(res?.user);
+        localStorage.setItem("token", res?.user?.token);
 
         if (res?.user?.role === "admin") {
           setIsAdmin(true);

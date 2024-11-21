@@ -22,7 +22,7 @@ export default function CustomFileUploader({
   onDrop = (event) => event,
   required,
 }) {
-  console.log({ files });
+  // console.log({ files });
   const [dragOver, setDragOver] = useState(false);
 
   useEffect(() => {

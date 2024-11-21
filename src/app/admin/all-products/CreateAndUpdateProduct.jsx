@@ -17,7 +17,7 @@ import { postProduct, updateProduct, uploadProductPic } from "@/apis/products";
 
 const CreateAndUpdateProduct = () => {
   const { popupOption } = usePopupContext();
-  console.log({ popupOption });
+  // console.log({ popupOption });
   const [formData, setFormData] = useState({
     id: popupOption?.data ? popupOption?.data?.id : "",
     name: popupOption?.data ? popupOption?.data?.name : "",
@@ -29,7 +29,7 @@ const CreateAndUpdateProduct = () => {
     images: popupOption?.data ? popupOption?.data?.images : [],
   });
 
-  console.log({ formData });
+  // console.log({ formData });
 
   useEffect(() => {
     setFormData((prev) => ({
@@ -55,14 +55,14 @@ const CreateAndUpdateProduct = () => {
     getAllCategories()
       .then((res) => {
         if (res?.data) {
-          console.log({ res });
+          // console.log({ res });
           setData(res);
           setIsCategoryLoading(false);
         }
       })
       .catch((err) => {
         setIsCategoryLoading(false);
-        console.log({ err });
+        // console.log({ err });
         errorHandler({ err, setLoading: setIsCategoryLoading });
       });
   }, []);
@@ -109,7 +109,7 @@ const CreateAndUpdateProduct = () => {
     }
 
     setErrors(newErrors);
-    console.log({ newErrors });
+    // console.log({ newErrors });
     // ValidationErrorHandler(newErrors);
     if (Object.keys(newErrors).length > 0) {
       toast.custom((t) => (
@@ -149,7 +149,7 @@ const CreateAndUpdateProduct = () => {
   const [filesUploading, setFilesUploading] = useState(false);
   const handleFileUpload = async (files) => {
     const fileArray = Array.from(files);
-    console.log({ fileArray });
+    // console.log({ fileArray });
 
     setLocalImage((prev) => [
       ...prev,
@@ -162,7 +162,7 @@ const CreateAndUpdateProduct = () => {
   };
 
   const fileUploadToServer = async (files) => {
-    console.log({ files });
+    // console.log({ files });
     const validFiles = [];
 
     // Validate each file for size
@@ -215,7 +215,7 @@ const CreateAndUpdateProduct = () => {
       if (popupOption?.data) {
         if (filesToUpload.length > 0) {
           const res = await fileUploadToServer(filesToUpload);
-          console.log({ res });
+          // console.log({ res });
           if (res?.images?.length > 0) {
             updateFunction(res);
           }
@@ -224,7 +224,7 @@ const CreateAndUpdateProduct = () => {
         }
       } else {
         const res = await fileUploadToServer(filesToUpload);
-        console.log({ res });
+        // console.log({ res });
         if (res?.images?.length > 0) {
           createFunction(res);
         }
@@ -237,7 +237,7 @@ const CreateAndUpdateProduct = () => {
     setIsProductCreating(true);
     postProduct(data)
       .then((res) => {
-        console.log({ res });
+        // console.log({ res });
         if (res?.success) {
           toast.custom((t) => (
             <CustomToaster
@@ -350,9 +350,9 @@ const CreateAndUpdateProduct = () => {
           wrapperClassName={"w-full"}
           required={true}
         />
-        {console.log({
+        {/* {console.log({
           selectedOne: options?.filter((m) => m?.id === formData?.category),
-        })}
+        })} */}
         {/* CATEGORY */}
         <CustomMultiSelect
           disable={false}
@@ -361,7 +361,7 @@ const CreateAndUpdateProduct = () => {
           placeholder="Select Category"
           selectedValues={options?.filter((m) => m?.id === formData?.category)}
           setSelectedValues={(e) => {
-            console.log({ e });
+            // console.log({ e });
             setFormData({ ...formData, category: e[0]?.id });
           }}
           options={options}
@@ -395,7 +395,7 @@ const CreateAndUpdateProduct = () => {
           onFileSelect={async (e) => handleFileUpload(e)}
           onDrop={(files) => handleFileUpload(files)}
           onRemove={(e) => {
-            console.log({ e });
+            // console.log({ e });
             setLocalImage((prev) =>
               prev?.filter((file) => file?.localImg !== e?.file)
             );

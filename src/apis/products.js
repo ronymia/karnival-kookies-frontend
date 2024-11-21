@@ -16,6 +16,7 @@ export const uploadProductPic = async (files) => {
       {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         withCredentials: true,
       }
@@ -131,11 +132,17 @@ export const postProduct = async (formData) => {
 // PUT API
 // ----------------------------------------------------------------
 export const updateProduct = async (formData) => {
+  console.log({ formData });
   try {
     const res = await axios.put(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/products`,
       formData,
-      { withCredentials: true }
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        withCredentials: true,
+      }
     );
     return res?.data;
   } catch (error) {

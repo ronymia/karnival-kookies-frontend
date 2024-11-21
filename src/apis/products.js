@@ -30,16 +30,31 @@ export const uploadProductPic = async (files) => {
 // ----------------------------------------------------------------
 export const getAllProducts = async (filters) => {
   const {
-    page,
-    perPage,
+    page = 1,
+    perPage = 10,
     category = "",
     sortByNewest = "",
     fromPrice = "",
     toPrice = "",
+    sortOrder = "",
   } = filters;
+
   try {
+    // Initialize URLSearchParams for building query string
+    const params = new URLSearchParams();
+
+    // Add parameters to the query string only if they have values
+    if (category) params.append("category", category);
+    if (sortByNewest) params.append("sortByNewest", sortByNewest);
+    if (fromPrice) params.append("fromPrice", fromPrice);
+    if (toPrice) params.append("toPrice", toPrice);
+    if (sortOrder) params.append("sortOrder", sortOrder);
+    if (page) params.append("page", page);
+    if (perPage) params.append("perPage", perPage);
+
+    // Make the GET request with the dynamically built query string
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/products?page=${page}&perPage=${perPage}&category=${category}&sortByNewest=${sortByNewest}&fromPrice=${fromPrice}&toPrice=${toPrice}`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/products?${params.toString()}`
     );
     return res?.data;
   } catch (error) {

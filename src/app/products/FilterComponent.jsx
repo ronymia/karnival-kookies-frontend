@@ -8,6 +8,7 @@ const FilterComponent = ({ filters, setFilters }) => {
     fromPrice: "",
     toPrice: "",
     sortByNewest: "",
+    sortOrder: "",
   });
   console.log({ componentFilters });
   const [data, setData] = useState({});
@@ -65,8 +66,12 @@ const FilterComponent = ({ filters, setFilters }) => {
             />
           </div>
         </div>
+
+        {/* SORT BY */}
         <div className={`space-y-2`}>
           <p className={`font-semibold text-xl text-primary `}>Sort by</p>
+
+          {/* NEWEST */}
           <div>
             <label className={`flex items-center gap-2`}>
               <input
@@ -83,6 +88,60 @@ const FilterComponent = ({ filters, setFilters }) => {
                 }
               />
               Newest
+            </label>
+          </div>
+
+          {/* LOW TO HIGHT */}
+          <div>
+            <label className={`flex items-center gap-2`}>
+              <input
+                type="checkbox"
+                className="checkbox"
+                name="lowToHigh"
+                value={"lowToHigh"}
+                checked={componentFilters?.sortOrder === "lowToHigh"}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setComponentFilters((prev) => ({
+                      ...prev,
+                      sortOrder: "lowToHigh",
+                    }));
+                  } else {
+                    setComponentFilters((prev) => ({
+                      ...prev,
+                      sortOrder: "",
+                    }));
+                  }
+                }}
+              />
+              Price low to high
+            </label>
+          </div>
+
+          {/* HIGH TO LOW */}
+          <div>
+            <label className={`flex items-center gap-2`}>
+              <input
+                type="checkbox"
+                className="checkbox"
+                name="highToLow"
+                value={"highToLow"}
+                checked={componentFilters?.sortOrder === "highToLow"}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setComponentFilters((prev) => ({
+                      ...prev,
+                      sortOrder: "highToLow",
+                    }));
+                  } else {
+                    setComponentFilters((prev) => ({
+                      ...prev,
+                      sortOrder: "",
+                    }));
+                  }
+                }}
+              />
+              Price high to low
             </label>
           </div>
         </div>

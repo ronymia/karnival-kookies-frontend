@@ -21,6 +21,7 @@ const Page = () => {
     fromPrice: "",
     toPrice: "",
     sortByNewest: "",
+    sortOrder: "",
   });
 
   const [isCategoryLoading, setIsCategoryLoading] = useState(false);
@@ -97,8 +98,12 @@ const Page = () => {
             sidebar ? "left-0" : "-left-[340px]"
           }`}
         >
+          {/* FILTERS */}
           <div className={`relative py-16 space-y-10`}>
+            {/* FILTERS COMPONENT */}
             <FilterComponent filters={filters} setFilters={setFilters} />
+
+            {/* SELECT PRODUCT CATEGORY */}
             <div>
               <div className={`flex flex-col justify-center items-start`}>
                 <div className={`flex justify-between items-center w-full`}>
@@ -149,14 +154,16 @@ const Page = () => {
             </div>
           </div>
         </div>
+
+        {/* TABLE PAGE */}
         {isProductLoading ? (
           <CustomLoading />
         ) : (
           <div className={`col-span-2 space-y-5`}>
             <div>
               <h2 className={`text-xl font-bold text-primary`}>
-                Total {products?.total}{" "}
-                {products?.total > 1 ? "Products" : "Product"} Found
+                Total {products?.meta?.total}{" "}
+                {products?.meta?.total > 1 ? "Products" : "Product"} Found
               </h2>
             </div>
             <div
@@ -170,7 +177,7 @@ const Page = () => {
             <Pagination
               setFilters={setFilters}
               filters={filters}
-              total={products?.total}
+              total={products?.meta?.total}
             />
           </div>
         )}

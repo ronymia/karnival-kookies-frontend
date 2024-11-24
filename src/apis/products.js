@@ -23,7 +23,7 @@ export const uploadProductPic = async (files) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 // ----------------------------------------------------------------
@@ -59,7 +59,7 @@ export const getAllProducts = async (filters) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 
@@ -70,7 +70,7 @@ export const getFilterData = async () => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 
@@ -81,7 +81,7 @@ export const getAllIdAndNameOfProducts = async () => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 export const getProductsByCategory = async ({ id }) => {
@@ -91,7 +91,7 @@ export const getProductsByCategory = async ({ id }) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 
@@ -125,7 +125,7 @@ export const postProduct = async (formData) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 // ----------------------------------------------------------------
@@ -146,7 +146,7 @@ export const updateProduct = async (formData) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 
@@ -161,6 +161,6 @@ export const deleteProduct = async ({ id }) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };

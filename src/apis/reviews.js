@@ -3,7 +3,7 @@ import axios from "axios";
 // ----------------------------------------------------------------
 // GET API
 // ----------------------------------------------------------------
-export const getAllReviews = async ({id}) => {
+export const getAllReviews = async ({ id }) => {
   try {
     const res = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/ratings/${id}`,
@@ -13,7 +13,7 @@ export const getAllReviews = async ({id}) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 
@@ -29,7 +29,7 @@ export const postReview = async (formData) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 // ----------------------------------------------------------------
@@ -44,7 +44,7 @@ export const updateReview = async (formData) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 
@@ -59,6 +59,6 @@ export const updateReview = async (formData) => {
 //     );
 //     return res?.data;
 //   } catch (error) {
-//     throw error;
+//     throw error.response;
 //   }
 // };

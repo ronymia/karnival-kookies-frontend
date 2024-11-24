@@ -7,6 +7,7 @@ import CustomLoading from "@/Shared/CustomLoading";
 import CustomToaster from "@/Shared/CustomToaster";
 import CustomField from "@/Shared/Fields/CustomField";
 import CustomPasswordField from "@/Shared/Fields/CustomPasswordField";
+import { errorHandler } from "@/Utils/errorHandler";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -16,13 +17,15 @@ const Page = () => {
   const router = useRouter();
   const [currentTab, setCurrentTab] = useState("login");
   const { setUser, setIsUserComing } = useAuthContext();
+  const [isLogging, setIsLogging] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  console.log({ formData });
+  // console.log({ formData });
 
   // CHANGE FORM DATA
   const handleFormChange = (e) => {
@@ -34,7 +37,6 @@ const Page = () => {
     }));
   };
   // VALIDATION
-  const [errors, setErrors] = useState({});
   const validateForm = () => {
     const newErrors = {};
 
@@ -92,18 +94,6 @@ const Page = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  //   SUBMIT DATA
-  const handleSubmit = async () => {
-    try {
-      // Validate form
-      const isValid = await validateForm();
-      if (isValid) {
-        createFunction(formData);
-      }
-    } catch (err) {}
-  };
-
-  const [isLogging, setIsLogging] = useState(false);
   const createFunction = async () => {
     setIsLogging(true);
     login(formData)
@@ -143,9 +133,36 @@ const Page = () => {
             });
         }
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log({ first: err });
+        const obj = {};
+
+        if (err?.status === 401) {
+          err?.data?.errorSources?.forEach((item) => {
+            obj["password"] = item?.message;
+          });
+
+          setErrors(obj);
+        }
+        errorHandler({ err, setLoading: setIsLogging });
+        setIsLogging(false);
+      });
   };
 
+  //   SUBMIT DATA
+  const handleSubmit = async () => {
+    try {
+      // Validate form
+      const isValid = await validateForm();
+      if (isValid) {
+        createFunction(formData);
+      }
+    } catch (err) {}
+  };
+
+  /* **********************************************
+  
+  ***************************************************/
   if (isLogging) {
     return <CustomLoading />;
   } else {

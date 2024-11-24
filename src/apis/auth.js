@@ -13,7 +13,7 @@ export const getAllUsers = async ({ page, perPage }) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 export const getUser = async () => {
@@ -26,7 +26,7 @@ export const getUser = async () => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 
@@ -41,7 +41,7 @@ export const createUser = async (formData) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 
@@ -53,7 +53,7 @@ export const login = async (formData) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error?.response;
   }
 };
 
@@ -65,7 +65,7 @@ export const isUserExist = async (formData) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 
@@ -80,7 +80,7 @@ export const jwt = async (user) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 // ----------------------------------------------------------------
@@ -93,19 +93,19 @@ export const verifyUser = async ({ email, otp }) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 export const updateUser = async (data) => {
   try {
     const res = await axios.put(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/user/${data?.email}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${data?.email}`,
       data,
       { withCredentials: true }
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 
@@ -117,6 +117,6 @@ export const updateUserPassword = async (email, info) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };

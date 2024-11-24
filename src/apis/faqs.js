@@ -8,7 +8,7 @@ export const getAllFaqs = async () => {
     const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/faqs`);
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 
@@ -24,7 +24,7 @@ export const postFaq = async (formData) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 // ----------------------------------------------------------------
@@ -39,7 +39,7 @@ export const updateFaq = async (formData) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 
@@ -54,6 +54,6 @@ export const deleteFaq = async ({ id }) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };

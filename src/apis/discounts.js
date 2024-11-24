@@ -11,7 +11,7 @@ export const getAllDiscounts = async () => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 
@@ -42,7 +42,7 @@ export const updateDiscount = async (formData) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 
@@ -57,6 +57,6 @@ export const deleteDiscount = async ({ id }) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };

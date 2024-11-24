@@ -11,7 +11,7 @@ export const getAllAdminDashboardItems = async () => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 
@@ -23,6 +23,6 @@ export const getAllUserDashboardItems = async ({ email }) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };

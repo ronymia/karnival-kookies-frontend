@@ -12,7 +12,7 @@ export const getAllCartItems = async ({ email }) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 
@@ -25,7 +25,7 @@ export const getAllCheckouts = async ({ email, page, perPage }) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 export const getAllCheckoutsForAdmin = async ({ page, perPage }) => {
@@ -36,7 +36,7 @@ export const getAllCheckoutsForAdmin = async ({ page, perPage }) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 
@@ -52,7 +52,7 @@ export const postCart = async (formData) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 export const postCheckout = async (formData) => {
@@ -64,7 +64,7 @@ export const postCheckout = async (formData) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 export const postPayment = async (products) => {
@@ -76,7 +76,7 @@ export const postPayment = async (products) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 // ----------------------------------------------------------------
@@ -92,7 +92,7 @@ export const updateQuantity = async (info) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 export const updateStatus = async ({ id, status }) => {
@@ -104,7 +104,7 @@ export const updateStatus = async ({ id, status }) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 
@@ -119,7 +119,7 @@ export const deleteCart = async ({ id }) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };
 export const deleteCartItems = async (ids) => {
@@ -130,6 +130,6 @@ export const deleteCartItems = async (ids) => {
     );
     return res?.data;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 };

@@ -27,7 +27,7 @@ const Page = () => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [isProductLoading, setIsProductLoading] = useState(false);
   console.log({ isProductLoading });
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
   const [isUpdating, setIsUpdating] = useState();
 
   // FILTERS
@@ -247,8 +247,8 @@ const Page = () => {
               heading={"All Products"}
             />
             <p className={``}>
-              Total {data?.total} {data?.total > 1 ? "Products" : "Product"}{" "}
-              Found
+              Total {data?.meta?.total}{" "}
+              {data?.meta?.total > 1 ? "Products" : "Product"} Found
             </p>
           </div>
           <Button text={"Add"} handler={handleCreate} />
@@ -259,7 +259,7 @@ const Page = () => {
             selectedIds={selectedIds}
             setSelectedIds={setSelectedIds}
             itemsPerPage={filters?.perPage}
-            totalItems={data?.total}
+            totalItems={data?.meta?.total}
             setPageNo={(data) => setFilters({ ...filters, page: data })}
             setPerPage={setPerPage}
             perPage={filters?.perPage}
@@ -302,7 +302,7 @@ const Page = () => {
           <Pagination
             setFilters={setFilters}
             filters={filters}
-            total={data?.total}
+            total={data?.meta?.total}
           />
         </div>
       </div>

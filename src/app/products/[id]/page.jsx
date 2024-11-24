@@ -8,12 +8,14 @@ import ButtonWrapper from "./ButtonWrapper";
 import Quantity from "./Quantity";
 import ProductCard from "@/Shared/ProductCard";
 import Reviews from "./Reviews";
+import Image from "next/image";
+import ImageSlider from "@/components/ImageSlider";
 
 const page = async ({ params }) => {
   const product = await axios.get(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/${params?.id}`
   );
-  console.log({ productData: product?.data });
+  console.log({ productData: product?.data?.data?.images });
   const productByCategory = await axios.get(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/category/${product?.data?.data?.category}?limit=4&skip=${product?.data?.data?.id}`
   );
@@ -46,24 +48,38 @@ const page = async ({ params }) => {
         }
       />
       <div className={`relative`}>
-        <img
+        <Image
           className={`absolute w-full -top-2 sm:-top-5 left-0`}
           src="/dark_temp.png"
           alt="dark temp"
+          width={100}
+          height={100}
         />
         <div
-          className={`grid grid-cols-1 md:grid-cols-5 gap-6 py-32 px-5 sm:px-10`}
+          className={`grid grid-cols-1 md:grid-cols-2 gap-6 py-32 px-5 sm:px-10`}
         >
-          <img
-            className={`md:col-span-2`}
+          {/* <img
+            width={100}
+            height={100}
             src={getFullImageLink(
               product?.data?.data?.images?.length > 0 &&
                 product?.data?.data?.images[0]?.file,
               "Products"
             )}
             alt={product?.data?.data?.name}
+            className={`md:col-span-2 w-full h-full`}
+          /> */}
+          {/* IMAGE SLIDER*/}
+          <ImageSlider
+            images={
+              product?.data?.data?.images?.length > 0
+                ? product?.data?.data?.images.map((item) => item?.file)
+                : []
+            }
           />
-          <div className={`md:col-span-3 space-y-5`}>
+
+          {/* PRODUCT DETAILS */}
+          <div className={`space-y-5 mt-10`}>
             <p className={`text-primary text-[30px]`}>
               {product?.data?.data?.discountPrice ? (
                 <span className={`flex gap-3 items-center`}>
@@ -103,7 +119,11 @@ const page = async ({ params }) => {
           </h2>
           <p>{product?.data?.data?.description}</p>
         </div>
+
+        {/* REVIEW */}
         <Reviews />
+
+        {/* RELEATED PRODUCTS */}
         <div
           className={`flex flex-col justify-center items-center gap-10 px-5 sm:px-10 pb-40`}
         >

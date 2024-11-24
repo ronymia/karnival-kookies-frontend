@@ -11,7 +11,7 @@ import DiscountComponent from "./DiscountComponent";
 import AdminRoute from "@/Routes/AdminRoute";
 
 const Page = () => {
-  const { user } = useAuthContext();
+  const { user, isLoading } = useAuthContext();
   const { popupOption, setPopupOption } = usePopupContext();
   const router = useRouter();
   const [data, setData] = useState({});
@@ -20,7 +20,7 @@ const Page = () => {
     setIsDashboardLoading(true);
     getAllAdminDashboardItems()
       .then((res) => {
-        setData(res);
+        setData(res?.data);
         setIsDashboardLoading(false);
       })
       .catch((err) => {
@@ -41,7 +41,7 @@ const Page = () => {
     });
   };
 
-  if (isDashboardLoading) {
+  if (isDashboardLoading || isLoading) {
     return <CustomLoading />;
   }
   return (

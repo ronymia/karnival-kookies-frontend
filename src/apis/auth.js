@@ -6,7 +6,7 @@ import axios from "axios";
 export const getAllUsers = async ({ page, perPage }) => {
   try {
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/users/all?page=${page}&perPage=${perPage}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/all?page=${page}&perPage=${perPage}`,
       {
         withCredentials: true,
       }

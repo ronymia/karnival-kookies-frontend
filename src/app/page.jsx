@@ -16,22 +16,25 @@ export default async function page({ searchParams }) {
         searchParams?.page || 1
       }&perPage=${searchParams?.perPage || 8}&searchKey=${
         searchParams?.searchKey || ""
-      }`
+      }`,
+      { next: { revalidate: 30 } }
     );
     if (!productRes.ok) throw new Error("Failed to fetch products");
     const productByRandom = await productRes.json();
 
     // Fetch categories
     const categoryRes = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/categories`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/categories`,
+      { next: { revalidate: 30 } }
     );
     if (!categoryRes.ok) throw new Error("Failed to fetch categories");
     const categories = await categoryRes.json();
+    // const categories = [];
 
-    console.log({
-      productByRandom: productByRandom?.data,
-      categories: categories?.data[0],
-    });
+    // console.log({
+    //   productByRandom: productByRandom,
+    //   categories: categories?.data[0],
+    // });
 
     const tabs = categories?.data?.map((category) => ({
       id: category?.id,
@@ -67,7 +70,7 @@ export default async function page({ searchParams }) {
           />
           <HomeSearchWrapper />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {productByRandom?.data?.data?.map((product) => (
+            {productByRandom?.data?.map((product) => (
               <ProductCard key={product?.id} product={product} />
             ))}
           </div>

@@ -41,7 +41,7 @@ const Page = () => {
     getAllProducts(filters)
       .then((res) => {
         if (res?.data) {
-          console.log({ res });
+          // console.log({ res });
           setData(res);
           setIsProductLoading(false);
         }

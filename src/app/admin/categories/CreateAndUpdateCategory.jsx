@@ -14,9 +14,9 @@ import { uploadProductPic } from "@/apis/products";
 
 const CreateAndUpdateCategory = () => {
   const { popupOption } = usePopupContext();
-  console.log({ popupOption });
+  // console.log({ popupOption });
   const [formData, setFormData] = useState({
-    id: popupOption?.data ? popupOption?.data?.id : "",
+    id: popupOption?.data ? popupOption?.data?.id : null,
     name: popupOption?.data ? popupOption?.data?.name : "",
     description: popupOption?.data ? popupOption?.data?.description : "",
   });
@@ -32,7 +32,7 @@ const CreateAndUpdateCategory = () => {
     }
 
     setErrors(newErrors);
-    console.log({ newErrors });
+    // console.log({ newErrors });
     // ValidationErrorHandler(newErrors);
     if (Object.keys(newErrors).length > 0) {
       toast.custom((t) => (

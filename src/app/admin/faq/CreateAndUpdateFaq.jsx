@@ -12,9 +12,9 @@ import { postFaq, updateFaq } from "@/apis/faqs";
 
 const CreateAndUpdateFaq = () => {
   const { popupOption } = usePopupContext();
-  console.log({ popupOption });
+  // console.log({ popupOption });
   const [formData, setFormData] = useState({
-    id: popupOption?.data ? popupOption?.data?.id : "",
+    id: popupOption?.data ? popupOption?.data?.id : null,
     question: popupOption?.data ? popupOption?.data?.question : "",
     answer: popupOption?.data ? popupOption?.data?.answer : "",
   });
@@ -33,7 +33,7 @@ const CreateAndUpdateFaq = () => {
     }
 
     setErrors(newErrors);
-    console.log({ newErrors });
+    // console.log({ newErrors });
     // ValidationErrorHandler(newErrors);
     if (Object.keys(newErrors).length > 0) {
       toast.custom((t) => (

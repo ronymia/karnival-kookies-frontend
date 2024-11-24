@@ -87,7 +87,10 @@ const Reviews = () => {
                 <span className={`border-b-4 border-primary`}>My Review</span>
               </h2>
               <div className={`relative`}>
+                {/* REVIEW CARD */}
                 <ReviewCard review={myReview} />
+
+                {/* EDIT BUTTON */}
                 <RiEdit2Fill
                   onClick={() => handleEdit(myReview)}
                   className={`absolute top-3 right-0 text-2xl`}
@@ -115,7 +118,7 @@ const Reviews = () => {
           {/* DATA AREA */}
           <div className={` flex flex-col justify-center items-center`}>
             <div className="space-y-5">
-              <p className={`text-4xl font-bold`}> Data checking</p>
+              <p className={`text-4xl font-bold`}> Average Rating</p>
               <p className={`flex text-7xl`}>
                 <span>{average ? average.toFixed(2) : "0.00"}</span>{" "}
                 <FaStar className={`text-yellow-500 `} />

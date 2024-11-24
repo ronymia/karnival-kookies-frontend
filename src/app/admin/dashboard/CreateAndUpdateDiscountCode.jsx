@@ -17,16 +17,18 @@ import { postDiscount, updateDiscount } from "@/apis/discounts";
 
 const CreateAndUpdateDiscountCode = () => {
   const { popupOption } = usePopupContext();
-  console.log({ popupOption });
+  // console.log({ popupOption });
   const [formData, setFormData] = useState({
-    id: popupOption?.data ? popupOption?.data?.id : "",
+    id: popupOption?.data ? popupOption?.data?.id : null,
     code: popupOption?.data ? popupOption?.data?.code : "",
     discountType: popupOption?.data ? popupOption?.data?.discountType : "",
-    discountAmount: popupOption?.data ? popupOption?.data?.discountAmount : "",
-    minimumSpend: popupOption?.data ? popupOption?.data?.minimumSpend : "",
+    discountAmount: popupOption?.data
+      ? popupOption?.data?.discountAmount
+      : null,
+    minimumSpend: popupOption?.data ? popupOption?.data?.minimumSpend : null,
   });
 
-  console.log({ formData });
+  // console.log({ formData });
 
   // VALIDATION
   const [errors, setErrors] = useState({});
@@ -53,7 +55,7 @@ const CreateAndUpdateDiscountCode = () => {
     }
 
     setErrors(newErrors);
-    console.log({ newErrors });
+    // console.log({ newErrors });
     // ValidationErrorHandler(newErrors);
     if (Object.keys(newErrors).length > 0) {
       toast.custom((t) => (
@@ -90,18 +92,6 @@ const CreateAndUpdateDiscountCode = () => {
     }));
   };
 
-  // SUBMIT DATA
-  const handleSubmit = async () => {
-    // Validate form
-    if (validateForm()) {
-      if (popupOption?.data) {
-        updateFunction(formData);
-      } else {
-        createFunction(formData);
-      }
-    }
-  };
-
   const [isDiscountCreating, setIsDiscountCreating] = useState(false);
   const createFunction = (data) => {
     setIsDiscountCreating(true);
@@ -130,7 +120,15 @@ const CreateAndUpdateDiscountCode = () => {
         }
       })
       .catch((err) => {
-        console.log({ err });
+        const obj = {};
+
+        if (err?.status === 422) {
+          err?.data?.errorSources?.forEach((item) => {
+            obj[item?.path] = item?.message;
+          });
+
+          setErrors(obj);
+        }
         errorHandler({ err, setLoading: setIsDiscountCreating });
       });
   };
@@ -154,8 +152,37 @@ const CreateAndUpdateDiscountCode = () => {
         }
       })
       .catch((err) => {
+        const obj = {};
+
+        if (err?.status === 422) {
+          err?.data?.errorSources?.forEach((item) => {
+            obj[item?.path] = item?.message;
+          });
+
+          setErrors(obj);
+        }
         errorHandler({ err, setLoading: setIsDiscountUpdating });
       });
+  };
+
+  // SUBMIT DATA
+  const handleSubmit = async () => {
+    // Validate form
+    if (validateForm()) {
+      if (popupOption?.data) {
+        updateFunction({
+          ...formData,
+          discountAmount: parseFloat(formData?.discountAmount),
+          minimumSpend: parseFloat(formData?.minimumSpend),
+        });
+      } else {
+        createFunction({
+          ...formData,
+          discountAmount: parseFloat(formData?.discountAmount),
+          minimumSpend: parseFloat(formData?.minimumSpend),
+        });
+      }
+    }
   };
 
   if (isDiscountCreating || isDiscountUpdating) {

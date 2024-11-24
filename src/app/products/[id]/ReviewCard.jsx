@@ -16,7 +16,7 @@ const ReviewCard = ({ review }) => {
         <div>
           <div className={`flex flex-col sm:flex-row sm:items-center sm:gap-2`}>
             <p className={`font-bold text-base-300`}>{review?.name}</p>
-            <p>{moment(review?.createdAt).fromNow()}</p>
+            <p>{moment(review?.updatedAt).fromNow()}</p>
           </div>
           <Rating
             style={{ maxWidth: 50, display: "flex" }}

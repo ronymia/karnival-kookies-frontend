@@ -82,6 +82,11 @@ const ProductCard = ({ product }) => {
         setIsAddingToCart(false);
       });
   };
+
+  // console.log({ first: product?.images });
+  /* **********************************************
+                          UI RENDER
+  ************************************************************/
   return (
     <div
       onMouseEnter={() => setIsHovered(true)}

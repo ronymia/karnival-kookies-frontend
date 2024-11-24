@@ -32,7 +32,7 @@ const Page = () => {
   const [data, setData] = useState([]);
   const [isUpdating, setIsUpdating] = useState();
 
-  console.log({ data });
+  console.log({ data: data?.data });
 
   // FILTERS
   const [filters, setFilters] = useState({
@@ -198,6 +198,10 @@ const Page = () => {
   if (isUserLoading) {
     return <CustomLoading />;
   }
+
+  /* ******************************************************
+  
+  ***************************************************************/
   return (
     <AdminRoute>
       <div
@@ -222,7 +226,8 @@ const Page = () => {
           <div>
             <Heading isSubHeading={false} isWave={false} heading={"All User"} />
             <p className={``}>
-              Total {data?.total} {data?.total > 1 ? "Users" : "User"} Found
+              Total {data?.meta?.total}{" "}
+              {data?.meta?.total > 1 ? "Users" : "User"} Found
             </p>
           </div>
         </div>
@@ -232,7 +237,7 @@ const Page = () => {
             selectedIds={selectedIds}
             setSelectedIds={setSelectedIds}
             itemsPerPage={filters?.perPage}
-            totalItems={data?.total}
+            totalItems={data?.meta?.total}
             setPageNo={(data) => setFilters({ ...filters, page: data })}
             setPerPage={setPerPage}
             perPage={filters?.perPage}
@@ -263,7 +268,7 @@ const Page = () => {
           <Pagination
             setFilters={setFilters}
             filters={filters}
-            total={data?.total}
+            total={data?.meta?.total}
           />
         </div>
       </div>

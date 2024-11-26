@@ -6,6 +6,7 @@ import CreateAndUpdateCategory from "@/app/admin/categories/CreateAndUpdateCateg
 import CreateAndUpdateDiscountCode from "@/app/admin/dashboard/CreateAndUpdateDiscountCode";
 import CreateAndUpdateFaq from "@/app/admin/faq/CreateAndUpdateFaq";
 import ViewOrder from "@/app/admin/orders/ViewOrder";
+import UserForm from "@/app/admin/users/UserForm";
 import ViewUser from "@/app/admin/users/ViewUser";
 import CreateAndUpdateReview from "@/app/products/[id]/CreateAndUpdateReview";
 import useAxiosSecure from "@/Hooks/useAxiosSecure";
@@ -164,6 +165,7 @@ const ProjectProvider = ({ children }) => {
             {popupOption?.type === "category" && <CreateAndUpdateCategory />}
             {popupOption?.type === "faq" && <CreateAndUpdateFaq />}
             {popupOption?.type === "viewUser" && <ViewUser />}
+            {popupOption?.type === "userForm" && <UserForm />}
             {popupOption?.type === "viewOrder" && <ViewOrder />}
             {popupOption?.type === "discountCode" && (
               <CreateAndUpdateDiscountCode />

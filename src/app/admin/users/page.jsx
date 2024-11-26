@@ -108,6 +108,28 @@ const Page = () => {
   };
 
   // HANDLE CREATE
+  const handleCreate = () => {
+    setPopupOption({
+      ...popupOption,
+      open: true,
+      type: "userForm",
+      title: "Add New User",
+      setIsUpdating: setIsUpdating,
+    });
+  };
+  // HANDLE EDIT
+  const handleEdit = (data) => {
+    setPopupOption({
+      ...popupOption,
+      open: true,
+      type: "userForm",
+      title: "Edit User",
+      data: data,
+      setIsUpdating: setIsUpdating,
+    });
+  };
+
+  // HANDLE CREATE
   const handleView = (data) => {
     setPopupOption({
       ...popupOption,
@@ -118,16 +140,16 @@ const Page = () => {
     });
   };
   // HANDLE EDIT
-  const handleEdit = (data) => {
-    setPopupOption({
-      ...popupOption,
-      open: true,
-      type: "user",
-      title: "Edit User",
-      data: data,
-      setIsUpdating: setIsUpdating,
-    });
-  };
+  // const handleEdit = (data) => {
+  //   setPopupOption({
+  //     ...popupOption,
+  //     open: true,
+  //     type: "user",
+  //     title: "Edit User",
+  //     data: data,
+  //     setIsUpdating: setIsUpdating,
+  //   });
+  // };
 
   // ALL ACTION BUTTONS
   const [actions, setActions] = useState([
@@ -230,6 +252,7 @@ const Page = () => {
               {data?.meta?.total > 1 ? "Users" : "User"} Found
             </p>
           </div>
+          <Button text={"Add"} handler={handleCreate} />
         </div>
         {/* TABLE AREA */}
         <div className={`space-y-10`}>

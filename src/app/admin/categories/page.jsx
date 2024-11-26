@@ -171,6 +171,7 @@ const Page = () => {
           </div>
           <Button text={"Add"} handler={handleCreate} />
         </div>
+
         {/* TABLE AREA */}
         <div className={`space-y-10`}>
           <Table

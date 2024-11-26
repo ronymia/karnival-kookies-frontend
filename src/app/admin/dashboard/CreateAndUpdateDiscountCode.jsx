@@ -36,9 +36,9 @@ const CreateAndUpdateDiscountCode = () => {
     const newErrors = {};
 
     // VALIDATE NAME
-    if (!formData.code || formData.code.trim() === "") {
-      newErrors.code = "Code is required";
-    }
+    // if (!formData.code || formData.code.trim() === "") {
+    //   newErrors.code = "Code is required";
+    // }
     if (!formData.discountType || formData.discountType.trim() === "") {
       newErrors.discountType = "Type is required";
     }
@@ -154,14 +154,18 @@ const CreateAndUpdateDiscountCode = () => {
       .catch((err) => {
         const obj = {};
 
-        if (err?.status === 422) {
-          err?.data?.errorSources?.forEach((item) => {
-            obj[item?.path] = item?.message;
-          });
+        // if (err?.status === 422) {
+        //   err?.data?.errorSources?.forEach((item) => {
+        //     obj[item?.path] = item?.message;
+        //   });
 
-          setErrors(obj);
-        }
-        errorHandler({ err, setLoading: setIsDiscountUpdating });
+        //   setErrors(obj);
+        // }
+        const resErrors = errorHandler({
+          err,
+          setLoading: setIsDiscountUpdating,
+        });
+        setErrors(resErrors);
       });
   };
 

@@ -20,6 +20,7 @@ const Page = () => {
     phone: "",
     email: "",
     password: "",
+    role: "customer",
   });
 
   console.log({ formData });
@@ -35,6 +36,7 @@ const Page = () => {
   };
   // VALIDATION
   const [errors, setErrors] = useState({});
+  const [codeError, setCodeError] = useState("");
   const validateForm = () => {
     const newErrors = {};
 
@@ -97,13 +99,6 @@ const Page = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  //   SUBMIT DATA
-  const handleSubmit = async () => {
-    if (validateForm()) {
-      createFunction(formData);
-    }
-  };
-
   const [isCreatingId, setIsCreatingId] = useState(false);
   const createFunction = async () => {
     setIsCreatingId(true);
@@ -115,6 +110,8 @@ const Page = () => {
             <CustomToaster t={t} type={"error"} text={res?.error} />
           ));
         }
+        setCodeError(res?.error);
+
         if (res?.success) {
           console.log({ user: res });
           setCurrentTab("code");
@@ -141,6 +138,17 @@ const Page = () => {
         setIsCreatingId(false);
       });
   };
+
+  //   SUBMIT DATA
+  const handleSubmit = async () => {
+    if (validateForm()) {
+      createFunction(formData);
+    }
+  };
+
+  /* ****************************************
+  
+  ********************************************************/
   if (isCreatingId) {
     return <CustomLoading />;
   } else {
@@ -232,7 +240,7 @@ const Page = () => {
             </div>
           </div>
         )}
-        {currentTab === "code" && <Code data={formData} />}
+        {currentTab === "code" && <Code error={codeError} data={formData} />}
       </>
     );
   }

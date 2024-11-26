@@ -2,6 +2,7 @@ import CustomToaster from "@/Shared/CustomToaster";
 import toast from "react-hot-toast";
 
 export const errorHandler = ({ err, setLoading }) => {
+  const obj = {};
   setLoading(false);
   if (err?.status === 401) {
     toast.custom((t) => (
@@ -15,6 +16,11 @@ export const errorHandler = ({ err, setLoading }) => {
         text={`Your access is forbidden to perform this action`}
       />
     ));
+  } else if (err?.status === 422) {
+    err?.data?.errorSources?.forEach((item) => {
+      obj[item?.path] = item?.message;
+    });
+    return obj;
   } else if (err?.status === 500) {
     toast.custom((t) => (
       <CustomToaster

@@ -8,7 +8,7 @@ import CustomToaster from "../CustomToaster";
 import CustomNumberFieldForOtp from "../Fields/CustomNumberFieldForOtp";
 import { useAuthContext } from "@/Context/ProjectProvider";
 
-const Code = ({ data }) => {
+const Code = ({ data, error }) => {
   const router = useRouter();
   const { setIsUserComing } = useAuthContext();
   const [formData, setFormData] = useState({

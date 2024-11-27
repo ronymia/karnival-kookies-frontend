@@ -1,7 +1,8 @@
 "use client";
-import { getAllUsers, updateUser } from "@/apis/auth";
+import { updateUser } from "@/apis/auth";
 import { deleteFaq, getAllFaqs } from "@/apis/faqs";
 import { usePopupContext } from "@/Context/ProjectProvider";
+import { useGetAllUsersQuery } from "@/redux/apis/userApis";
 import AdminRoute from "@/Routes/AdminRoute";
 import Button from "@/Shared/Button";
 import ButtonLoading from "@/Shared/ButtonLoading";
@@ -21,7 +22,7 @@ import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 import Swal from "sweetalert2";
 
-const Page = () => {
+const UserList = () => {
   const router = useRouter();
   const { popupOption, setPopupOption } = usePopupContext();
 
@@ -29,32 +30,25 @@ const Page = () => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [isUserLoading, setIsUserLoading] = useState(false);
   console.log({ isUserLoading });
-  const [data, setData] = useState([]);
-  const [isUpdating, setIsUpdating] = useState();
-
-  console.log({ data: data?.data });
 
   // FILTERS
   const [filters, setFilters] = useState({
-    perPage: 20,
     page: 1,
+    limit: 20,
+    perPage: 20,
   });
 
-  useEffect(() => {
-    setIsUserLoading(true);
-    getAllUsers(filters)
-      .then((res) => {
-        if (res?.data) {
-          console.log({ res });
-          setData(res);
-          setIsUserLoading(false);
-        }
-      })
-      .catch((err) => {
-        setIsUserLoading(false);
-        console.log({ err });
-      });
-  }, [isUpdating]);
+  // GET ALL USER
+  const { data, isLoading } = useGetAllUsersQuery({
+    page: filters?.page,
+    limit: filters?.limit,
+  });
+
+  // USER DELETE
+
+  const [isUpdating, setIsUpdating] = useState();
+
+  console.log({ data: data?.data });
 
   const [isChangingRole, setIsChangingRole] = useState({
     id: null,
@@ -139,17 +133,6 @@ const Page = () => {
       data: data,
     });
   };
-  // HANDLE EDIT
-  // const handleEdit = (data) => {
-  //   setPopupOption({
-  //     ...popupOption,
-  //     open: true,
-  //     type: "user",
-  //     title: "Edit User",
-  //     data: data,
-  //     setIsUpdating: setIsUpdating,
-  //   });
-  // };
 
   // ALL ACTION BUTTONS
   const [actions, setActions] = useState([
@@ -161,14 +144,14 @@ const Page = () => {
       backgroundColorClass: "bg-red-200",
       disabledOn: [],
     },
-    // {
-    //   name: "edit",
-    //   handler: handleEdit,
-    //   Icon: RiEdit2Fill,
-    //   colorClass: "text-secondary",
-    //   backgroundColorClass: "bg-secondary-content",
-    //   disabledOn: [],
-    // },
+    {
+      name: "edit",
+      handler: handleEdit,
+      Icon: RiEdit2Fill,
+      colorClass: "text-secondary",
+      backgroundColorClass: "bg-secondary-content",
+      disabledOn: [],
+    },
   ]);
 
   // ALL DISPLAYED COLUMNS IN TABLE
@@ -217,7 +200,7 @@ const Page = () => {
     },
   ]);
 
-  if (isUserLoading) {
+  if (isLoading) {
     return <CustomLoading />;
   }
 
@@ -264,7 +247,7 @@ const Page = () => {
             setPageNo={(data) => setFilters({ ...filters, page: data })}
             setPerPage={setPerPage}
             perPage={filters?.perPage}
-            isLoading={isUserLoading}
+            isLoading={isLoading}
             rows={data?.data?.map((d, i) => ({
               ...d,
               count: (filters?.page - 1) * filters?.perPage + i + 1,
@@ -299,4 +282,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default UserList;

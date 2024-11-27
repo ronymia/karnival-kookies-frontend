@@ -5,6 +5,7 @@ import ProductCard from "@/Shared/ProductCard";
 import HomeSearchWrapper from "@/Shared/SearchFields/HomeSearchWrapper";
 import CategorySection from "./CategorySection";
 import Slider from "./slider";
+import PackageSection from "@/components/layouts/PackageSection";
 
 export default async function page({ searchParams }) {
   console.log({ searchParams });
@@ -31,10 +32,25 @@ export default async function page({ searchParams }) {
     const categories = await categoryRes.json();
     // const categories = [];
 
-    // console.log({
-    //   productByRandom: productByRandom,
-    //   categories: categories?.data[0],
-    // });
+    // PACKAGES
+    const packageResp = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/packages`,
+      { next: { revalidate: 30 } }
+    );
+    // IF FAIL TO FETCH
+    if (!packageResp.ok) {
+      const errorDetails = await packageResp.text(); // To log the actual error message.
+      throw new Error(`Fail to load packages: ${errorDetails}`);
+    }
+
+    //
+    const packages = await packageResp.json();
+
+    console.log({
+      // productByRandom: productByRandom,
+      // categories: categories?.data[0],
+      packages: [packages],
+    });
 
     const tabs = categories?.data?.map((category) => ({
       id: category?.id,
@@ -63,21 +79,28 @@ export default async function page({ searchParams }) {
         />
 
         {/* FEATURED PRODUCTS */}
-        <div className="space-y-10">
+        <section className="space-y-10">
+          {/* HEADER */}
           <Heading
             subHeading={"Online Store"}
             heading={"Discover Sweet Delicious"}
           />
+
+          {/* SEARCH FIELD */}
           <HomeSearchWrapper />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+          {/* PRODUCT LIST */}
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {productByRandom?.data?.map((product) => (
               <ProductCard key={product?.id} product={product} />
             ))}
-          </div>
+          </section>
+
+          {/* NAVIGATE TO PRODUCTS LIST PAGE */}
           <div className="flex flex-col justify-center items-center">
             <NavigateHandler text={"Online Store"} route={"/products"} />
           </div>
-        </div>
+        </section>
 
         {/* FIXED COMPONENT */}
         <div className="relative">
@@ -98,9 +121,27 @@ export default async function page({ searchParams }) {
         </div>
 
         {/* CATEGORY */}
-        <div className="px-5 md:px-10 mb-20">
+        <section className="px-5 md:px-10 mb-20">
           <CategorySection tabs={tabs} />
-        </div>
+        </section>
+
+        {/* PACKAGES */}
+        <section className="px-5 md:px-10 mb-20">
+          {/* HEADER */}
+          <Heading subHeading={"Online Store"} heading={"Combo Packages"} />
+
+          {/* PACKAGE LIST */}
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {packages?.data?.map((product) => (
+              <ProductCard key={product?.id} product={product} />
+            ))}
+          </section>
+
+          {/* NAVIGATE TO PRODUCTS LIST PAGE */}
+          <div className="flex flex-col justify-center items-center">
+            <NavigateHandler text={"See More"} route={"/products"} />
+          </div>
+        </section>
       </div>
     );
   } catch (error) {

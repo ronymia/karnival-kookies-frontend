@@ -25,11 +25,11 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   // @ts-ignore
   function (response) {
-    const responseObject = {
-      data: response?.data?.data,
-      meta: response?.data?.meta,
-    };
-    return responseObject;
+    // const responseObject = {
+    //   data: response?.data?.data,
+    //   meta: response?.data?.meta,
+    // };
+    return response;
   },
   // response error
   async function (error) {

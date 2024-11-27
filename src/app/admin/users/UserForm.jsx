@@ -1,25 +1,61 @@
 "use client";
 
+import { usePopupContext } from "@/Context/ProjectProvider";
 import { useCreateUserMutation } from "@/redux/apis/authApis";
 import Button from "@/Shared/Button";
 import CustomToaster from "@/Shared/CustomToaster";
 import CustomField from "@/Shared/Fields/CustomField";
+import CustomMultiSelect from "@/Shared/Fields/CustomMultiSelect";
 import CustomNumberField from "@/Shared/Fields/CustomNumberField";
 import CustomPasswordField from "@/Shared/Fields/CustomPasswordField";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
+// ROLES
+const roles = [
+  {
+    id: "admin",
+    name: "Admin",
+  },
+  {
+    id: "manager",
+    name: "Manager",
+  },
+  {
+    id: "content_editor",
+    name: "Content Editor",
+  },
+  {
+    id: "product_manager",
+    name: "Product Manager",
+  },
+  {
+    id: "order_manager",
+    name: "Order Manager",
+  },
+  {
+    id: "customer_support",
+    name: "Customer Support",
+  },
+  {
+    id: "marketing_manager",
+    name: "Marketing Manager",
+  },
+];
+
 export default function UserForm() {
   const [createUser, createResult] = useCreateUserMutation();
+  const { popupOption } = usePopupContext();
   // ERROR STATE
   const [errors, setErrors] = useState({});
   // FORM STATE
   const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    password: "",
-    role: "",
+    id: popupOption?.data?.id ?? null,
+    name: popupOption?.data?.name ?? "",
+    phone: popupOption?.data?.phone ?? "",
+    email: popupOption?.data?.email ?? "",
+    password: popupOption?.data?.password ?? "",
+    role: popupOption?.data?.role ?? "admin",
   });
 
   // CHANGE FORM DATA
@@ -95,6 +131,32 @@ export default function UserForm() {
     return Object.keys(newErrors).length === 0;
   };
 
+  // UPDATE FUNCTION
+  const updateFunction = async () => {
+    createUser(formData)
+      .unwrap()
+      .then((res) => {
+        console.log({ user: res });
+        if (res?.success) {
+          setFormData({
+            name: "",
+            email: "",
+            password: "",
+          });
+          popupOption?.onClose();
+        }
+      })
+      .catch((err) => {
+        console.log({ first: err });
+        toast.custom((t) => (
+          <CustomToaster
+            t={t}
+            type={"error"}
+            text={"Something went wrong. Please register again"}
+          />
+        ));
+      });
+  };
   // CREATE FUNCTION
   const createFunction = async () => {
     createUser(formData)
@@ -102,30 +164,33 @@ export default function UserForm() {
       .then((res) => {
         console.log({ user: res });
         if (res?.success) {
-        }
-        if (!res?.success) {
           setFormData({
             name: "",
             email: "",
             password: "",
           });
-          toast.custom((t) => (
-            <CustomToaster
-              t={t}
-              type={"error"}
-              text={"Something went wrong. Please register again"}
-            />
-          ));
+          popupOption?.onClose();
         }
       })
       .catch((err) => {
         console.log({ first: err });
+        toast.custom((t) => (
+          <CustomToaster
+            t={t}
+            type={"error"}
+            text={"Something went wrong. Please register again"}
+          />
+        ));
       });
   };
   //   SUBMIT DATA
   const handleSubmit = async () => {
     if (validateForm()) {
-      createFunction(formData);
+      if (popupOption?.data) {
+        updateFunction(formData);
+      } else {
+        createFunction(formData);
+      }
     }
   };
 
@@ -177,6 +242,22 @@ export default function UserForm() {
           type={"email"}
           wrapperClassName={"w-full"}
           required={true}
+        />
+
+        {/* ROLE */}
+        <CustomMultiSelect
+          disable={false}
+          label={"Role"}
+          // loading={isCategoryLoading}
+          placeholder="Select Role"
+          selectedValues={roles?.filter((m) => m?.id === formData?.role)}
+          setSelectedValues={(e) => {
+            // console.log({ e });
+            setFormData({ ...formData, role: e[0]?.id });
+          }}
+          options={roles}
+          singleSelect
+          error={errors?.category}
         />
         {/* PASSWORD */}
         <CustomPasswordField

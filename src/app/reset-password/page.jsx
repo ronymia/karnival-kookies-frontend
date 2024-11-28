@@ -7,7 +7,7 @@ import CustomField from "@/Shared/Fields/CustomField";
 import { validationErrorHandler } from "@/Utils/validationErrorHandler";
 import { useState } from "react";
 
-const Page = () => {
+const ResetPasswordPage = () => {
   const [currentTab, setCurrentTab] = useState("reset_password");
   const [formData, setFormData] = useState({
     email: "",
@@ -65,6 +65,7 @@ const Page = () => {
           }
         })
         .catch((err) => {
+          console.log({ err });
           setIsUserFound(false);
         });
     }
@@ -114,4 +115,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default ResetPasswordPage;

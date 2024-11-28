@@ -7,7 +7,7 @@ import { usePopupContext } from "@/Context/ProjectProvider";
 const FileViewer = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { popupOption } = usePopupContext();
-  const { files, onClose, fileFolder } = popupOption;
+  const { files, onClose } = popupOption;
   console.log({ popupOption });
 
   const handlePrev = () => {
@@ -92,7 +92,7 @@ const FileViewer = () => {
               index === currentIndex ? "block" : "hidden"
             }`}
           >
-            {file.endsWith(".pdf") ? (
+            {file?.endsWith(".pdf") ? (
               <>
                 <div className="file-info flex justify-between items-center mb-3 pr-2">
                   <span className="file-name text-primary font-semibold">{`${
@@ -112,18 +112,18 @@ const FileViewer = () => {
                 <div className="file-info flex justify-between items-center mb-3 pr-2">
                   <span className="file-name text-primary font-semibold">{`${
                     index + 1
-                  }. ${file.split("/")[file.split("/").length - 1]}`}</span>
+                  }. ${file?.split("/")[file?.split("/")?.length - 1]}`}</span>
                 </div>
                 <img
                   data-auto={`file-viewer-image-all-page`}
-                  src={getFullImageLink(file, fileFolder)}
-                  alt={`${file.split("/")[file.split("/").length - 1]}`}
+                  src={getFullImageLink(file)}
+                  alt={file}
                 />
               </div>
             )}
           </div>
         ))}
-        {files.length > 1 && (
+        {files?.length > 1 && (
           <div className="w-full absolute top-1/3 flex justify-between items-center mt-5">
             <button
               data-auto={`file-viewer-previous-button-all-page`}

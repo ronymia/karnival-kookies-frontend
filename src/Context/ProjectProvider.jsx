@@ -1,11 +1,13 @@
 "use client";
 import { getUser } from "@/apis/auth";
-import CreateAndUpdateProduct from "@/app/admin/all-products/CreateAndUpdateProduct";
+import ProductForm from "@/app/admin/all-products/ProductForm";
 import ViewProduct from "@/app/admin/all-products/ViewProduct";
 import CreateAndUpdateCategory from "@/app/admin/categories/CreateAndUpdateCategory";
 import CreateAndUpdateDiscountCode from "@/app/admin/dashboard/CreateAndUpdateDiscountCode";
 import CreateAndUpdateFaq from "@/app/admin/faq/CreateAndUpdateFaq";
 import ViewOrder from "@/app/admin/orders/ViewOrder";
+import PackageForm from "@/app/admin/packages/PackageForm";
+import PackageView from "@/app/admin/packages/PackageView";
 import UserForm from "@/app/admin/users/UserForm";
 import ViewUser from "@/app/admin/users/ViewUser";
 import CreateAndUpdateReview from "@/app/products/[id]/CreateAndUpdateReview";
@@ -159,18 +161,35 @@ const ProjectProvider = ({ children }) => {
         setPopupOption={setPopupOption}
         Component={
           <>
-            {popupOption?.type === "product" && <CreateAndUpdateProduct />}
-            {popupOption?.type === "viewProduct" && <ViewProduct />}
-            {popupOption?.type === "viewFile" && <FileViewer />}
-            {popupOption?.type === "category" && <CreateAndUpdateCategory />}
-            {popupOption?.type === "faq" && <CreateAndUpdateFaq />}
+            {/* USERS */}
             {popupOption?.type === "viewUser" && <ViewUser />}
             {popupOption?.type === "userForm" && <UserForm />}
+
+            {/* PRODUCTS */}
+            {popupOption?.type === "productForm" && <ProductForm />}
+            {popupOption?.type === "viewProduct" && <ViewProduct />}
+
+            {/* CATEGORIES */}
+            {popupOption?.type === "category" && <CreateAndUpdateCategory />}
+
+            {/* FAQ */}
+            {popupOption?.type === "faq" && <CreateAndUpdateFaq />}
             {popupOption?.type === "viewOrder" && <ViewOrder />}
+
+            {/* DISCOUNT */}
             {popupOption?.type === "discountCode" && (
               <CreateAndUpdateDiscountCode />
             )}
+
+            {/* REVIEW */}
             {popupOption?.type === "review" && <CreateAndUpdateReview />}
+
+            {/* PACKAGES */}
+            {popupOption?.type === "packageForm" && <PackageForm />}
+            {popupOption?.type === "packageView" && <PackageView />}
+
+            {/* FILE VIEW */}
+            {popupOption?.type === "viewFile" && <FileViewer />}
           </>
         }
       />

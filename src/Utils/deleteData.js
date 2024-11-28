@@ -19,9 +19,9 @@ export const deleteData = ({
       confirmButton: "bg-primary",
       cancelButton: "bg-error",
     },
-  }).then((result) => {
+  }).then(async (result) => {
     if (result.isConfirmed) {
-      handler({ id: data?.id })
+      await handler({ id: data?.id })
         .then((res) => {
           if (res?.success) {
             Swal.fire({

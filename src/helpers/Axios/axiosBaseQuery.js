@@ -23,5 +23,6 @@ export const axiosBaseQuery =
           data: err.response?.data || err.message,
         },
       };
+      return err;
     }
   };

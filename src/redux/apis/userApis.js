@@ -1,15 +1,15 @@
 import { TagTypes } from "../tagTypes";
+import { baseApi } from "./baseAPi";
 
-const { baseApi } = require("./baseAPi");
+// BASE URL
+const URL = "/users";
 
-const USER_URL = "/users";
-
-export const userApis = baseApi.injectEndpoints({
+export const apis = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // GET ALL USERS
     getAllUsers: builder.query({
       query: ({ page, perPage, limit }) => ({
-        url: `${USER_URL}/all`,
+        url: `${URL}/all`,
         method: "GET",
         params: { page, limit, perPage },
       }),
@@ -18,7 +18,7 @@ export const userApis = baseApi.injectEndpoints({
     // UPDATE USER
     updateUser: builder.mutation({
       query: (payload) => ({
-        url: `${USER_URL}/${payload?.email}`,
+        url: `${URL}/${payload?.email}`,
         method: "PUT",
         data: payload,
       }),
@@ -27,4 +27,4 @@ export const userApis = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetAllUsersQuery, useUpdateUserMutation } = userApis;
+export const { useGetAllUsersQuery, useUpdateUserMutation } = apis;

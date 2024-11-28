@@ -116,6 +116,13 @@ const Navbar = () => {
           handler: handleCloseMenu,
         },
         {
+          id: 8,
+          name: "Packages",
+          path: "/admin/packages",
+          // Icon: <Tag className="h-4 w-4" />,
+          handler: handleCloseMenu,
+        },
+        {
           id: 6,
           name: "Orders",
           path: "/admin/orders",

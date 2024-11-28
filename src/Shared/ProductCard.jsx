@@ -101,8 +101,7 @@ const ProductCard = ({ product }) => {
         <img
           className="jump-image"
           src={getFullImageLink(
-            product?.images?.length > 0 && product?.images[0]?.file,
-            "Products"
+            product?.images?.length > 0 && product?.images[0]
           )}
           alt={product?.name}
         />

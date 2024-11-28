@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable react/prop-types */
 
 import { useEffect, useState } from "react";
 import { FaRegFileLines } from "react-icons/fa6";
@@ -10,6 +9,7 @@ import { RxCross2 } from "react-icons/rx";
 import { getFullImageLink } from "@/Utils/getFullImageLink";
 import CustomPopup from "../CustomPopup";
 import FileViewer from "../FileViewer";
+import { usePopupContext } from "@/Context/ProjectProvider";
 
 export default function CustomFileUploader({
   fileFolder,
@@ -21,9 +21,11 @@ export default function CustomFileUploader({
   onRemove = (event) => event,
   onDrop = (event) => event,
   required,
+  label = "Attachment",
 }) {
   // console.log({ files });
   const [dragOver, setDragOver] = useState(false);
+  const { popupOption, setPopupOption } = usePopupContext();
 
   useEffect(() => {
     setDragOver(false);
@@ -54,20 +56,9 @@ export default function CustomFileUploader({
     onRemove(index);
   };
 
-  // POPUP OPTIONS
-  const [popupOption, setPopupOption] = useState({
-    open: false,
-    type: "",
-    id: null,
-    onClose: () => {
-      setPopupOption({ ...popupOption, open: false });
-    },
-    overlayStyle: { background: "red" },
-    closeOnDocumentClick: false,
-  });
-
   // HANDLE VIEW FILES
   const handleViewFiles = (files) => {
+    console.log({ first: files });
     setPopupOption({
       open: true,
       type: "viewFiles",
@@ -111,7 +102,7 @@ export default function CustomFileUploader({
       />
 
       <p className="text-sm font-semibold label-text mb-2">
-        Attachment{" "}
+        {label}{" "}
         {required && <span className="text-error font-bold text-md">*</span>}
       </p>
       <div className="bg-secondary text-base-300 border border-primary-content shadow-md rounded-xl pb-4">
@@ -188,7 +179,7 @@ export default function CustomFileUploader({
                       className="relative w-[200px] sm:w-[100px] h-[200px] sm:h-[100px] shadow-md rounded-xl  group flex justify-center items-center"
                       key={index}
                     >
-                      {file?.file !== "" && (
+                      {file !== "" && (
                         <div onClick={() => handleViewFiles([file])}>
                           {file?.file?.endsWith(".png") ||
                           file?.file?.endsWith(".jpg") ||
@@ -196,15 +187,15 @@ export default function CustomFileUploader({
                           file?.file?.endsWith(".JPEG") ||
                           file?.file?.endsWith(".JPG") ? (
                             <img
-                              src={getFullImageLink(file?.file, fileFolder)}
-                              alt={file?.id}
+                              src={getFullImageLink(file)}
+                              alt={file}
                               className="h-full w-full duration-200 absolute top-0 cursor-pointer  rounded-xl  right-0 object-cover group-hover:opacity-20"
                             />
                           ) : (
                             <div className="h-full w-full duration-200 absolute top-0 cursor-pointer  rounded-xl  right-0 object-cover group-hover:opacity-20 flex justify-center items-center">
                               <img
-                                src={file?.file}
-                                alt={file?.id}
+                                src={getFullImageLink(file)}
+                                alt={file}
                                 className="h-full w-full duration-200 absolute top-0 cursor-pointer  rounded-xl  right-0 object-cover group-hover:opacity-20"
                               />
                             </div>

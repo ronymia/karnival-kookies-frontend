@@ -86,7 +86,7 @@ const CartItemsCard = ({ item, setIsUpdating, handleChecked, checked }) => {
       />
       <img
         className={`min-w-[50px] w-[100px]`}
-        src={getFullImageLink(item?.product?.images[0]?.file, "Products")}
+        src={getFullImageLink(item?.product?.images[0])}
         alt={item?.product?.name}
       />
       <div className={`flex flex-col justify-between gap-5 flex-grow`}>
@@ -118,7 +118,7 @@ const CartItemsCard = ({ item, setIsUpdating, handleChecked, checked }) => {
                   <img
                     onClick={() => setCurrentImageIndex(i)}
                     className={`w-full h-auto`}
-                    src={getFullImageLink(image?.file, "Products")}
+                    src={getFullImageLink(image)}
                     alt=""
                   />
                 </div>

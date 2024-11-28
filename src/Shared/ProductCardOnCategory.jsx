@@ -6,7 +6,7 @@ const ProductCardOnCategory = ({ product }) => {
     <div className={`flex items-center`}>
       <img
         className="h-20 w-20 rounded-full"
-        src={getFullImageLink(product?.images[0]?.file, "Products")}
+        src={getFullImageLink(product?.images[0])}
         alt={product?.name}
       />
       <div className={`flex-grow`}>

@@ -19,7 +19,7 @@ import { AiFillEye } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 
-const Page = () => {
+const ProductPage = () => {
   const router = useRouter();
   const { popupOption, setPopupOption } = usePopupContext();
 
@@ -119,9 +119,8 @@ const Page = () => {
     setPopupOption({
       ...popupOption,
       open: true,
-      type: "product",
+      type: "productForm",
       title: "Add New Product",
-      setIsUpdating: setIsUpdating,
     });
   };
   // HANDLE EDIT
@@ -129,10 +128,9 @@ const Page = () => {
     setPopupOption({
       ...popupOption,
       open: true,
-      type: "product",
+      type: "productForm",
       title: "Edit Product",
       data: data,
-      setIsUpdating: setIsUpdating,
     });
   };
 
@@ -275,7 +273,7 @@ const Page = () => {
                 <img
                   onClick={() => handleViewImages(d?.images)}
                   src={getFullImageLink(
-                    d?.images?.length > 0 ? d?.images[0]?.file : "",
+                    d?.images?.length > 0 ? d?.images[0] : "",
                     "Products"
                   )}
                   alt={d?.name}
@@ -310,4 +308,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default ProductPage;

@@ -1,14 +1,14 @@
+import { baseApi } from "../baseAPi";
 import { TagTypes } from "../tagTypes";
 
-const { baseApi } = require("./baseAPi");
+// BASE URL
+const URL = "/auth";
 
-const AUTH_URL = "/auth";
-
-export const authApis = baseApi.injectEndpoints({
+export const apis = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createUser: builder.mutation({
       query: (payload) => ({
-        url: `${AUTH_URL}/register`,
+        url: `${URL}/register`,
         method: "POST",
         data: payload,
       }),
@@ -17,4 +17,4 @@ export const authApis = baseApi.injectEndpoints({
   }),
 });
 
-export const { useCreateUserMutation } = authApis;
+export const { useCreateUserMutation } = apis;

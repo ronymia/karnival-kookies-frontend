@@ -15,7 +15,7 @@ const ProductComponent = () => {
         >
           <img
             className={` w-[70px] sm:w-[100px]`}
-            src={getFullImageLink(item?.product?.images[0]?.file, "Products")}
+            src={getFullImageLink(item?.product?.images[0])}
             alt={item?.product?.name}
           />
           <div className={`flex flex-col justify-between gap-5 flex-grow`}>

@@ -25,8 +25,6 @@ export default function ImageSlider({ images }) {
     }
   };
 
-  console.log(getFullImageLink(images[0], "Products"));
-
   /* ****************************************
   
   ************************************************/
@@ -51,7 +49,7 @@ export default function ImageSlider({ images }) {
           {/* Image */}
           <div className="relative w-3/4 max-w-4xl">
             <img
-              src={getFullImageLink(images[imageIndex], "Products")}
+              src={getFullImageLink(images[imageIndex])}
               alt={`Slide ${imageIndex + 1}`}
               className="w-full h-auto rounded-lg shadow-lg"
             />
@@ -79,7 +77,7 @@ export default function ImageSlider({ images }) {
       {/* Main Slider */}
       <div className="w-full max-w-2xl">
         <img
-          src={getFullImageLink(images[0], "Products")}
+          src={getFullImageLink(images[0])}
           alt="Main Slide"
           className="w-full h-auto rounded-lg cursor-pointer shadow-lg"
           onClick={() => setImageIndex(0)}
@@ -92,7 +90,7 @@ export default function ImageSlider({ images }) {
           <img
             key={index}
             // {console.log(first)}
-            src={getFullImageLink(image, "Products")}
+            src={getFullImageLink(image)}
             alt={`Thumbnail ${index + 1}`}
             className="w-20 h-20 object-cover rounded-lg cursor-pointer shadow-md hover:scale-105 transition-transform"
             onClick={() => setImageIndex(index + 1)}

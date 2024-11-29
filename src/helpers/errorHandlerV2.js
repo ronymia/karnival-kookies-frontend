@@ -1,4 +1,5 @@
 import CustomToaster from "@/Shared/CustomToaster";
+import { validationErrorHandler } from "@/Utils/validationErrorHandler";
 import toast from "react-hot-toast";
 
 export const errorHandlerV2 = ({ err }) => {
@@ -23,14 +24,11 @@ export const errorHandlerV2 = ({ err }) => {
     err?.data?.errorSources?.forEach((item) => {
       obj[item?.path] = item?.message;
     });
+    validationErrorHandler(obj);
     return obj;
   } else if (err?.status === 500) {
     toast.custom((t) => (
-      <CustomToaster
-        t={t}
-        type={"error"}
-        text={`Something went wrong. Please call the customer care`}
-      />
+      <CustomToaster t={t} type={"error"} text={err?.data?.message} />
     ));
   }
 };

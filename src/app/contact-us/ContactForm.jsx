@@ -112,7 +112,7 @@ const ContactForm = () => {
       <div className={`grid grid-cols-1 md:grid-cols-2 md:gap-5`}>
         {/* NAME */}
         <CustomField
-          defaultValue={formData?.name}
+          value={formData?.name}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.name}
@@ -127,7 +127,7 @@ const ContactForm = () => {
         />
         {/* EMAIL */}
         <CustomField
-          defaultValue={formData?.email}
+          value={formData?.email}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.email}
@@ -143,7 +143,7 @@ const ContactForm = () => {
       </div>
       {/* MESSAGE */}
       <CustomTextareaField
-        defaultValue={formData?.message}
+        value={formData?.message}
         disable={false}
         fieldClassName={"w-full"}
         error={errors?.message}

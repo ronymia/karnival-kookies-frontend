@@ -85,7 +85,7 @@ const ResetPasswordPage = () => {
           >
             {/* EMAIL */}
             <CustomField
-              defaultValue={formData?.email}
+              value={formData?.email}
               disable={false}
               fieldClassName={"w-full"}
               error={errors?.email}

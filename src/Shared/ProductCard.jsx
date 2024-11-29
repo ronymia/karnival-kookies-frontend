@@ -6,16 +6,16 @@ import "./sharedAnimation.css";
 import { getFullImageLink } from "@/Utils/getFullImageLink";
 import { useRouter } from "next/navigation";
 import { postCart, updateQuantity } from "@/apis/carts";
-import { useAuthContext } from "@/Context/ProjectProvider";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import CustomToaster from "./CustomToaster";
 import { errorHandler } from "@/Utils/errorHandler";
+import { useSelector } from "react-redux";
 
 const ProductCard = ({ product }) => {
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
-  const { user } = useAuthContext();
+  const { user } = useSelector((state) => state.auth);
   const [quantity, setQuantity] = useState(1);
 
   const useDeviceWidth = () => {
@@ -156,6 +156,16 @@ const ProductCard = ({ product }) => {
           <p>Sale</p>
         </div>
       )}
+
+      {/* FAVORITE PRODUCT */}
+      {/* <div className="flex flex-col gap-2 absolute top-1 right-1 bg-red-500">
+        <FaEye size={24} title="Quick View" className="text-slate-300" />
+        <MdFavoriteBorder
+          size={24}
+          title="Add to Wishlist"
+          className="text-slate-300"
+        />
+      </div> */}
     </div>
   );
 };

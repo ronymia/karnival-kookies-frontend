@@ -1,5 +1,5 @@
 import { deleteCartItems, postCheckout } from "@/apis/carts";
-import { useAuthContext, useCartContext } from "@/Context/ProjectProvider";
+import { useCartContext } from "@/Context/ProjectProvider";
 import Button from "@/Shared/Button";
 import ButtonSpinner from "@/Shared/ButtonSpinner";
 import CustomToaster from "@/Shared/CustomToaster";
@@ -12,13 +12,15 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { IoIosArrowRoundForward } from "react-icons/io";
+import { useSelector } from "react-redux";
 
 const PaymentForm = ({ formData }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [message, setMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
-  const { user } = useAuthContext();
+  // USER FROM REDUX STORE
+  const { user } = useSelector((state) => state.auth);
   const { checkoutTotal, selectedItems } = useCartContext();
   const router = useRouter();
 

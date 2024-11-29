@@ -1,6 +1,7 @@
 "use client";
-import { jwt, login } from "@/apis/auth";
-import { useAuthContext } from "@/Context/ProjectProvider";
+import { jwt } from "@/apis/auth";
+import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
+import { useLoginUserMutation } from "@/redux/apis/authApis";
 import Code from "@/Shared/auth/Code";
 import Button from "@/Shared/Button";
 import CustomLoading from "@/Shared/CustomLoading";
@@ -13,19 +14,21 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 
-const Page = () => {
+export default function LoginPage() {
   const router = useRouter();
+  // TAB
   const [currentTab, setCurrentTab] = useState("login");
-  const { setUser, setIsUserComing } = useAuthContext();
-  const [isLogging, setIsLogging] = useState(false);
-  const [errors, setErrors] = useState({});
 
+  // LOGIN ERROR STATE
+  const [errors, setErrors] = useState({});
+  // USER LOGIN
+  const [login, loginResult] = useLoginUserMutation();
+
+  // FORM STATE
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
-  // console.log({ formData });
 
   // CHANGE FORM DATA
   const handleFormChange = (e) => {
@@ -95,42 +98,30 @@ const Page = () => {
   };
 
   const createFunction = async () => {
-    setIsLogging(true);
-    login(formData)
+    await login(formData)
+      .unwrap()
       .then((res) => {
         if (!res?.data?.user?.isVerified) {
           setCurrentTab("code");
-          setIsLogging(false);
           return;
         } else if (res?.success) {
-          jwt({ email: res?.data?.user?.email })
-            .then((token) => {
-              console.log({ token });
-              if (token?.success) {
-                setIsUserComing(Math.random());
-                setFormData({
-                  email: "",
-                  password: "",
-                });
-                Swal.fire({
-                  position: "center",
-                  icon: "success",
-                  title: "Login Successfully",
-                  showConfirmButton: false,
-                  timer: 1500,
-                });
-                router.push("/");
-                // if (location?.state) {
-                //   navigate(location?.state?.from);
-                // } else {
-                //   navigate("/");
-                // }
-                setIsLogging(false);
-              }
-            })
-            .catch((err) => {
-              setIsLogging(false);
-            });
+          jwt({ email: res?.data?.user?.email }).then((token) => {
+            console.log({ token });
+            if (token?.success) {
+              setFormData({
+                email: "",
+                password: "",
+              });
+              Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Login Successfully",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              router.push("/");
+            }
+          });
         }
       })
       .catch((err) => {
@@ -144,8 +135,7 @@ const Page = () => {
 
           setErrors(obj);
         }
-        errorHandler({ err, setLoading: setIsLogging });
-        setIsLogging(false);
+        errorHandlerV2({ err });
       });
   };
 
@@ -163,7 +153,7 @@ const Page = () => {
   /* **********************************************
   
   ***************************************************/
-  if (isLogging) {
+  if (loginResult.isLoading) {
     return <CustomLoading />;
   } else {
     return (
@@ -176,7 +166,7 @@ const Page = () => {
               <h2 className={`text-xl font-bold`}>Welcome Back</h2>
               {/* EMAIL */}
               <CustomField
-                defaultValue={formData?.email}
+                value={formData?.email}
                 disable={false}
                 fieldClassName={"w-full"}
                 error={errors?.email}
@@ -211,7 +201,7 @@ const Page = () => {
                 <Button
                   text={"Login"}
                   handler={handleSubmit}
-                  isLoading={isLogging}
+                  isLoading={loginResult.isLoading}
                 />
               </div>
               <div className={`font-bold text-heading-main pb-10`}>
@@ -230,6 +220,4 @@ const Page = () => {
       </>
     );
   }
-};
-
-export default Page;
+}

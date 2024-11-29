@@ -159,7 +159,7 @@ const Code = ({ data, error }) => {
       <div className={`space-y-2 flex flex-col justify-center items-center`}>
         <div className={`flex gap-2`}>
           <CustomNumberFieldForOtp
-            defaultValue={formData?.digit_1}
+            value={formData?.digit_1}
             disable={false}
             fieldClassName={"w-12"}
             id={"digit_1"}
@@ -170,7 +170,7 @@ const Code = ({ data, error }) => {
             maxLength={1}
           />
           <CustomNumberFieldForOtp
-            defaultValue={formData?.digit_2}
+            value={formData?.digit_2}
             disable={false}
             fieldClassName={"w-12"}
             id={"digit_2"}
@@ -181,7 +181,7 @@ const Code = ({ data, error }) => {
             maxLength={1}
           />
           <CustomNumberFieldForOtp
-            defaultValue={formData?.digit_3}
+            value={formData?.digit_3}
             disable={false}
             fieldClassName={"w-12"}
             id={"digit_3"}
@@ -192,7 +192,7 @@ const Code = ({ data, error }) => {
             maxLength={1}
           />
           <CustomNumberFieldForOtp
-            defaultValue={formData?.digit_4}
+            value={formData?.digit_4}
             disable={false}
             fieldClassName={"w-12"}
             id={"digit_4"}

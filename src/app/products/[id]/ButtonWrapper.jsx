@@ -2,16 +2,17 @@
 import Button from "@/Shared/Button";
 import React, { useState } from "react";
 import Quantity from "./Quantity";
-import { useAuthContext } from "@/Context/ProjectProvider";
 import { postCart, updateQuantity } from "@/apis/carts";
 import toast from "react-hot-toast";
 import CustomToaster from "@/Shared/CustomToaster";
 import { errorHandler } from "@/Utils/errorHandler";
+import { useSelector } from "react-redux";
 
 const ButtonWrapper = ({ text, id }) => {
   const [quantity, setQuantity] = useState(1);
 
-  const { user } = useAuthContext();
+  // USER FROM REDUX STORE
+  const { user } = useSelector((state) => state.auth);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const handleAddToCart = () => {
     setIsAddingToCart(true);

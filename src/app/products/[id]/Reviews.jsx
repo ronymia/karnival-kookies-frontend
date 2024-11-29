@@ -14,7 +14,8 @@ import { FaStar } from "react-icons/fa";
 
 const Reviews = () => {
   const { setPopupOption, popupOption } = usePopupContext();
-  const { user } = useAuthContext();
+  // USER FROM REDUX STORE
+  const { user } = useSelector((state) => state.auth);
   const [isUpdating, setIsUpdating] = useState();
   const params = useParams();
 

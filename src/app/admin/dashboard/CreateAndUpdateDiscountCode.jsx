@@ -197,7 +197,7 @@ const CreateAndUpdateDiscountCode = () => {
       <div>
         {/* CODE */}
         <CustomField
-          defaultValue={formData?.code}
+          value={formData?.code}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.code}
@@ -248,7 +248,7 @@ const CreateAndUpdateDiscountCode = () => {
 
         {/* AMOUNT */}
         <CustomNumberField
-          defaultValue={formData?.discountAmount}
+          value={formData?.discountAmount}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.discountAmount}
@@ -261,7 +261,7 @@ const CreateAndUpdateDiscountCode = () => {
           required={true}
         />
         <CustomNumberField
-          defaultValue={formData?.minimumSpend}
+          value={formData?.minimumSpend}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.minimumSpend}

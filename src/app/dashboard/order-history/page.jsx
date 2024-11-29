@@ -4,7 +4,7 @@ import {
   getAllCheckoutsForAdmin,
   updateStatus,
 } from "@/apis/carts";
-import { useAuthContext, usePopupContext } from "@/Context/ProjectProvider";
+import { usePopupContext } from "@/Context/ProjectProvider";
 import PrivateRoute from "@/Routes/PrivateRoute";
 import ButtonLoading from "@/Shared/ButtonLoading";
 import CustomLoading from "@/Shared/CustomLoading";
@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AiFillEye } from "react-icons/ai";
 import { FiX } from "react-icons/fi";
+import { useSelector } from "react-redux";
 
 const Page = () => {
   const router = useRouter();
@@ -26,10 +27,11 @@ const Page = () => {
   // ALL SELECTED IDs
   const [selectedIds, setSelectedIds] = useState([]);
   const [isOrderLoading, setIsOrderLoading] = useState(false);
-  console.log({ isOrderLoading });
+
   const [data, setData] = useState([]);
   const [isUpdating, setIsUpdating] = useState();
-  const { user } = useAuthContext();
+  // USER FROM REDUX STORE
+  const { user } = useSelector((state) => state.auth);
 
   // FILTERS
   const [filters, setFilters] = useState({

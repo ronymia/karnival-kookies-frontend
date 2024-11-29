@@ -1,6 +1,6 @@
 "use client";
 import { getAllAdminDashboardItems } from "@/apis/dashboardApis";
-import { useAuthContext, usePopupContext } from "@/Context/ProjectProvider";
+import { usePopupContext } from "@/Context/ProjectProvider";
 import Button from "@/Shared/Button";
 import CustomLoading from "@/Shared/CustomLoading";
 import DashboardCard from "@/Shared/DashboardCard";
@@ -9,9 +9,11 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import DiscountComponent from "./DiscountComponent";
 import AdminRoute from "@/Routes/AdminRoute";
+import { useSelector } from "react-redux";
 
 const Page = () => {
-  const { user, isLoading } = useAuthContext();
+  // USER FROM REDUX STORE
+  const { user } = useSelector((state) => state.auth);
   const { popupOption, setPopupOption } = usePopupContext();
   const router = useRouter();
   const [data, setData] = useState({});
@@ -41,7 +43,7 @@ const Page = () => {
     });
   };
 
-  if (isDashboardLoading || isLoading) {
+  if (isDashboardLoading) {
     return <CustomLoading />;
   }
   return (

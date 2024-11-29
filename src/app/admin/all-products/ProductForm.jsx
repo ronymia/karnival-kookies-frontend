@@ -226,7 +226,7 @@ export default function ProductForm() {
       <div>
         {/* NAME */}
         <CustomField
-          defaultValue={state?.name}
+          value={state?.name}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.name}
@@ -241,7 +241,7 @@ export default function ProductForm() {
         />
         {/* PRICE */}
         <CustomNumberField
-          defaultValue={state?.regularPrice}
+          value={state?.regularPrice}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.regularPrice}
@@ -254,7 +254,7 @@ export default function ProductForm() {
           required={true}
         />
         <CustomNumberField
-          defaultValue={state?.discountPrice}
+          value={state?.discountPrice}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.discountPrice}
@@ -268,7 +268,7 @@ export default function ProductForm() {
 
         {/* STOCK */}
         <CustomNumberField
-          defaultValue={state?.inStock}
+          value={state?.inStock}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.inStock}
@@ -304,7 +304,7 @@ export default function ProductForm() {
 
         {/* DESCRIPTION */}
         <CustomTextareaField
-          defaultValue={state?.description}
+          value={state?.description}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.description}

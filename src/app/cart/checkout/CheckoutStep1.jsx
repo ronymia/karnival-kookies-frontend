@@ -167,7 +167,7 @@ const CheckoutStep1 = ({
       </div>
       {/* DELIVERY INSTRUCTIONS */}
       <CustomTextareaField
-        defaultValue={formData?.step1?.deliveryInstruction}
+        value={formData?.step1?.deliveryInstruction}
         disable={false}
         fieldClassName={"w-full"}
         error={errors?.deliveryInstruction}

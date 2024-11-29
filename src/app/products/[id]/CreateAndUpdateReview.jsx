@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuthContext, usePopupContext } from "@/Context/ProjectProvider";
+import { usePopupContext } from "@/Context/ProjectProvider";
 import ButtonSpinner from "@/Shared/ButtonSpinner";
 import CustomLoading from "@/Shared/CustomLoading";
 import CustomToaster from "@/Shared/CustomToaster";
@@ -12,11 +12,12 @@ import { Rating } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
 import { postReview, updateReview } from "@/apis/reviews";
 import { errorHandler } from "@/Utils/errorHandler";
+import { useSelector } from "react-redux";
 
 const CreateAndUpdateReview = () => {
   const { popupOption } = usePopupContext();
-  console.log({ popupOption });
-  const { user } = useAuthContext();
+  // USER FROM REDUX STORE
+  const { user } = useSelector((state) => state.auth);
   const params = useParams();
   console.log({ params });
   const [formData, setFormData] = useState({
@@ -183,7 +184,7 @@ const CreateAndUpdateReview = () => {
 
         {/* DESCRIPTION */}
         <CustomTextareaField
-          defaultValue={formData?.comment}
+          value={formData?.comment}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.comment}

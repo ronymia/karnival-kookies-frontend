@@ -1,19 +1,15 @@
-import { useAuthContext } from "@/Context/ProjectProvider";
-import CustomLoading from "@/Shared/CustomLoading";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
 
 const PrivateRoute = ({ children }) => {
-  const { user, isLoading } = useAuthContext();
+  // USER FROM REDUX STORE
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const router = useRouter();
 
-  if (isLoading) {
-    return <CustomLoading />; // Replace with your custom loading component here.
-  } else {
-    if (!user) {
-      return router.push("/login");
-    }
-    return children;
+  if (!isAuthenticated) {
+    return router.push("/login");
   }
+  return children;
 };
 
 export default PrivateRoute;

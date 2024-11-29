@@ -1,6 +1,6 @@
 "use client";
 import { getAllCartItems } from "@/apis/carts";
-import { useAuthContext, useCartContext } from "@/Context/ProjectProvider";
+import { useCartContext } from "@/Context/ProjectProvider";
 import Button from "@/Shared/Button";
 import CustomLoading from "@/Shared/CustomLoading";
 import CustomToaster from "@/Shared/CustomToaster";
@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import CartItemsCard from "./CartItemsCard";
 import PrivateRoute from "@/Routes/PrivateRoute";
+import { useSelector } from "react-redux";
 
 const Page = () => {
   const {
@@ -22,11 +23,11 @@ const Page = () => {
     checkedId,
     setCheckedId,
   } = useCartContext();
-  console.log({ selectedItems });
+
   const router = useRouter();
-  const { user } = useAuthContext();
+  // USER FROM REDUX STORE
+  const { user } = useSelector((state) => state.auth);
   const [data, setData] = useState([]);
-  console.log({ data });
 
   const [isUpdating, setIsUpdating] = useState();
   const [isCartLoading, setIsCartLoading] = useState(false);

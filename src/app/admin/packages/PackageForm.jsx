@@ -231,7 +231,7 @@ export default function PackageForm() {
     <div className={` pb-12 h-full flex flex-col justify-between gap-2`}>
       {/* NAME */}
       <CustomField
-        defaultValue={state?.name}
+        value={state?.name}
         disable={false}
         fieldClassName={"w-full"}
         error={errors?.name}
@@ -246,7 +246,7 @@ export default function PackageForm() {
       />
       {/* REGULAR PRICE */}
       <CustomNumberField
-        defaultValue={state?.regularPrice}
+        value={state?.regularPrice}
         disable={false}
         fieldClassName={"w-full"}
         error={errors?.regularPrice}
@@ -260,7 +260,7 @@ export default function PackageForm() {
       />
       {/* DISCOUNT PRICE */}
       <CustomNumberField
-        defaultValue={state?.discountPrice}
+        value={state?.discountPrice}
         disable={false}
         fieldClassName={"w-full"}
         error={errors?.discountPrice}
@@ -274,7 +274,7 @@ export default function PackageForm() {
 
       {/* STOCK */}
       <CustomNumberField
-        defaultValue={state?.inStock}
+        value={state?.inStock}
         disable={false}
         fieldClassName={"w-full"}
         error={errors?.inStock}
@@ -305,7 +305,7 @@ export default function PackageForm() {
       />
       {/* DESCRIPTION */}
       <CustomTextareaField
-        defaultValue={state?.description}
+        value={state?.description}
         disable={false}
         fieldClassName={"w-full"}
         error={errors?.description}

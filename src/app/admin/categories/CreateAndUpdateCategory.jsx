@@ -145,7 +145,7 @@ const CreateAndUpdateCategory = () => {
       <div>
         {/* NAME */}
         <CustomField
-          defaultValue={formData?.name}
+          value={formData?.name}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.name}
@@ -161,7 +161,7 @@ const CreateAndUpdateCategory = () => {
 
         {/* DESCRIPTION */}
         <CustomTextareaField
-          defaultValue={formData?.description}
+          value={formData?.description}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.description}

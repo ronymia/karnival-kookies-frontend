@@ -146,7 +146,7 @@ const CreateAndUpdateFaq = () => {
       <div>
         {/* NAME */}
         <CustomField
-          defaultValue={formData?.question}
+          value={formData?.question}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.question}
@@ -162,7 +162,7 @@ const CreateAndUpdateFaq = () => {
 
         {/* DESCRIPTION */}
         <CustomTextareaField
-          defaultValue={formData?.answer}
+          value={formData?.answer}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.answer}

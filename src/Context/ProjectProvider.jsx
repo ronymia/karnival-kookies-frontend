@@ -1,5 +1,4 @@
 "use client";
-import { getUser } from "@/apis/auth";
 import ProductForm from "@/app/admin/all-products/ProductForm";
 import ViewProduct from "@/app/admin/all-products/ViewProduct";
 import CreateAndUpdateCategory from "@/app/admin/categories/CreateAndUpdateCategory";
@@ -11,20 +10,29 @@ import PackageView from "@/app/admin/packages/PackageView";
 import UserForm from "@/app/admin/users/UserForm";
 import ViewUser from "@/app/admin/users/ViewUser";
 import CreateAndUpdateReview from "@/app/products/[id]/CreateAndUpdateReview";
-import useAxiosSecure from "@/Hooks/useAxiosSecure";
+import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
+import { useGetUserQuery, useLogOutUserMutation } from "@/redux/apis/authApis";
 import CustomPopup from "@/Shared/CustomPopup";
 import FileViewer from "@/Shared/FileViewer";
 import { createContext, useContext, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
+// INITIALIZE PROJECT CONTEXT
 export const ProjectContext = createContext();
-const ProjectProvider = ({ children }) => {
-  const axiosSecure = useAxiosSecure();
-  const [login, setLogin] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isUserComing, setIsUserComing] = useState();
+
+//
+export default function ProjectProvider({ children }) {
+  const [userLogOut, logOutResult] = useLogOutUserMutation();
+
+  // IF USER RELOAD THEN API WILL BE CALL
+  const [isUserComing, setIsUserComing] = useState(null);
+  const getUser = useGetUserQuery();
+
+  useEffect(() => {
+    if (isUserComing) {
+      refetch(); // REFETCH WHEN isUserComing BECAME TRUE
+    }
+  }, [isUserComing]);
 
   // CART
   const [selectedItems, setSelectedItems] = useState([]);
@@ -56,30 +64,7 @@ const ProjectProvider = ({ children }) => {
     setCheckedId,
   });
 
-  useEffect(() => {
-    setIsLoading(true);
-    getUser()
-      .then((res) => {
-        console.log({ res });
-        setUser(res?.user);
-        localStorage.setItem("token", res?.user?.token);
-
-        if (res?.user?.role === "admin") {
-          setIsAdmin(true);
-        } else {
-          setIsAdmin(false);
-        }
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        console.log({ err });
-      });
-  }, [isUserComing]);
-
-  console.log({ user });
-
-  const logout = () => {
+  const logout = async () => {
     Swal.fire({
       title: "Are you sure?",
       icon: "warning",
@@ -89,15 +74,14 @@ const ProjectProvider = ({ children }) => {
         confirmButton: "bg-primary",
         cancelButton: "bg-error",
       },
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        axiosSecure
-          ?.post("/auth/logout", {}, { withCredentials: true })
+        await userLogOut()
+          .unwrap()
           .then((res) => {
             console.log({ logoutRes: res });
-            if (res?.data?.success) {
+            if (res?.success) {
               setIsUserComing(Math.random());
-              setUser(null);
               Swal.fire({
                 position: "center",
                 icon: "success",
@@ -107,7 +91,9 @@ const ProjectProvider = ({ children }) => {
               });
             }
           })
-          .catch((err) => {});
+          .catch((err) => {
+            errorHandlerV2({ err });
+          });
       }
     });
   };
@@ -124,10 +110,6 @@ const ProjectProvider = ({ children }) => {
     closeOnDocumentClick: false,
   });
   const value = {
-    // LOGIN
-    login,
-    setLogin,
-
     // POPUP OPTIONS
     popupOption,
     setPopupOption,
@@ -136,14 +118,6 @@ const ProjectProvider = ({ children }) => {
     logout,
     isUserComing,
     setIsUserComing,
-    user,
-    setUser,
-    isLoading,
-    setIsLoading,
-
-    // ADMIN
-    isAdmin,
-    setIsAdmin,
 
     // CART
     checkoutQuantity,
@@ -196,40 +170,20 @@ const ProjectProvider = ({ children }) => {
       {children}
     </ProjectContext.Provider>
   );
-};
+}
 
-export default ProjectProvider;
-
+// AUTH CONTEXT
 export const useAuthContext = () => {
-  const {
-    login,
-    setLogin,
-    logout,
-    isUserComing,
-    setIsUserComing,
-    user,
-    setUser,
-    isLoading,
-    setIsLoading,
-    isAdmin,
-    setIsAdmin,
-  } = useContext(ProjectContext);
+  const { logout, isUserComing, setIsUserComing } = useContext(ProjectContext);
 
   return {
-    login,
-    setLogin,
     logout,
     isUserComing,
     setIsUserComing,
-    user,
-    setUser,
-    isLoading,
-    setIsLoading,
-    isAdmin,
-    setIsAdmin,
   };
 };
 
+// CART CONTEXT
 export const useCartContext = () => {
   const {
     checkoutQuantity,
@@ -249,6 +203,8 @@ export const useCartContext = () => {
     setCheckedId,
   };
 };
+
+// CONTEXT FOR POPUP
 export const usePopupContext = () => {
   const { popupOption, setPopupOption } = useContext(ProjectContext);
 

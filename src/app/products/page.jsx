@@ -4,13 +4,13 @@ import { getAllProducts } from "@/apis/products";
 import CustomLoading from "@/Shared/CustomLoading";
 import FixedBgComponent from "@/Shared/FixedBgComponent";
 import { Pagination } from "@/Shared/Paginations/Pagination";
-import ProductCard from "@/Shared/ProductCard";
 import TableComponentHeading from "@/Shared/TableComponentHeading";
 import NavigateComponent from "@/Utils/navigate";
 import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import { RiSoundModuleFill } from "react-icons/ri";
 import FilterComponent from "./FilterComponent";
+import ProductCard from "@/components/UI/ProductCard";
 
 const Page = () => {
   const [sidebar, setSidebar] = useState(false);

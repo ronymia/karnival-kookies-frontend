@@ -165,7 +165,7 @@ const Page = () => {
               <div>
                 {/* NAME */}
                 <CustomField
-                  defaultValue={formData?.name}
+                  value={formData?.name}
                   disable={false}
                   fieldClassName={"w-full"}
                   error={errors?.name}
@@ -180,7 +180,7 @@ const Page = () => {
                 />
                 {/* PHONE */}
                 <CustomNumberField
-                  defaultValue={formData?.phone}
+                  value={formData?.phone}
                   disable={false}
                   fieldClassName={"w-full"}
                   error={errors?.phone}
@@ -193,7 +193,7 @@ const Page = () => {
                 />
                 {/* EMAIL */}
                 <CustomField
-                  defaultValue={formData?.email}
+                  value={formData?.email}
                   disable={false}
                   fieldClassName={"w-full"}
                   error={errors?.email}

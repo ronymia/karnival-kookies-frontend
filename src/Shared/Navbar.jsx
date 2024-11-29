@@ -8,10 +8,12 @@ import { CgShoppingCart } from "react-icons/cg";
 import { FiAlignLeft, FiX } from "react-icons/fi";
 import { MdChevronRight } from "react-icons/md";
 import { OutsideClickHandler } from "./OutsideClickHandler";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
-  const { user, logout, isAdmin } = useAuthContext();
-  console.log({ user });
+  const { logout } = useAuthContext();
+  // USER FROM REDUX STORE
+  const { user, isAdmin } = useSelector((state) => state.auth);
   const [sidebar, setSidebar] = useState(false);
   const router = useRouter();
   const [isExpanded, setIsExpanded] = useState("");

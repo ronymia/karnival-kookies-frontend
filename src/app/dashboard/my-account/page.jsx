@@ -1,6 +1,5 @@
 "use client";
 import { getAllUserDashboardItems } from "@/apis/dashboardApis";
-import { useAuthContext } from "@/Context/ProjectProvider";
 import PrivateRoute from "@/Routes/PrivateRoute";
 import CustomLoading from "@/Shared/CustomLoading";
 import DashboardCard from "@/Shared/DashboardCard";
@@ -9,9 +8,11 @@ import { errorHandler } from "@/Utils/errorHandler";
 import { formatRole } from "@/Utils/formatRole";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const Page = () => {
-  const { user } = useAuthContext();
+  // USER FROM REDUX STORE
+  const { user } = useSelector((state) => state.auth);
   const router = useRouter();
   const [data, setData] = useState({});
   const [isDashboardLoading, setIsDashboardLoading] = useState(false);

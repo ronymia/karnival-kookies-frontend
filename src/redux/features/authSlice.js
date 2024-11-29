@@ -24,7 +24,7 @@ const authSlice = createSlice({
         state.token = action.payload?.data?.accessToken;
         state.isAuthenticated = true;
         window.localStorage.setItem(
-          "accessToken",
+          "token",
           `Bearer ${action.payload?.data?.accessToken}`
         );
       }
@@ -40,9 +40,22 @@ const authSlice = createSlice({
         state.token = action.payload?.user?.token;
         state.isAuthenticated = true;
         window.localStorage.setItem(
-          "accessToken",
+          "token",
           `Bearer ${action.payload?.user?.token}`
         );
+      }
+    );
+
+    // LOGOUT AND CLEAR STATE
+    builder.addMatcher(
+      authApis.endpoints.logOutUser.matchFulfilled,
+      (state, action) => {
+        state.user = null;
+        state.token = null;
+        state.permissions = [];
+        state.isAdmin = null;
+        state.isAuthenticated = null;
+        window.localStorage.clear();
       }
     );
   },

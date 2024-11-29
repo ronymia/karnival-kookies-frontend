@@ -12,6 +12,7 @@ import ViewUser from "@/app/admin/users/ViewUser";
 import CreateAndUpdateReview from "@/app/products/[id]/CreateAndUpdateReview";
 import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
 import { useGetUserQuery, useLogOutUserMutation } from "@/redux/apis/authApis";
+import CustomLoading from "@/Shared/CustomLoading";
 import CustomPopup from "@/Shared/CustomPopup";
 import FileViewer from "@/Shared/FileViewer";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -30,7 +31,7 @@ export default function ProjectProvider({ children }) {
 
   useEffect(() => {
     if (isUserComing) {
-      refetch(); // REFETCH WHEN isUserComing BECAME TRUE
+      getUser.refetch(); // REFETCH WHEN isUserComing BECAME TRUE
     }
   }, [isUserComing]);
 
@@ -75,25 +76,26 @@ export default function ProjectProvider({ children }) {
         cancelButton: "bg-error",
       },
     }).then(async (result) => {
-      if (result.isConfirmed) {
-        await userLogOut()
-          .unwrap()
-          .then((res) => {
-            console.log({ logoutRes: res });
-            if (res?.success) {
-              setIsUserComing(Math.random());
-              Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Logout successful",
-                showConfirmButton: false,
-                timer: 1500,
-              });
-            }
-          })
-          .catch((err) => {
-            errorHandlerV2({ err });
-          });
+      try {
+        if (result.isConfirmed) {
+          // CALL LOGOUT API
+          const res = await userLogOut().unwrap();
+          if (res?.success) {
+            setIsUserComing(Math.random());
+            // NAVIGATE TO LOGIN PAGE
+
+            // SUCCESS MESSAGE
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Logout successful",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
+        }
+      } catch (err) {
+        errorHandlerV2({ err });
       }
     });
   };
@@ -127,6 +129,10 @@ export default function ProjectProvider({ children }) {
     checkedId,
     setCheckedId,
   };
+
+  if (getUser.isLoading || logOutResult.isLoading) {
+    return <CustomLoading />;
+  }
   return (
     <ProjectContext.Provider value={value}>
       <CustomPopup

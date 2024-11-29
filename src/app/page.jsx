@@ -5,7 +5,6 @@ import ProductCard from "@/Shared/ProductCard";
 import HomeSearchWrapper from "@/Shared/SearchFields/HomeSearchWrapper";
 import CategorySection from "./CategorySection";
 import Slider from "./slider";
-import PackageSection from "@/components/layouts/PackageSection";
 
 export default async function page({ searchParams }) {
   console.log({ searchParams });

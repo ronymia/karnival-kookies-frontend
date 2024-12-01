@@ -14,7 +14,11 @@ async function fetchProducts({ searchParams }) {
     }&perPage=${searchParams.perPage || 8}&searchKey=${
       searchParams.searchKey || ""
     }`,
-    { cache: "no-store" } // Ensure server-side fetching
+    {
+      next: {
+        revalidate: 30,
+      },
+    }
   );
   if (!res.ok) throw new Error("Failed to fetch products");
   return res.json();
@@ -22,7 +26,9 @@ async function fetchProducts({ searchParams }) {
 
 async function fetchCategories() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/categories`, {
-    cache: "no-store",
+    next: {
+      revalidate: 30,
+    },
   });
   if (!res.ok) throw new Error("Failed to fetch categories");
   return res.json();
@@ -30,7 +36,9 @@ async function fetchCategories() {
 
 async function fetchPackages() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/packages`, {
-    cache: "no-store",
+    next: {
+      revalidate: 30,
+    },
   });
   if (!res.ok) throw new Error("Failed to fetch packages");
   return res.json();

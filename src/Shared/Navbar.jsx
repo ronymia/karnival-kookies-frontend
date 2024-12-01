@@ -1,5 +1,4 @@
 "use client";
-import { useAuthContext } from "@/Context/ProjectProvider";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,9 +8,9 @@ import { FiAlignLeft, FiX } from "react-icons/fi";
 import { MdChevronRight } from "react-icons/md";
 import { OutsideClickHandler } from "./OutsideClickHandler";
 import { useSelector } from "react-redux";
+import Logout from "@/components/layouts/Logout";
 
 const Navbar = () => {
-  const { logout } = useAuthContext();
   // USER FROM REDUX STORE
   const { user, isAdmin } = useSelector((state) => state.auth);
   const [sidebar, setSidebar] = useState(false);
@@ -234,13 +233,7 @@ const Navbar = () => {
               <CgShoppingCart className={`text-2xl font-bold text-primary`} />
             </div>
             {user ? (
-              <button
-                data-tip={`Sign Out`}
-                onClick={logout}
-                className={`tooltip tooltip-custom-primary tooltip-bottom items-center gap-1 hidden xl:flex px-3  sm:px-6 py-2 sm:py-3 bg-base-200 text-base-300 rounded-full font-bold `}
-              >
-                Logout
-              </button>
+              <Logout />
             ) : (
               <div className={`flex items-center gap-3`}>
                 <button
@@ -358,12 +351,7 @@ const Navbar = () => {
                 </div>
 
                 {user ? (
-                  <button
-                    onClick={logout}
-                    className="w-full mt-4 px-4 py-2 text-sm font-medium bg-transparent text-heading-main hover:text-gray-100 hover:bg-gray-700 rounded-md flex items-center justify-start"
-                  >
-                    Logout
-                  </button>
+                  <Logout />
                 ) : (
                   <div className={`grid grid-cols-2 gap-3`}>
                     <button

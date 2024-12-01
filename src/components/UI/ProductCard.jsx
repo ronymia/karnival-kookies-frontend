@@ -91,6 +91,7 @@ export default function ProductCard({ product }) {
       })
       .catch((err) => {
         setIsAddingToCart(false);
+        errorHandlerV2({ err });
       });
   };
 

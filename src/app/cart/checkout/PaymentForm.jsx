@@ -1,5 +1,4 @@
 import { deleteCartItems, postCheckout } from "@/apis/carts";
-import { useCartContext } from "@/Context/ProjectProvider";
 import Button from "@/Shared/Button";
 import ButtonSpinner from "@/Shared/ButtonSpinner";
 import CustomToaster from "@/Shared/CustomToaster";
@@ -21,10 +20,10 @@ const PaymentForm = ({ formData }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   // USER FROM REDUX STORE
   const { user } = useSelector((state) => state.auth);
-  const { checkoutTotal, selectedItems } = useCartContext();
+  const { totalPrice: checkoutTotal, selectedItems } = useSelector(
+    (state) => state.cart
+  );
   const router = useRouter();
-
-  console.log({ selectedItems });
 
   const handlePayment = async (e) => {
     e.preventDefault();

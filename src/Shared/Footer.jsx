@@ -7,7 +7,7 @@ import NewsletterSection from "@/components/layouts/Newsletter";
 
 const Footer = () => {
   return (
-    <div
+    <footer
       className={`relative md:pt-40 pb-10 flex flex-col justify-center items-center md:block`}
     >
       <div className={`grid grid-cols-1 md:grid-cols-3 gap-10 mx-5 md:mx-10`}>
@@ -102,7 +102,7 @@ const Footer = () => {
         alt="bg footer"
         className={`absolute -top-20 left-0 right-0`}
       />
-    </div>
+    </footer>
   );
 };
 

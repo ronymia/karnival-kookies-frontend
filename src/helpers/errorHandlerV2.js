@@ -20,6 +20,10 @@ export const errorHandlerV2 = ({ err }) => {
         text={`Your access is forbidden to perform this action`}
       />
     ));
+  } else if (err?.status === 409) {
+    toast.custom((t) => (
+      <CustomToaster t={t} type={"error"} text={err?.data?.message} />
+    ));
   } else if (err?.status === 422) {
     err?.data?.errorSources?.forEach((item) => {
       obj[item?.path] = item?.message;

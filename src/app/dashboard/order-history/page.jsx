@@ -46,7 +46,7 @@ const Page = () => {
       .then((res) => {
         if (res?.data) {
           console.log({ res });
-          setData(res);
+          setData(res?.data);
           setIsOrderLoading(false);
         }
       })

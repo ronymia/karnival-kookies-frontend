@@ -1,45 +1,62 @@
 "use client";
-import { useCartContext } from "@/Context/ProjectProvider";
 import Button from "@/Shared/Button";
 import { Elements, PaymentElement } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import PaymentForm from "./PaymentForm";
 import { useRouter } from "next/navigation";
+import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
+import {
+  useCreatePaymentIntentMutation,
+  useLazyPaymentConfigQuery,
+} from "@/redux/apis/paymentApis";
+import { useSelector } from "react-redux";
 
 export default function PaymentStep4({ formData }) {
-  console.log({ formData });
-  const { checkoutTotal } = useCartContext();
+  const { totalPrice: checkoutTotal } = useSelector((state) => state.cart);
   const router = useRouter();
 
   const [stripePromise, setStripePromise] = useState(null);
   const [clientSecret, setClientSecret] = useState("");
+  const [createPaymentIntent, paymentIntentResult] =
+    useCreatePaymentIntentMutation();
+  const [paymentConfig] = useLazyPaymentConfigQuery();
+  // console.log({ clientSecret, stripePromise });
 
-  console.log({ clientSecret, stripePromise });
-
+  //
   useEffect(() => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/carts/payment/config`, {
-        withCredentials: true,
-      })
-      .then(async (res) => {
-        const publishableKey = await res.data.publishableKey;
-        setStripePromise(loadStripe(publishableKey));
-      });
+    const getPaymentConfig = async () => {
+      try {
+        await paymentConfig()
+          .unwrap()
+          .then(async (res) => {
+            console.log({ config: res });
+            const publishableKey = await res?.data?.publishableKey;
+            setStripePromise(loadStripe(publishableKey));
+          });
+      } catch (error) {
+        errorHandlerV2({ err });
+      }
+    };
+    getPaymentConfig();
   }, []);
 
+  //
   useEffect(() => {
-    axios
-      .post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/carts/payment/create-payment-intent`,
-        { price: checkoutTotal },
-        { withCredentials: true }
-      )
-      .then(async (res) => {
-        const clientSecret = await res.data.clientSecret;
-        setClientSecret(clientSecret);
-      });
+    const paymentIntent = async () => {
+      try {
+        await createPaymentIntent({ price: checkoutTotal })
+          .unwrap()
+          .then(async (res) => {
+            console.log({ paymentIntent: res });
+            const clientSecret = await res?.data?.clientSecret;
+            setClientSecret(clientSecret);
+          });
+      } catch (err) {
+        errorHandlerV2({ err });
+      }
+    };
+    paymentIntent();
   }, []);
 
   return (

@@ -1,10 +1,10 @@
-import { useCartContext } from "@/Context/ProjectProvider";
 import Heading from "@/Shared/Heading";
 import ViewField from "@/Shared/ViewField";
 import React from "react";
+import { useSelector } from "react-redux";
 
 const CheckoutStep3 = ({ formData, handleNextStep, handlePrevStep }) => {
-  const { checkoutTotal } = useCartContext();
+  const { totalPrice: checkoutTotal } = useSelector((state) => state.cart);
   return (
     <div className={`space-y-5`}>
       <Heading isSubHeading={false} heading={"Order Informations"} />

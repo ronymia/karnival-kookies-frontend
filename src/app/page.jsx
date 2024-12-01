@@ -7,7 +7,7 @@ import CategorySection from "./CategorySection";
 import Slider from "./slider";
 
 export default async function page({ searchParams }) {
-  console.log({ searchParams });
+  // console.log({ searchParams });
 
   try {
     // Fetch products
@@ -45,11 +45,11 @@ export default async function page({ searchParams }) {
     //
     const packages = await packageResp.json();
 
-    console.log({
-      // productByRandom: productByRandom,
-      // categories: categories?.data[0],
-      packages: [packages],
-    });
+    // console.log({
+    //   productByRandom: productByRandom,
+    //   categories: categories?.data[0],
+    //   packages: packages?.data,
+    // });
 
     const tabs = categories?.data?.map((category) => ({
       id: category?.id,

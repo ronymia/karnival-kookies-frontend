@@ -5,6 +5,7 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import Footer from "@/Shared/Footer";
 import ReduxProvider from "@/redux/ReduxProvider";
+import LiveChat from "@/components/layouts/LiveChat";
 
 const cormorant = Cormorant({ subsets: ["latin"] });
 
@@ -20,18 +21,17 @@ export default function RootLayout({ children }) {
         <ReduxProvider>
           <ProjectProvider>
             {/* NAV BAR */}
-            <div className="absolute top-0 left-0 right-0 z-[100]">
+            <nav className="absolute top-0 left-0 right-0 z-[100]">
               <Navbar />
-            </div>
-
+            </nav>
             {/* MAIN CONTENT */}
-            <div className="">{children}</div>
-
+            <main className="">{children}</main>
             {/* FOOTER */}
-            <div>
+            <>
               <Footer />
-            </div>
-
+            </>
+            {/*  */}
+            <LiveChat />
             {/* NOTIFICATION TOASTER */}
             <Toaster position="top-right" />
           </ProjectProvider>

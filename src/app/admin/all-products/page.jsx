@@ -18,10 +18,13 @@ import { useEffect, useState } from "react";
 import { AiFillEye } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
+import { useSelector } from "react-redux";
 
 const ProductPage = () => {
   const router = useRouter();
   const { popupOption, setPopupOption } = usePopupContext();
+  const { user } = useSelector((state) => state.auth);
+  console.log({ user });
 
   // ALL SELECTED IDs
   const [selectedIds, setSelectedIds] = useState([]);

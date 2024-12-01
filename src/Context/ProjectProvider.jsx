@@ -10,95 +10,46 @@ import PackageView from "@/app/admin/packages/PackageView";
 import UserForm from "@/app/admin/users/UserForm";
 import ViewUser from "@/app/admin/users/ViewUser";
 import CreateAndUpdateReview from "@/app/products/[id]/CreateAndUpdateReview";
-import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
-import { useGetUserQuery, useLogOutUserMutation } from "@/redux/apis/authApis";
+import { useLazyGetUserQuery } from "@/redux/apis/authApis";
 import CustomLoading from "@/Shared/CustomLoading";
 import CustomPopup from "@/Shared/CustomPopup";
 import FileViewer from "@/Shared/FileViewer";
 import { createContext, useContext, useEffect, useState } from "react";
-import Swal from "sweetalert2";
 
 // INITIALIZE PROJECT CONTEXT
 export const ProjectContext = createContext();
 
 //
 export default function ProjectProvider({ children }) {
-  const [userLogOut, logOutResult] = useLogOutUserMutation();
-
   // IF USER RELOAD THEN API WILL BE CALL
+  // const getUser = useGetUserQuery(undefined, { skip: !isUserComing });
   const [isUserComing, setIsUserComing] = useState(null);
-  const getUser = useGetUserQuery();
+  const [isLoading, setIsLoading] = useState(false);
+  const [getUser, getUserResult] = useLazyGetUserQuery();
+  const token = window.localStorage.getItem("token")?.split(" ")[1];
 
   useEffect(() => {
+    if (token) {
+      setIsUserComing(Math.random());
+    }
+  }, []);
+
+  // GET CURRENT USER
+  useEffect(() => {
     if (isUserComing) {
-      getUser.refetch(); // REFETCH WHEN isUserComing BECAME TRUE
+      setIsLoading(true);
+      getUser()
+        .unwrap()
+        .then((data) => {
+          console.log("Fetched user:", data);
+        })
+        .catch((err) => {
+          console.error("Error fetching user:", err);
+          window.localStorage.clear();
+        })
+        .finally(() => setIsLoading(false));
     }
   }, [isUserComing]);
-
-  // CART
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [checkedId, setCheckedId] = useState([]);
-
-  const checkoutTotal = selectedItems?.reduce((accumulator, currentProduct) => {
-    const perProductTotal = currentProduct?.product?.discountPrice
-      ? parseFloat(currentProduct?.product?.discountPrice) *
-        parseInt(currentProduct?.quantity)
-      : parseFloat(currentProduct?.product?.regularPrice) *
-        parseInt(currentProduct?.quantity);
-
-    return accumulator + perProductTotal;
-  }, 0);
-
-  const checkoutQuantity = selectedItems?.reduce(
-    (accumulator, currentProduct) => {
-      return accumulator + parseInt(currentProduct?.quantity);
-    },
-    0
-  );
-
-  console.log({
-    checkoutQuantity,
-    checkoutTotal,
-    selectedItems,
-    setSelectedItems,
-    checkedId,
-    setCheckedId,
-  });
-
-  const logout = async () => {
-    Swal.fire({
-      title: "Are you sure?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Logout!",
-      customClass: {
-        confirmButton: "bg-primary",
-        cancelButton: "bg-error",
-      },
-    }).then(async (result) => {
-      try {
-        if (result.isConfirmed) {
-          // CALL LOGOUT API
-          const res = await userLogOut().unwrap();
-          if (res?.success) {
-            setIsUserComing(Math.random());
-            // NAVIGATE TO LOGIN PAGE
-
-            // SUCCESS MESSAGE
-            Swal.fire({
-              position: "center",
-              icon: "success",
-              title: "Logout successful",
-              showConfirmButton: false,
-              timer: 1500,
-            });
-          }
-        }
-      } catch (err) {
-        errorHandlerV2({ err });
-      }
-    });
-  };
 
   // POPUP OPTIONS
   const [popupOption, setPopupOption] = useState({
@@ -117,22 +68,15 @@ export default function ProjectProvider({ children }) {
     setPopupOption,
 
     // USER
-    logout,
     isUserComing,
     setIsUserComing,
-
-    // CART
-    checkoutQuantity,
-    checkoutTotal,
-    selectedItems,
-    setSelectedItems,
-    checkedId,
-    setCheckedId,
+    isLoading,
   };
 
-  if (getUser.isLoading || logOutResult.isLoading) {
-    return <CustomLoading />;
-  }
+  // if (isLoading) {
+  //   return <CustomLoading />;
+  // }
+
   return (
     <ProjectContext.Provider value={value}>
       <CustomPopup
@@ -180,33 +124,13 @@ export default function ProjectProvider({ children }) {
 
 // AUTH CONTEXT
 export const useAuthContext = () => {
-  const { logout, isUserComing, setIsUserComing } = useContext(ProjectContext);
+  const { isUserComing, setIsUserComing, isLoading } =
+    useContext(ProjectContext);
 
   return {
-    logout,
     isUserComing,
     setIsUserComing,
-  };
-};
-
-// CART CONTEXT
-export const useCartContext = () => {
-  const {
-    checkoutQuantity,
-    checkoutTotal,
-    selectedItems,
-    setSelectedItems,
-    checkedId,
-    setCheckedId,
-  } = useContext(ProjectContext);
-
-  return {
-    checkoutQuantity,
-    checkoutTotal,
-    selectedItems,
-    setSelectedItems,
-    checkedId,
-    setCheckedId,
+    isLoading,
   };
 };
 

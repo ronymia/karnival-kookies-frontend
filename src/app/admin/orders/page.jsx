@@ -1,6 +1,11 @@
 "use client";
-import { getAllCheckoutsForAdmin, updateStatus } from "@/apis/carts";
+import { getAllCheckoutsForAdmin } from "@/apis/carts";
 import { usePopupContext } from "@/Context/ProjectProvider";
+import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
+import {
+  useGetAllOrdersQuery,
+  useOrderStatusChangeMutation,
+} from "@/redux/apis/orderApis";
 import AdminRoute from "@/Routes/AdminRoute";
 import ButtonLoading from "@/Shared/ButtonLoading";
 import CustomLoading from "@/Shared/CustomLoading";
@@ -18,37 +23,24 @@ import { FiX } from "react-icons/fi";
 const Page = () => {
   const router = useRouter();
   const { popupOption, setPopupOption } = usePopupContext();
-
-  // ALL SELECTED IDs
-  const [selectedIds, setSelectedIds] = useState([]);
-  const [isOrderLoading, setIsOrderLoading] = useState(false);
-  console.log({ isOrderLoading });
-  const [data, setData] = useState([]);
-  const [isUpdating, setIsUpdating] = useState();
-  const [statusChangeId, setStatusChangeId] = useState(null);
-
   // FILTERS
   const [filters, setFilters] = useState({
     perPage: 20,
     page: 1,
   });
+  // ALL SELECTED IDs
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [isOrderLoading, setIsOrderLoading] = useState(false);
+  console.log({ isOrderLoading });
+  // const [data, setData] = useState([]);
+  const [isUpdating, setIsUpdating] = useState();
+  const [statusChangeId, setStatusChangeId] = useState(null);
+  const [changeOrderStatus, statusResult] = useOrderStatusChangeMutation();
+  const { data, isError, error, refetch, isLoading } = useGetAllOrdersQuery({});
 
-  useEffect(() => {
-    setIsOrderLoading(true);
-    getAllCheckoutsForAdmin(filters)
-      .then((res) => {
-        if (res?.data) {
-          console.log({ res });
-          setData(res);
-          setIsOrderLoading(false);
-        }
-      })
-      .catch((err) => {
-        setIsOrderLoading(false);
-        console.log({ err });
-        errorHandler({ err, setLoading: setIsOrderLoading });
-      });
-  }, [isUpdating]);
+  if (isError) {
+    errorHandlerV2({ err: error });
+  }
 
   // HANDLE PER PAGE
   const setPerPage = (count) => {
@@ -88,15 +80,22 @@ const Page = () => {
       isMainField: true,
     },
     {
-      name: "Order Id",
-      attribute_name: "orderId",
+      name: "Order ID",
+      attribute_name: "order_id",
       minWidth: 20,
       show: true,
       isMainField: true,
     },
     {
       name: "Email",
-      attribute_name: "userEmail",
+      attribute_name: "email",
+      minWidth: 20,
+      show: true,
+      isMainField: true,
+    },
+    {
+      name: "Products",
+      attribute_name: "products",
       minWidth: 20,
       show: true,
       isMainField: true,
@@ -104,13 +103,13 @@ const Page = () => {
 
     {
       name: "Amount",
-      attribute_name: "totalPayableAmount",
+      attribute_name: "totalAmount",
       minWidth: 20,
       show: true,
     },
     {
       name: "Payment Method",
-      attribute_name: "paymentMethod_table",
+      attribute_name: "payment_method",
       minWidth: 20,
       show: true,
     },
@@ -127,26 +126,27 @@ const Page = () => {
     document.getElementById("dialog_status_change").showModal();
   };
 
-  const [isStatusChanging, setIsStatusChanging] = useState(false);
-  const handleChangeStatus = (status) => {
-    setIsStatusChanging(true);
-    updateStatus({ id: statusChangeId, status })
-      .then((res) => {
-        if (res?.success) {
-          document.getElementById("dialog_status_change").close();
-          setIsUpdating(Math.random());
-          setIsStatusChanging(false);
-        }
-      })
-      .catch((err) => {
-        errorHandler({ err, setLoading: isStatusChanging });
-      });
+  // ORDER STATUS CHANGE
+  const handleChangeStatus = async (status) => {
+    try {
+      const result = await changeOrderStatus({
+        id: statusChangeId,
+        status,
+      }).unwrap();
+      // SUCCESS MESSAGE
+      if (result?.success) {
+        document.getElementById("dialog_status_change").close();
+        setIsUpdating(Math.random());
+      }
+    } catch (err) {
+      errorHandlerV2({ err });
+    }
   };
   const handleCancelBookingModal = () => {
     document.getElementById("dialog_status_change").close();
   };
 
-  if (isOrderLoading) {
+  if (isLoading) {
     return <CustomLoading />;
   }
   return (
@@ -167,15 +167,24 @@ const Page = () => {
             >
               <FiX className="text-primary text-xl" />
             </button>
-            {["pending", "processing", "shipped"]?.map((status, i) => (
+            {[
+              "pending",
+              "confirmed",
+              "preparing",
+              "shipped",
+              "delivered",
+              "cancelled",
+            ]?.map((status, i) => (
               <div
                 key={i}
                 onClick={() => handleChangeStatus(status)}
                 className={`py-3 font-bold ${
                   status === "pending"
                     ? "bg-primary"
-                    : status === "processing"
+                    : status === "preparing"
                     ? "bg-lime-500"
+                    : status === "cancelled"
+                    ? "bg-red-500"
                     : "bg-green-500"
                 } text-base-300 border border-primary rounded-lg cursor-pointer transition-all active:scale-90 flex justify-center items-center`}
               >
@@ -225,7 +234,17 @@ const Page = () => {
             rows={data?.data?.map((d, i) => ({
               ...d,
               count: (filters?.page - 1) * filters?.perPage + i + 1,
-              paymentMethod_table: formatRole(d?.paymentMethod),
+              payment_method: formatRole(d?.payment_method),
+              email: d?.shipping_info?.email,
+              products: d?.order_items
+                .map((item) => item?.product_id)
+                ?.join(","),
+              totalAmount: d?.order_items
+                .reduce(
+                  (total, item) => total ?? 0 + parseFloat(item?.price) ?? 0,
+                  0
+                )
+                .toFixed(2),
               status_table: (
                 <div
                   onClick={() => handleOpenModal(d?.id)}
@@ -234,6 +253,8 @@ const Page = () => {
                       ? "bg-primary"
                       : d?.status === "processing"
                       ? "bg-lime-500"
+                      : d?.status === "cancelled"
+                      ? "bg-red-500"
                       : "bg-green-500"
                   }  shadow-lg shadow-base-100  text-base-300 capitalize flex justify-center items-center`}
                 >

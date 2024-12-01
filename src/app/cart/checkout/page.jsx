@@ -7,9 +7,12 @@ import CheckoutStep2 from "./CheckoutStep2";
 import CheckoutStep3 from "./CheckoutStep3";
 import PaymentStep4 from "./PaymentStep4";
 import PrivateRoute from "@/Routes/PrivateRoute";
+import useCheckoutReducer from "./checkoutReducer";
 
 const Page = () => {
   const [step, setStep] = useState(1);
+
+  const { state, dispatch } = useCheckoutReducer();
 
   const [formData, setFormData] = useState({
     step1: {
@@ -133,12 +136,16 @@ const Page = () => {
               formData={formData}
               validateForm={validateForm1}
               handleNextStep={handleNextStep}
+              state={state}
+              dispatch={dispatch}
             />
           )}
           {step === 2 && (
             <CheckoutStep2
               handleNextStep={handleNextStep}
               handlePrevStep={handlePrevStep}
+              state={state}
+              dispatch={dispatch}
             />
           )}
           {step === 3 && (
@@ -146,6 +153,8 @@ const Page = () => {
               formData={formData}
               handleNextStep={handleNextStep}
               handlePrevStep={handlePrevStep}
+              state={state}
+              dispatch={dispatch}
             />
           )}
           {step === 4 && (
@@ -153,6 +162,8 @@ const Page = () => {
               formData={formData}
               handleNextStep={handleNextStep}
               handlePrevStep={handlePrevStep}
+              state={state}
+              dispatch={dispatch}
             />
           )}
         </div>

@@ -12,7 +12,17 @@ const initialState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: { logout: () => initialState },
+  reducers: {
+    logout: () => initialState,
+    setUser: (state, action) => {
+      state.user = action.payload?.user;
+      state.token = action.payload?.user?.token;
+      state.isAuthenticated = true; // Ensure this is set
+    },
+    setAdmin: (state, action) => {
+      state.isAdmin = action.payload?.user?.role === "admin";
+    },
+  },
   extraReducers: (builder) => {
     // FROM LOGIN
     builder.addMatcher(
@@ -38,7 +48,7 @@ const authSlice = createSlice({
         state.user = action.payload?.user;
         state.isAdmin = action.payload?.user?.role === "admin";
         state.token = action.payload?.user?.token;
-        state.isAuthenticated = true;
+        state.isAuthenticated = true; // Ensure this is set
         window.localStorage.setItem(
           "token",
           `Bearer ${action.payload?.user?.token}`
@@ -61,6 +71,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, setAdmin, setUser } = authSlice.actions;
 
 export default authSlice.reducer;

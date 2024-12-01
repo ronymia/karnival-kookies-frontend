@@ -1,1 +1,1 @@
-export const localDBKey = { authKey: "accessToken" };
+export const localDBKey = { authKey: "accessToken", token: "token" };

@@ -1,5 +1,4 @@
 import { baseApi } from "../baseAPi";
-import { TagTypes } from "../tagTypes";
 
 // BASE URL
 const URL = "/subscribers";

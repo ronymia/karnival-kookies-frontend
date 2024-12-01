@@ -1,6 +1,5 @@
 "use client";
 import { getAllCartItems } from "@/apis/carts";
-import { useCartContext } from "@/Context/ProjectProvider";
 import Button from "@/Shared/Button";
 import CustomLoading from "@/Shared/CustomLoading";
 import CustomToaster from "@/Shared/CustomToaster";
@@ -12,17 +11,19 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import CartItemsCard from "./CartItemsCard";
 import PrivateRoute from "@/Routes/PrivateRoute";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addIds,
+  removeIds,
+  addItems,
+  removeItems,
+} from "@/redux/features/cartSlice";
 
 const Page = () => {
-  const {
-    checkoutQuantity,
-    checkoutTotal,
-    selectedItems,
-    setSelectedItems,
-    checkedId,
-    setCheckedId,
-  } = useCartContext();
+  const appDispatch = useDispatch();
+  const { selectedItems, checkedId, totalQuantity, totalPrice } = useSelector(
+    (state) => state.cart
+  );
 
   const router = useRouter();
   // USER FROM REDUX STORE
@@ -50,21 +51,19 @@ const Page = () => {
 
   //   HANDLE CHECKED
   const handleChecked = (e, item) => {
-    const checked = e?.target?.checked;
-    setSelectedItems((prev) => {
-      if (checked) {
-        setCheckedId([...checkedId, item?.id]);
-        return [...prev, item];
-      } else {
-        setCheckedId(checkedId.filter((i) => i !== item?.id));
-        return prev.filter((i) => i.id !== item?.id);
-      }
-    });
+    const { checked } = e.target;
+    if (checked) {
+      appDispatch(addItems(item));
+      appDispatch(addIds(item?.id));
+    } else {
+      appDispatch(removeItems(item));
+      appDispatch(removeIds(item?.id));
+    }
   };
 
   // HANDLE CHECKOUT
   const handleCheckout = () => {
-    if (checkoutQuantity > 0) {
+    if (totalQuantity > 0) {
       router.push("/cart/checkout");
     } else {
       toast.custom((t) => (
@@ -117,10 +116,10 @@ const Page = () => {
                 Selected for checkout
               </h1>
               <h1 className={`font-medium text-body-sub`}>
-                Quantity: {checkoutQuantity}
+                Quantity: {totalQuantity}
               </h1>
               <h1 className={`font-medium text-body-sub`}>
-                Total: ${checkoutTotal.toFixed(2)}
+                Total: ${totalPrice?.toFixed(2)}
               </h1>
 
               <Button text={"Proceed Checkout"} handler={handleCheckout} />

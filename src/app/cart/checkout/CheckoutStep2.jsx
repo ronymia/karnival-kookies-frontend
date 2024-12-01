@@ -1,10 +1,12 @@
-import { useCartContext } from "@/Context/ProjectProvider";
 import CustomField from "@/Shared/Fields/CustomField";
 import Heading from "@/Shared/Heading";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 const CheckoutStep2 = ({ handleNextStep, handlePrevStep }) => {
-  const { checkoutTotal, selectedItems } = useCartContext();
+  const { totalPrice: checkoutTotal, selectedItems } = useSelector(
+    (state) => state.cart
+  );
   const [isCouponFieldActive, setIsCouponFieldActive] = useState(false);
   return (
     <div className={`space-y-5`}>

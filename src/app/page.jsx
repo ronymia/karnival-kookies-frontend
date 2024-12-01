@@ -7,9 +7,13 @@ import CategorySection from "./CategorySection";
 import Slider from "./slider";
 
 // Fetch Data on the Server
-async function fetchProducts({ page = 1, perPage = 8, searchKey = "" }) {
+async function fetchProducts({ searchParams }) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/get/random?page=${page}&perPage=${perPage}&searchKey=${searchKey}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/get/random?page=${
+      searchParams?.page || 1
+    }&perPage=${searchParams.perPage || 8}&searchKey=${
+      searchParams.searchKey || ""
+    }`,
     { cache: "no-store" } // Ensure server-side fetching
   );
   if (!res.ok) throw new Error("Failed to fetch products");

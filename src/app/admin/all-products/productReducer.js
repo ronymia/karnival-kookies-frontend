@@ -5,12 +5,13 @@ const initialState = {
   id: null /* number */,
   name: "",
   description: "",
-  regularPrice: null /* number  */,
-  discountPrice: null /* number */,
-  category: null /* number */,
-  is_active: 1 /* boolean */,
-  inStock: null /* number */,
+  regular_price: null /* number  */,
+  discount_price: null /* number */,
+  category_id: null /* number */,
+  is_discount_enable: 1 /* boolean */,
+  quantity: null /* number */,
   images: [] /* string[] */,
+  status: "in-stock" /* string */,
 };
 
 // FORM REDUCER

@@ -7,9 +7,37 @@ const URL = "/products";
 export const apis = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // GET ALL PACKAGES
+    getAllClientProducts: builder.query({
+      query: ({
+        page,
+        limit,
+        category_id,
+        fromPrice,
+        toPrice,
+        sortByNewest,
+        HighToLow,
+        lowToHigh,
+        searchTerm,
+      }) => ({
+        url: `${URL}`,
+        params: {
+          page,
+          limit,
+          category_id,
+          fromPrice,
+          toPrice,
+          sortByNewest,
+          HighToLow,
+          lowToHigh,
+          searchTerm,
+        },
+      }),
+      providesTags: (result) => (result ? [TagTypes.products] : []),
+    }),
+    // GET ALL PACKAGES
     getAllProducts: builder.query({
       query: ({ page, perPage, limit }) => ({
-        url: `${URL}`,
+        url: `${URL}/all-products`,
         method: "GET",
         params: { page, limit, perPage },
       }),
@@ -76,4 +104,5 @@ export const {
   useUpdateProductsMutation,
   useDeleteProductsMutation,
   useUploadProductsImagesMutation,
+  useGetAllClientProductsQuery,
 } = apis;

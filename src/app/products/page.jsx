@@ -1,6 +1,4 @@
 "use client";
-import { getAllCategories } from "@/apis/categories";
-import { getAllProducts } from "@/apis/products";
 import CustomLoading from "@/Shared/CustomLoading";
 import FixedBgComponent from "@/Shared/FixedBgComponent";
 import { Pagination } from "@/Shared/Paginations/Pagination";
@@ -11,58 +9,49 @@ import { FiX } from "react-icons/fi";
 import { RiSoundModuleFill } from "react-icons/ri";
 import FilterComponent from "./FilterComponent";
 import ProductCard from "@/components/UI/ProductCard";
+import { useGetAllCategoriesQuery } from "@/redux/apis/categoryApis";
+import { useGetAllClientProductsQuery } from "@/redux/apis/productApis";
 
 const Page = () => {
   const [sidebar, setSidebar] = useState(false);
   const [filters, setFilters] = useState({
+    searchTerm: "",
     page: 1,
-    perPage: 10,
-    category: "",
+    limit: 10,
+    category_id: "",
     fromPrice: "",
     toPrice: "",
     sortByNewest: "",
     sortOrder: "",
+    HighToLow: "",
+    lowToHigh: "",
   });
 
-  const [isCategoryLoading, setIsCategoryLoading] = useState(false);
-  const [categories, seCategories] = useState([]);
-  useEffect(() => {
-    setIsCategoryLoading(true);
-    getAllCategories()
-      .then((res) => {
-        if (res?.data) {
-          seCategories(res);
-          setIsCategoryLoading(false);
-        }
-      })
-      .catch((err) => {
-        setIsCategoryLoading(false);
-        console.log({ err });
-      });
-  }, []);
+  const categories = useGetAllCategoriesQuery({});
+  const products = useGetAllClientProductsQuery({
+    searchTerm: filters?.searchTerm,
+    page: filters?.page,
+    limit: filters?.limit,
+    category_id: filters?.category_id,
+    fromPrice: filters?.fromPrice,
+    toPrice: filters?.toPrice,
+    sortByNewest: filters?.sortByNewest,
+    HighToLow: filters?.HighToLow,
+    lowToHigh: filters?.lowToHigh,
+  });
 
-  const [isProductLoading, setIsProductLoading] = useState(false);
-  const [products, setProducts] = useState([]);
-  console.log({ products });
   useEffect(() => {
-    setIsProductLoading(true);
-    getAllProducts(filters)
-      .then((res) => {
-        console.log({ res });
-        if (res?.data) {
-          setProducts(res);
-          setIsProductLoading(false);
-        }
-      })
-      .catch((err) => {
-        setIsProductLoading(false);
-        console.log({ err });
-      });
+    products.refetch();
   }, [filters]);
 
-  console.log({ productsFromPage: products });
+  console.log({ products: products.data });
+
+  if (categories.isLoading || products.isLoading) {
+    return <CustomLoading />;
+  }
   return (
     <div className={`space-y-20 pb-40`}>
+      {/* PAGE HEADER */}
       <FixedBgComponent
         url="/chocolate_bg.jpg"
         wrapperClass={`pt-60 pb-40`}
@@ -80,9 +69,12 @@ const Page = () => {
           />
         }
       />
+
+      {/* PRODUCTS SHOW */}
       <div
         className={`grid grid-cols-1 lg:grid-cols-3 mx-5 md:mx-10 relative h-full`}
       >
+        {/* FILTERS SIDE BAR */}
         {!sidebar && (
           <div
             className={`fixed lg:hidden left-0 bottom-40 z-[1000] py-4 pr-4 rounded-r-full bg-primary text-2xl text-base-300 font-bold  hover:bg-secondary transition-all active:scale-95`}
@@ -93,6 +85,7 @@ const Page = () => {
             />
           </div>
         )}
+
         <div
           className={`fixed overflow-auto bottom-0 bg-base-100 px-3  lg:static top-0 w-[300px] z-[1000] transition-all  ${
             sidebar ? "left-0" : "-left-[340px]"
@@ -125,25 +118,25 @@ const Page = () => {
               >
                 <button
                   onClick={() => {
-                    setFilters((prev) => ({ ...prev, category: "" }));
+                    setFilters((prev) => ({ ...prev, category_id: "" }));
                   }}
                   className={`text-xl font-medium hover:text-primary p-2 rounded-lg transition-all w-full ${
-                    !filters?.category && "bg-secondary text-primary"
+                    !filters?.category_id && "bg-secondary text-primary"
                   }`}
                 >
                   All
                 </button>
-                {categories?.data?.map((category, i) => (
+                {categories?.data?.data?.map((category, i) => (
                   <button
                     onClick={() => {
                       setFilters((prev) => ({
                         ...prev,
-                        category: category?.id,
+                        category_id: category?.id,
                       }));
                     }}
                     key={i}
                     className={`text-xl font-medium hover:text-primary p-2 rounded-lg transition-all w-full ${
-                      filters?.category === category?.id &&
+                      filters?.category_id === category?.id &&
                       "bg-secondary text-primary"
                     }`}
                   >
@@ -156,7 +149,7 @@ const Page = () => {
         </div>
 
         {/* TABLE PAGE */}
-        {isProductLoading ? (
+        {products.isLoading ? (
           <CustomLoading />
         ) : (
           <div className={`col-span-2 space-y-5`}>
@@ -169,7 +162,7 @@ const Page = () => {
             <div
               className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 `}
             >
-              {products?.data?.map((product, i) => (
+              {products?.data?.data?.map((product, i) => (
                 <ProductCard key={i} product={product} />
               ))}
             </div>

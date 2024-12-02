@@ -1,9 +1,9 @@
 "use client";
-import { getFilterData } from "@/apis/products";
+// import { getFilterData } from "@/apis/products";
 import Button from "@/Shared/Button";
 import React, { useEffect, useState } from "react";
 
-const FilterComponent = ({ filters, setFilters }) => {
+const FilterComponent = ({ filters, setFilters, data }) => {
   const [componentFilters, setComponentFilters] = useState({
     fromPrice: "",
     toPrice: "",
@@ -11,19 +11,21 @@ const FilterComponent = ({ filters, setFilters }) => {
     sortOrder: "",
   });
   console.log({ componentFilters });
-  const [data, setData] = useState({});
+  // const [data, setData] = useState({});
 
-  useEffect(() => {
-    getFilterData()
-      .then((res) => {
-        console.log({ res });
-        setData(res);
-      })
-      .catch((err) => {
-        console.log({ err });
-      });
-  }, []);
+  // useEffect(() => {
+  //   getFilterData()
+  //     .then((res) => {
+  //       console.log({ res });
+  //       setData(res);
+  //     })
+  //     .catch((err) => {
+  //       console.log({ err });
+  //     });
+  // }, []);
+
   console.log({ data });
+
   return (
     <div className="collapse bg-secondary">
       <input type="checkbox" />

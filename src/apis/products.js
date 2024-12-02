@@ -63,17 +63,6 @@ export const getAllProducts = async (filters) => {
   }
 };
 
-export const getFilterData = async () => {
-  try {
-    const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/price-range`
-    );
-    return res?.data;
-  } catch (error) {
-    throw error.response;
-  }
-};
-
 export const getAllIdAndNameOfProducts = async () => {
   try {
     const res = await axios.get(

@@ -16,7 +16,6 @@ import CustomMultiSelect from "@/Shared/Fields/CustomMultiSelect";
 import CustomTextareaField from "@/Shared/Fields/CustomTextAreaField";
 import CustomFileUploader from "@/Shared/Fields/CustomFileUploader";
 import { usePopupContext } from "@/Context/ProjectProvider";
-import CustomLoading from "@/Shared/CustomLoading";
 import { useGetAllCategoriesQuery } from "@/redux/apis/categoryApis";
 import toast from "react-hot-toast";
 
@@ -50,21 +49,21 @@ export default function ProductForm() {
       newErrors.name = "Name is required";
     }
     // VALIDATE PRICE
-    if (!state.regularPrice) {
-      newErrors.regularPrice = "Regular Price is required";
+    if (!state.regular_price) {
+      newErrors.regular_price = "Regular Price is required";
     }
-    if (state.regularPrice < 0) {
-      newErrors.regularPrice = "Regular Price cannot be negative";
+    if (state.regular_price < 0) {
+      newErrors.regular_price = "Regular Price cannot be negative";
     }
-    if (state.discountPrice < 0) {
-      newErrors.discountPrice = "Discount Price cannot be negative";
+    if (state.discount_price < 0) {
+      newErrors.discount_price = "Discount Price cannot be negative";
     }
     // VALIDATE STOCK
-    if (!state.inStock) {
-      newErrors.inStock = "Stock is required";
+    if (!state.quantity) {
+      newErrors.quantity = "Stock is required";
     }
-    if (state.inStock < 0) {
-      newErrors.inStock = "Stock cannot be negative";
+    if (state.quantity < 0) {
+      newErrors.quantity = "Stock cannot be negative";
     }
 
     // VALIDATE IMAGES
@@ -108,11 +107,13 @@ export default function ProductForm() {
         "id",
         "name",
         "description",
-        "regularPrice",
-        "discountPrice",
-        "category",
-        "inStock",
+        "regular_price",
+        "discount_price",
+        "category_id",
+        "quantity",
         "images",
+        "is_discount_enable",
+        "status",
       ].forEach((field) => {
         dispatch({
           type: "UPDATE_FIELD",
@@ -166,6 +167,7 @@ export default function ProductForm() {
   // CREATE FUNCTION
   const createFunction = async (updatedState) => {
     await createProduct(updatedState)
+      .unwrap()
       .then(() => {
         toast.custom((t) => (
           <CustomToaster
@@ -186,6 +188,7 @@ export default function ProductForm() {
   // UPDATE FUNCTION
   const updateFunction = async (updatedState) => {
     await updateProduct(updatedState)
+      .unwrap()
       .then((resp) => {
         console.log({ resp });
         toast.custom((t) => (
@@ -217,6 +220,8 @@ export default function ProductForm() {
     }
   };
 
+  console.log({ state });
+  console.log({ data: popupOption?.data });
   /* *********************************************************
   
   ***************************************************************/
@@ -241,26 +246,26 @@ export default function ProductForm() {
         />
         {/* PRICE */}
         <CustomNumberField
-          value={state?.regularPrice}
+          value={state?.regular_price}
           disable={false}
           fieldClassName={"w-full"}
-          error={errors?.regularPrice}
-          id={"regularPrice"}
+          error={errors?.regular_price}
+          id={"regular_price"}
           label={"Regular Price"}
-          name={"regularPrice"}
+          name={"regular_price"}
           onChange={handleFormChange}
           placeholder={"Regular Price"}
           wrapperClassName={"w-full"}
           required={true}
         />
         <CustomNumberField
-          value={state?.discountPrice}
+          value={state?.discount_price}
           disable={false}
           fieldClassName={"w-full"}
-          error={errors?.discountPrice}
-          id={"discountPrice"}
+          error={errors?.discount_price}
+          id={"discount_price"}
           label={"Discount Price"}
-          name={"discountPrice"}
+          name={"discount_price"}
           onChange={handleFormChange}
           placeholder={"Discount Price"}
           wrapperClassName={"w-full"}
@@ -268,13 +273,13 @@ export default function ProductForm() {
 
         {/* STOCK */}
         <CustomNumberField
-          value={state?.inStock}
+          value={state?.quantity}
           disable={false}
           fieldClassName={"w-full"}
-          error={errors?.inStock}
-          id={"inStock"}
+          error={errors?.quantity}
+          id={"quantity"}
           label={"Stock"}
-          name={"inStock"}
+          name={"quantity"}
           onChange={handleFormChange}
           placeholder={"Stock"}
           wrapperClassName={"w-full"}
@@ -289,17 +294,17 @@ export default function ProductForm() {
           loading={categories.isLoading}
           placeholder="Select Category"
           selectedValues={categories.data?.data?.filter(
-            (item) => item?.id === state?.category
+            (item) => item?.id === state?.category_id
           )}
           setSelectedValues={(e) => {
             // console.log({ e });
             dispatch({
               type: "UPDATE_FIELD",
-              payload: { field: "category", value: e[0]?.id },
+              payload: { field: "category_id", value: e[0]?.id },
             });
           }}
           options={categories.data?.data}
-          error={errors?.category}
+          error={errors?.category_id}
         />
 
         {/* DESCRIPTION */}

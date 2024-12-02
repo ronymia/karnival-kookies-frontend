@@ -1,7 +1,10 @@
 "use client";
-import { getAllCategories } from "@/apis/categories";
-import { deleteProduct, getAllProducts } from "@/apis/products";
 import { usePopupContext } from "@/Context/ProjectProvider";
+import { deleteDataV2 } from "@/helpers/DeleteDataV2";
+import {
+  useDeleteProductsMutation,
+  useGetAllProductsQuery,
+} from "@/redux/apis/productApis";
 import AdminRoute from "@/Routes/AdminRoute";
 import Button from "@/Shared/Button";
 import CustomLoading from "@/Shared/CustomLoading";
@@ -10,28 +13,21 @@ import { Pagination } from "@/Shared/Paginations/Pagination";
 import SplitDescription from "@/Shared/SplitDescription";
 import Table from "@/Shared/Table";
 import TableComponentHeading from "@/Shared/TableComponentHeading";
-import { deleteData } from "@/Utils/deleteData";
-import { errorHandler } from "@/Utils/errorHandler";
 import { getFullImageLink } from "@/Utils/getFullImageLink";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AiFillEye } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
-import { useSelector } from "react-redux";
 
-const ProductPage = () => {
+export default function ProductPage() {
   const router = useRouter();
   const { popupOption, setPopupOption } = usePopupContext();
-  const { user } = useSelector((state) => state.auth);
-  console.log({ user });
 
   // ALL SELECTED IDs
   const [selectedIds, setSelectedIds] = useState([]);
-  const [isProductLoading, setIsProductLoading] = useState(false);
-  console.log({ isProductLoading });
-  const [data, setData] = useState({});
-  const [isUpdating, setIsUpdating] = useState();
+  const { data, isLoading, refetch } = useGetAllProductsQuery({});
+  const [deleteProduct, deleteResult] = useDeleteProductsMutation();
 
   // FILTERS
   const [filters, setFilters] = useState({
@@ -40,40 +36,8 @@ const ProductPage = () => {
   });
 
   useEffect(() => {
-    setIsProductLoading(true);
-    getAllProducts(filters)
-      .then((res) => {
-        if (res?.data) {
-          // console.log({ res });
-          setData(res);
-          setIsProductLoading(false);
-        }
-      })
-      .catch((err) => {
-        setIsProductLoading(false);
-        console.log({ err });
-        errorHandler({ err, setLoading: setIsProductLoading });
-      });
-  }, [isUpdating, filters]);
-
-  const [categories, setCategories] = useState([]);
-  const [isCategoryLoading, setIsCategoryLoading] = useState(false);
-  useEffect(() => {
-    setIsCategoryLoading(true);
-    getAllCategories()
-      .then((res) => {
-        if (res?.data) {
-          console.log({ res });
-          setCategories(res);
-          setIsCategoryLoading(false);
-        }
-      })
-      .catch((err) => {
-        setIsCategoryLoading(false);
-        console.log({ err });
-        errorHandler({ err, setLoading: setIsCategoryLoading });
-      });
-  }, []);
+    refetch();
+  }, [filters]);
 
   // HANDLE PER PAGE
   const setPerPage = (count) => {
@@ -81,14 +45,11 @@ const ProductPage = () => {
   };
 
   // HANDLE DELETE PRODUCT
-  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
   const handleDeleteProduct = (data) => {
-    deleteData({
+    deleteDataV2({
       handler: deleteProduct,
       data,
       deleteMsg: "Product deleted successfully",
-      setIsUpdating,
-      setIsDeleteLoading,
     });
   };
 
@@ -111,7 +72,12 @@ const ProductPage = () => {
       files: images?.map((image) => image?.file),
       fileFolder: "Products",
       onClose: () => {
-        setPopupOption({ ...popupOption, open: false });
+        setPopupOption({
+          ...popupOption,
+          open: false,
+          files: "",
+          fileFolder: "",
+        });
       },
       closeOnDocumentClick: false,
     });
@@ -161,7 +127,6 @@ const ProductPage = () => {
       Icon: MdDelete,
       colorClass: "text-red-600",
       backgroundColorClass: "bg-red-200",
-      isLoading: isDeleteLoading,
       disabledOn: [],
     },
   ]);
@@ -191,14 +156,14 @@ const ProductPage = () => {
     },
     {
       name: "Regular Price",
-      attribute_name: "regularPrice",
+      attribute_name: "regular_price",
       minWidth: 10,
       show: true,
       isMainField: true,
     },
     {
       name: "Discount Price",
-      attribute_name: "discountPrice",
+      attribute_name: "discount_price",
       minWidth: 10,
       show: true,
       isMainField: true,
@@ -211,13 +176,13 @@ const ProductPage = () => {
     },
     {
       name: "Category",
-      attribute_name: "category_table",
+      attribute_name: "category",
       minWidth: 10,
       show: true,
     },
   ]);
 
-  if (isProductLoading) {
+  if (isLoading) {
     return <CustomLoading />;
   }
   return (
@@ -264,7 +229,7 @@ const ProductPage = () => {
             setPageNo={(data) => setFilters({ ...filters, page: data })}
             setPerPage={setPerPage}
             perPage={filters?.perPage}
-            isLoading={isProductLoading}
+            isLoading={isLoading || deleteResult.isLoading}
             rows={data?.data?.map((d, i) => ({
               ...d,
               count: (filters?.page - 1) * filters?.perPage + i + 1,
@@ -284,16 +249,7 @@ const ProductPage = () => {
                 />
               ),
               price: d?.price,
-              category_table: categories?.data?.find(
-                (c) => c?.id === d?.category
-              )?.name,
-              // category_table: (
-              //   <div className={`flex gap-1 capitalize`}>
-              //     {d?.category?.split("_")?.map((c, i) => (
-              //       <span key={i}>{c}</span>
-              //     ))}
-              //   </div>
-              // ),
+              category: d?.category?.name,
             }))}
             actions={actions}
             cols={cols}
@@ -309,6 +265,4 @@ const ProductPage = () => {
       </div>
     </AdminRoute>
   );
-};
-
-export default ProductPage;
+}

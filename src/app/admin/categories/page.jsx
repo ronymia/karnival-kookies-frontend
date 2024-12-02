@@ -1,6 +1,11 @@
 "use client";
-import { deleteCategory, getAllCategories } from "@/apis/categories";
 import { usePopupContext } from "@/Context/ProjectProvider";
+import { deleteDataV2 } from "@/helpers/DeleteDataV2";
+import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
+import {
+  useDeleteCategoryMutation,
+  useGetAllCategoriesQuery,
+} from "@/redux/apis/categoryApis";
 import AdminRoute from "@/Routes/AdminRoute";
 import Button from "@/Shared/Button";
 import CustomLoading from "@/Shared/CustomLoading";
@@ -9,23 +14,17 @@ import { Pagination } from "@/Shared/Paginations/Pagination";
 import SplitDescription from "@/Shared/SplitDescription";
 import Table from "@/Shared/Table";
 import TableComponentHeading from "@/Shared/TableComponentHeading";
-import { deleteData } from "@/Utils/deleteData";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { AiFillEye } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 
-const Page = () => {
+export default function CategoryPage() {
   const router = useRouter();
   const { popupOption, setPopupOption } = usePopupContext();
 
   // ALL SELECTED IDs
   const [selectedIds, setSelectedIds] = useState([]);
-  const [isCategoryLoading, setIsCategoryLoading] = useState(false);
-  console.log({ isCategoryLoading });
-  const [data, setData] = useState([]);
-  const [isUpdating, setIsUpdating] = useState();
 
   // FILTERS
   const [filters, setFilters] = useState({
@@ -33,21 +32,11 @@ const Page = () => {
     page: 1,
   });
 
-  useEffect(() => {
-    setIsCategoryLoading(true);
-    getAllCategories(filters)
-      .then((res) => {
-        if (res?.data) {
-          console.log({ res });
-          setData(res);
-          setIsCategoryLoading(false);
-        }
-      })
-      .catch((err) => {
-        setIsCategoryLoading(false);
-        console.log({ err });
-      });
-  }, [isUpdating]);
+  const { data, isLoading, isError, error } = useGetAllCategoriesQuery({});
+  const [deleteCategory, deleteResult] = useDeleteCategoryMutation();
+  if (isError) {
+    errorHandlerV2({ err: error });
+  }
 
   // HANDLE PER PAGE
   const setPerPage = (count) => {
@@ -57,12 +46,10 @@ const Page = () => {
   // HANDLE DELETE PRODUCT
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
   const handleDeleteProduct = (data) => {
-    deleteData({
+    deleteDataV2({
       handler: deleteCategory,
       data,
       deleteMsg: "Category deleted successfully",
-      setIsUpdating,
-      setIsDeleteLoading,
     });
   };
 
@@ -71,9 +58,8 @@ const Page = () => {
     setPopupOption({
       ...popupOption,
       open: true,
-      type: "category",
+      type: "categoryForm",
       title: "Add New Category",
-      setIsUpdating: setIsUpdating,
     });
   };
   // HANDLE EDIT
@@ -81,10 +67,9 @@ const Page = () => {
     setPopupOption({
       ...popupOption,
       open: true,
-      type: "category",
+      type: "categoryForm",
       title: "Edit Category",
       data: data,
-      setIsUpdating: setIsUpdating,
     });
   };
 
@@ -134,7 +119,7 @@ const Page = () => {
     },
   ]);
 
-  if (isCategoryLoading) {
+  if (isLoading) {
     return <CustomLoading />;
   }
   return (
@@ -182,7 +167,7 @@ const Page = () => {
             setPageNo={(data) => setFilters({ ...filters, page: data })}
             setPerPage={setPerPage}
             perPage={filters?.perPage}
-            isLoading={isCategoryLoading}
+            isLoading={isLoading}
             rows={data?.data?.map((d, i) => ({
               ...d,
               count: (filters?.page - 1) * filters?.perPage + i + 1,
@@ -205,6 +190,4 @@ const Page = () => {
       </div>
     </AdminRoute>
   );
-};
-
-export default Page;
+}

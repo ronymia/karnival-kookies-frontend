@@ -4,17 +4,23 @@ import CustomLoading from "@/Shared/CustomLoading";
 import CustomToaster from "@/Shared/CustomToaster";
 import { useState } from "react";
 import toast from "react-hot-toast";
-
 import ButtonSpinner from "@/Shared/ButtonSpinner";
 import CustomField from "@/Shared/Fields/CustomField";
 import CustomTextareaField from "@/Shared/Fields/CustomTextAreaField";
-import { errorHandler } from "@/Utils/errorHandler";
-import { postCategory, updateCategory } from "@/apis/categories";
-import { uploadProductPic } from "@/apis/products";
+import {
+  useCreateCategoryMutation,
+  useUpdateCategoryMutation,
+} from "@/redux/apis/categoryApis";
+import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
+import { validationErrorHandler } from "@/Utils/validationErrorHandler";
 
-const CreateAndUpdateCategory = () => {
+export default function CategoryForm() {
   const { popupOption } = usePopupContext();
-  // console.log({ popupOption });
+
+  const [createCategory, createResult] = useCreateCategoryMutation();
+  const [updateCategory, updateResult] = useUpdateCategoryMutation();
+
+  //
   const [formData, setFormData] = useState({
     id: popupOption?.data ? popupOption?.data?.id : null,
     name: popupOption?.data ? popupOption?.data?.name : "",
@@ -33,27 +39,8 @@ const CreateAndUpdateCategory = () => {
 
     setErrors(newErrors);
     // console.log({ newErrors });
-    // ValidationErrorHandler(newErrors);
     if (Object.keys(newErrors).length > 0) {
-      toast.custom((t) => (
-        <CustomToaster
-          t={t}
-          type={"error"}
-          errors={{
-            validationErrors: Object.entries(newErrors).map((error, i) => {
-              if (Array.isArray(error[1])) {
-                return Object.entries(error[1][0])
-                  ?.filter((error2, j) => error2[0] !== "id")
-                  ?.map((error2, j) => error2[1])
-                  ?.join(" & ");
-              } else {
-                return error[1];
-              }
-            }),
-          }}
-          text={`You are submitting invalid data`}
-        />
-      ));
+      validationErrorHandler(newErrors);
     }
 
     // Return true if there are no errors
@@ -69,22 +56,10 @@ const CreateAndUpdateCategory = () => {
     }));
   };
 
-  // SUBMIT DATA
-  const handleSubmit = async () => {
-    // Validate form
-    if (validateForm()) {
-      if (popupOption?.data) {
-        updateFunction(formData);
-      } else {
-        createFunction(formData);
-      }
-    }
-  };
-
   const [isCategoryCreating, setIsCategoryCreating] = useState(false);
   const createFunction = (data) => {
-    setIsCategoryCreating(true);
-    postCategory(data)
+    createCategory(data)
+      .unwrap()
       .then((res) => {
         console.log({ res });
         if (res?.success) {
@@ -105,19 +80,16 @@ const CreateAndUpdateCategory = () => {
             images: [],
           });
           popupOption?.onClose();
-          popupOption.setIsUpdating(Math.random());
-          setIsCategoryCreating(false);
         }
       })
       .catch((err) => {
-        errorHandler({ err, setLoading: setIsCategoryCreating });
+        errorHandlerV2({ err });
       });
   };
 
-  const [isCategoryUpdating, setIsCategoryUpdating] = useState(false);
   const updateFunction = (data) => {
-    setIsCategoryUpdating(true);
     updateCategory(data)
+      .unwrap()
       .then((res) => {
         if (res?.success) {
           toast.custom((t) => (
@@ -128,16 +100,30 @@ const CreateAndUpdateCategory = () => {
             />
           ));
           popupOption?.onClose();
-          popupOption.setIsUpdating(Math.random());
-          setIsCategoryUpdating(false);
         }
       })
       .catch((err) => {
-        errorHandler({ err, setLoading: setIsCategoryUpdating });
+        errorHandlerV2({ err });
       });
   };
 
-  if (isCategoryCreating || isCategoryUpdating) {
+  // SUBMIT DATA
+  const handleSubmit = async () => {
+    // Validate form
+    if (validateForm()) {
+      if (popupOption?.data) {
+        updateFunction(formData);
+      } else {
+        createFunction(formData);
+      }
+    }
+  };
+
+  /* *************************************
+  
+  &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*/
+
+  if (createResult.isLoading || updateResult.isLoading) {
     return <CustomLoading />;
   }
   return (
@@ -176,18 +162,18 @@ const CreateAndUpdateCategory = () => {
       </div>
       <div className="flex flex-col md:flex-row w-full justify-center md:justify-end items-center py-5 gap-2">
         <button
-          disabled={isCategoryCreating || isCategoryUpdating}
+          disabled={createResult.isLoading || updateResult.isLoading}
           onClick={popupOption?.onClose}
           className="btn w-full md:btn-wide btn-outline btn-primary"
         >
           Cancel
         </button>
         <button
-          disabled={isCategoryCreating || isCategoryUpdating}
+          disabled={createResult.isLoading || updateResult.isLoading}
           onClick={handleSubmit}
           className="btn w-full md:btn-wide btn-primary"
         >
-          {isCategoryCreating || isCategoryUpdating ? (
+          {createResult.isLoading || updateResult.isLoading ? (
             <ButtonSpinner />
           ) : popupOption?.data ? (
             "Update"
@@ -198,6 +184,4 @@ const CreateAndUpdateCategory = () => {
       </div>
     </div>
   );
-};
-
-export default CreateAndUpdateCategory;
+}

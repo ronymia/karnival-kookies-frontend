@@ -4,7 +4,7 @@ import { TagTypes } from "../tagTypes";
 // BASE URL
 const URL = "/categories";
 
-export const apis = baseApi.injectEndpoints({
+export const categoryApis = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // GET ALL CATEGORY
     getAllCategories: builder.query({
@@ -22,7 +22,6 @@ export const apis = baseApi.injectEndpoints({
         url: `${URL}/${id}`,
         method: "GET",
       }),
-      // providesTags: (result) => (result ? [TagTypes.categories] : []),
       keepUnusedDataFor: 0,
     }),
     // CREATE CATEGORY
@@ -38,7 +37,7 @@ export const apis = baseApi.injectEndpoints({
     updateCategory: builder.mutation({
       query: (payload) => ({
         url: `${URL}`,
-        method: "PATCH",
+        method: "PUT",
         data: payload,
       }),
       invalidatesTags: () => [TagTypes.categories],
@@ -51,23 +50,12 @@ export const apis = baseApi.injectEndpoints({
       }),
       invalidatesTags: () => [TagTypes.categories],
     }),
-    // UPLOAD CATEGORY IMAGES
-    uploadCategoryImages: builder.mutation({
-      query: (payload) => {
-        const formData = new FormData();
-        payload.forEach((file) => {
-          formData.append(`files`, file);
-        });
-
-        return {
-          url: `${URL}/upload-bulk-files`,
-          method: "POST",
-          contentType: `multipart/form-data`,
-          data: formData,
-        };
-      },
-    }),
   }),
 });
 
-export const { useGetAllCategoriesQuery } = apis;
+export const {
+  useGetAllCategoriesQuery,
+  useCreateCategoryMutation,
+  useUpdateCategoryMutation,
+  useDeleteCategoryMutation,
+} = categoryApis;

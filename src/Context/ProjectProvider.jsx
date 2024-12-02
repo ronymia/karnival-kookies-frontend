@@ -1,7 +1,7 @@
 "use client";
 import ProductForm from "@/app/admin/all-products/ProductForm";
 import ViewProduct from "@/app/admin/all-products/ViewProduct";
-import CreateAndUpdateCategory from "@/app/admin/categories/CreateAndUpdateCategory";
+import CategoryForm from "@/app/admin/categories/CategoryForm";
 import CreateAndUpdateDiscountCode from "@/app/admin/dashboard/CreateAndUpdateDiscountCode";
 import CreateAndUpdateFaq from "@/app/admin/faq/CreateAndUpdateFaq";
 import ViewOrder from "@/app/admin/orders/ViewOrder";
@@ -11,7 +11,6 @@ import UserForm from "@/app/admin/users/UserForm";
 import ViewUser from "@/app/admin/users/ViewUser";
 import CreateAndUpdateReview from "@/app/products/[id]/CreateAndUpdateReview";
 import { useLazyGetUserQuery } from "@/redux/apis/authApis";
-import CustomLoading from "@/Shared/CustomLoading";
 import CustomPopup from "@/Shared/CustomPopup";
 import FileViewer from "@/Shared/FileViewer";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -94,7 +93,7 @@ export default function ProjectProvider({ children }) {
             {popupOption?.type === "viewProduct" && <ViewProduct />}
 
             {/* CATEGORIES */}
-            {popupOption?.type === "category" && <CreateAndUpdateCategory />}
+            {popupOption?.type === "categoryForm" && <CategoryForm />}
 
             {/* FAQ */}
             {popupOption?.type === "faq" && <CreateAndUpdateFaq />}

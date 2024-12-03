@@ -8,8 +8,16 @@ export const orderApis = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // GET ALL ORDERS
     getAllOrders: builder.query({
-      query: ({ status, start_date, end_date, page, limit }) => ({
+      query: ({ status, start_date, end_date, page, limit, searchTerm }) => ({
         url: `${URL}`,
+        params: { status, start_date, end_date, page, limit, searchTerm },
+      }),
+      providesTags: (result) => (result ? [TagTypes.orders] : []),
+    }),
+    // GET ALL ORDERS
+    getOrderByUserId: builder.query({
+      query: ({ status, start_date, end_date, page, limit, user_id }) => ({
+        url: `${URL}/${user_id}`,
         params: { status, start_date, end_date, page, limit },
       }),
       providesTags: (result) => (result ? [TagTypes.orders] : []),
@@ -26,4 +34,8 @@ export const orderApis = baseApi.injectEndpoints({
   }),
 });
 
-export const { useOrderStatusChangeMutation, useGetAllOrdersQuery } = orderApis;
+export const {
+  useOrderStatusChangeMutation,
+  useGetAllOrdersQuery,
+  useGetOrderByUserIdQuery,
+} = orderApis;

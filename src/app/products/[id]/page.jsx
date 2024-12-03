@@ -1,27 +1,59 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import FixedBgComponent from "@/Shared/FixedBgComponent";
 import TableComponentHeading from "@/Shared/TableComponentHeading";
-import { formatRole } from "@/Utils/formatRole";
-import { getFullImageLink } from "@/Utils/getFullImageLink";
 import NavigateComponent from "@/Utils/navigate";
 import axios from "axios";
 import ButtonWrapper from "./ButtonWrapper";
-import Quantity from "./Quantity";
 import ProductCard from "@/Shared/ProductCard";
 import Reviews from "./Reviews";
 import Image from "next/image";
 import ImageSlider from "@/components/ImageSlider";
 
-const page = async ({ params }) => {
-  const product = await axios.get(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/${params?.id}`
-  );
-  console.log({ productData: product?.data?.data?.images });
-  const productByCategory = await axios.get(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/category/${product?.data?.data?.category}?limit=4&skip=${product?.data?.data?.id}`
-  );
-  console.log({ product: productByCategory?.data });
+export default function SingleProductPage({ params }) {
+  const [product, setProduct] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+
+        const productUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/${params?.id}`;
+        const productResponse = await axios.get(productUrl);
+
+        const productData = productResponse?.data?.data;
+
+        const relatedProductsUrl = `${
+          process.env.NEXT_PUBLIC_BACKEND_URL
+        }/products?limit=4&page=${1}&category_id=${productData?.category_id}`;
+
+        const [product, relatedProducts] = await Promise.all([
+          axios.get(productUrl),
+          axios.get(relatedProductsUrl),
+        ]);
+
+        setProduct(product.data.data);
+        setRelatedProducts(relatedProducts.data.data || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [params?.id]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div>
+    <section>
+      {/* PAGE HEADER */}
       <FixedBgComponent
         url="/chocolate_bg.jpg"
         wrapperClass={`pt-60 pb-40`}
@@ -43,7 +75,7 @@ const page = async ({ params }) => {
                 {"//"} <span>All Products</span>
               </div>
             }
-            heading={product?.data?.data?.name}
+            heading={product?.name}
           />
         }
       />
@@ -55,60 +87,46 @@ const page = async ({ params }) => {
           width={100}
           height={100}
         />
+
+        {/* CATEGORY NAME */}
         <div
           className={`grid grid-cols-1 md:grid-cols-2 gap-6 py-32 px-5 sm:px-10`}
         >
-          {/* <img
-            width={100}
-            height={100}
-            src={getFullImageLink(
-              product?.data?.data?.images?.length > 0 &&
-                product?.data?.data?.images[0]?.file,
-              "Products"
-            )}
-            alt={product?.data?.data?.name}
-            className={`md:col-span-2 w-full h-full`}
-          /> */}
-          {/* IMAGE SLIDER*/}
+          {/* IMAGE SLIDER */}
           <ImageSlider
-            images={
-              product?.data?.data?.images?.length > 0
-                ? product?.data?.data?.images.map((item) => item?.file)
-                : []
-            }
+            images={product?.images?.length > 0 ? product?.images : []}
           />
 
           {/* PRODUCT DETAILS */}
           <div className={`space-y-5 mt-10`}>
             <p className={`text-primary text-[30px]`}>
-              {product?.data?.data?.discountPrice ? (
+              {product?.discountPrice ? (
                 <span className={`flex gap-3 items-center`}>
                   <del className={`text-base-200`}>
-                    ${product?.data?.data?.regularPrice}
+                    ${product?.regular_price}
                   </del>
                   <span className={`text-red-500`}>
-                    ${product?.data?.data?.discountPrice}
+                    ${product?.discount_price}
                   </span>
                 </span>
               ) : (
                 <span className={`text-primary`}>
-                  ${product?.data?.data?.regularPrice}
+                  ${product?.regular_price}
                 </span>
               )}
             </p>
-            <p>{product?.data?.data?.description?.slice(0, 300)}...</p>
+            <p>{product?.description?.slice(0, 300)}...</p>
             <div className={`space-x-5`}>
-              <ButtonWrapper
-                text={"Add to cart"}
-                id={product?.data?.data?.id}
-              />
+              <ButtonWrapper text={"Add to cart"} id={product?.id} />
             </div>
             <p className={`text-[20px]`}>
               <span className={`text-primary font-bold`}>Category: </span>
-              <span>{product?.data?.data?.categoryName}</span>
+              <span>{product?.category?.name}</span>
             </p>
           </div>
         </div>
+
+        {/* PRODUCT DESCRIPTION */}
         <div
           className={`flex flex-col justify-center items-center gap-10 px-5 sm:px-10 pb-40`}
         >
@@ -117,46 +135,24 @@ const page = async ({ params }) => {
           >
             Description
           </h2>
-          <p>{product?.data?.data?.description}</p>
+          <p>{product?.description}</p>
         </div>
 
         {/* REVIEW */}
         <Reviews />
 
-        {/* RELEATED PRODUCTS */}
+        {/* RELATED PRODUCTS */}
         <div
           className={`flex flex-col justify-center items-center gap-10 px-5 sm:px-10 pb-40`}
         >
           <h2 className={`text-[30px]`}>Related products</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {productByCategory?.data?.data?.map((product) => (
-              <ProductCard key={product?.id} product={product} />
+            {relatedProducts.map((relatedProduct) => (
+              <ProductCard key={relatedProduct?.id} product={relatedProduct} />
             ))}
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
-};
-
-export default page;
-
-// export const getServerSideProps = async (context) => {
-//   const axiosPublic = useAxiosPublic();
-//   const { id } = context.params; // Extract the 'id' from params
-
-//   try {
-//     const res = await axiosPublic.get(`/products/${id}`);
-//     return {
-//       props: {
-//         product: res?.data,
-//       },
-//     };
-//   } catch (error) {
-//     return {
-//       props: {
-//         error: "Product not found",
-//       },
-//     };
-//   }
-// };
+}

@@ -36,10 +36,10 @@ export const apis = baseApi.injectEndpoints({
     }),
     // GET ALL PACKAGES
     getAllProducts: builder.query({
-      query: ({ page, perPage, limit }) => ({
+      query: ({ page, searchTerm, limit }) => ({
         url: `${URL}/all-products`,
         method: "GET",
-        params: { page, limit, perPage },
+        params: { page, limit, searchTerm },
       }),
       providesTags: (result) => (result ? [TagTypes.products] : []),
     }),

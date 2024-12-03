@@ -1,43 +1,52 @@
 "use client";
 import { getProductsByCategory } from "@/apis/products";
+import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
+import { useGetAllClientProductsQuery } from "@/redux/apis/productApis";
 import Button from "@/Shared/Button";
+import CustomLoading from "@/Shared/CustomLoading";
 import Heading from "@/Shared/Heading";
 import ProductCardOnCategory from "@/Shared/ProductCardOnCategory";
 import Tabs from "@/Shared/Tabs";
-import { errorHandler } from "@/Utils/errorHandler";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-const CategorySection = ({ tabs }) => {
+export default function CategorySection({ tabs }) {
   const router = useRouter();
+  // CATEGORY TAB
   const [activeTab, setActiveTab] = useState(tabs[0]?.id);
-  const [data, setData] = useState([]);
-  console.log({ activeTab, data });
 
-  const [isCategoryLoading, setIsCategoryLoading] = useState(false);
+  // GET PRODUCT BY CATEGORY ID
+  const products = useGetAllClientProductsQuery({
+    searchTerm: "",
+    page: 1,
+    limit: 10,
+    category_id: activeTab,
+  });
+
+  // REFETCH IF CATEGORY TAB CHANGE
   useEffect(() => {
-    setIsCategoryLoading(true);
-    getProductsByCategory({ id: activeTab })
-      .then((res) => {
-        if (res?.data) {
-          console.log({ res });
-          setData(res);
-          setIsCategoryLoading(false);
-        }
-      })
-      .catch((err) => {
-        setIsCategoryLoading(false);
-        console.log({ err });
-        errorHandler({ err, isLoading: setIsCategoryLoading });
-      });
+    products.refetch();
   }, [activeTab]);
 
+  // IF ANY ERROR
+  useEffect(() => {
+    if (products.isError) {
+      errorHandlerV2({ err: products.error });
+    }
+  }, []);
+
+  /* *******************************
+  
+  &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*/
+  if (products.isLoading) {
+    return <CustomLoading />;
+  }
   return (
     <div className="space-y-10">
       <Heading subHeading={"Online Store"} heading={"Explore Categories"} />
       <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {data?.data?.map((product) => (
+        {products.data?.data?.map((product) => (
           <ProductCardOnCategory key={product?.id} product={product} />
         ))}
       </div>
@@ -50,6 +59,4 @@ const CategorySection = ({ tabs }) => {
       </div>
     </div>
   );
-};
-
-export default CategorySection;
+}

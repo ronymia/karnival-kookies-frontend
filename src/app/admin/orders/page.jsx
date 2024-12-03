@@ -25,18 +25,22 @@ const Page = () => {
   const { popupOption, setPopupOption } = usePopupContext();
   // FILTERS
   const [filters, setFilters] = useState({
-    perPage: 20,
+    searchTerm: "",
     page: 1,
+    limit: 10,
   });
   // ALL SELECTED IDs
   const [selectedIds, setSelectedIds] = useState([]);
-  const [isOrderLoading, setIsOrderLoading] = useState(false);
-  console.log({ isOrderLoading });
-  // const [data, setData] = useState([]);
+
   const [isUpdating, setIsUpdating] = useState();
   const [statusChangeId, setStatusChangeId] = useState(null);
+
   const [changeOrderStatus, statusResult] = useOrderStatusChangeMutation();
-  const { data, isError, error, refetch, isLoading } = useGetAllOrdersQuery({});
+  const { data, isError, error, refetch, isLoading } = useGetAllOrdersQuery({
+    searchTerm: filters?.searchTerm,
+    page: filters?.page,
+    limit: filters?.limit,
+  });
 
   if (isError) {
     errorHandlerV2({ err: error });
@@ -216,7 +220,8 @@ const Page = () => {
               heading={"All Orders"}
             />
             <p className={``}>
-              Total {data?.total} {data?.total > 1 ? "Orders" : "Order"} Found
+              Total {data?.meta?.total}{" "}
+              {data?.meta?.total > 1 ? "Orders" : "Order"} Found
             </p>
           </div>
         </div>
@@ -225,15 +230,15 @@ const Page = () => {
           <Table
             selectedIds={selectedIds}
             setSelectedIds={setSelectedIds}
-            itemsPerPage={filters?.perPage}
+            itemsPerPage={filters?.limit}
             totalItems={data?.total}
             setPageNo={(data) => setFilters({ ...filters, page: data })}
             setPerPage={setPerPage}
-            perPage={filters?.perPage}
-            isLoading={isOrderLoading}
+            perPage={filters?.limit}
+            isLoading={isLoading}
             rows={data?.data?.map((d, i) => ({
               ...d,
-              count: (filters?.page - 1) * filters?.perPage + i + 1,
+              count: (filters?.page - 1) * filters?.limit + i + 1,
               payment_method: formatRole(d?.payment_method),
               email: d?.shipping_info?.email,
               products: d?.order_items

@@ -44,8 +44,6 @@ const Page = () => {
     products.refetch();
   }, [filters]);
 
-  console.log({ products: products.data });
-
   if (categories.isLoading || products.isLoading) {
     return <CustomLoading />;
   }

@@ -18,8 +18,10 @@ import {
   addItems,
   removeItems,
 } from "@/redux/features/cartSlice";
+import { useGetCartByEmailQuery } from "@/redux/apis/cartApis";
+import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
 
-const Page = () => {
+export default function Page() {
   const appDispatch = useDispatch();
   const { selectedItems, checkedId, totalQuantity, totalPrice } = useSelector(
     (state) => state.cart
@@ -28,26 +30,24 @@ const Page = () => {
   const router = useRouter();
   // USER FROM REDUX STORE
   const { user } = useSelector((state) => state.auth);
-  const [data, setData] = useState([]);
 
   const [isUpdating, setIsUpdating] = useState();
-  const [isCartLoading, setIsCartLoading] = useState(false);
+  const getCartByEmail = useGetCartByEmailQuery(
+    { email: user?.email },
+    { skip: !user?.email }
+  );
 
+  // REFETCH
   useEffect(() => {
-    setIsCartLoading(true);
-    getAllCartItems({ email: user?.email })
-      .then((res) => {
-        if (res?.data) {
-          console.log({ res });
-          setData(res);
-          setIsCartLoading(false);
-        }
-      })
-      .catch((err) => {
-        setIsCartLoading(false);
-        console.log({ err });
-      });
-  }, [user, isUpdating]);
+    getCartByEmail.refetch();
+  }, [isUpdating]);
+
+  // IF ERROR
+  useEffect(() => {
+    if (getCartByEmail.isError) {
+      errorHandlerV2({ err: getCartByEmail.error });
+    }
+  }, []);
 
   //   HANDLE CHECKED
   const handleChecked = (e, item) => {
@@ -76,6 +76,9 @@ const Page = () => {
     }
   };
 
+  if (getCartByEmail.isLoading) {
+    return <CustomLoading />;
+  }
   return (
     <PrivateRoute>
       <div className={`flex flex-col gap-20 mb-60`}>
@@ -96,12 +99,12 @@ const Page = () => {
             />
           }
         />
-        {data?.data?.length > 0 ? (
+        {getCartByEmail.data?.data?.length > 0 ? (
           <div
             className={`grid grid-cols-1 md:grid-cols-3 gap-20 md:gap-6 w-full px-5 md:px-10`}
           >
             <div className={`flex flex-col gap-5 mx-auto md:col-span-2 w-full`}>
-              {data?.data?.map((item) => (
+              {getCartByEmail.data?.data?.map((item) => (
                 <CartItemsCard
                   key={item?.id}
                   item={item}
@@ -150,6 +153,4 @@ const Page = () => {
       </div>
     </PrivateRoute>
   );
-};
-
-export default Page;
+}

@@ -9,9 +9,8 @@ import { TfiEmail } from "react-icons/tfi";
 import ContactForm from "./ContactForm";
 import SupportCard from "./SupportCard";
 
-const page = async () => {
+export default async function FaqPage() {
   const faqs = await getAllFaqs();
-  console.log({ faqs });
 
   const supports = [
     {
@@ -84,6 +83,4 @@ const page = async () => {
       </div>
     </div>
   );
-};
-
-export default page;
+}

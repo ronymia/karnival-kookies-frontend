@@ -26,13 +26,18 @@ export default function ProductPage() {
 
   // ALL SELECTED IDs
   const [selectedIds, setSelectedIds] = useState([]);
-  const { data, isLoading, refetch } = useGetAllProductsQuery({});
   const [deleteProduct, deleteResult] = useDeleteProductsMutation();
 
   // FILTERS
   const [filters, setFilters] = useState({
-    perPage: 20,
+    searchTerm: "",
     page: 1,
+    limit: 10,
+  });
+  const { data, isLoading, refetch } = useGetAllProductsQuery({
+    searchTerm: filters?.searchTerm,
+    page: filters?.page,
+    limit: filters?.limit,
   });
 
   useEffect(() => {
@@ -224,11 +229,11 @@ export default function ProductPage() {
           <Table
             selectedIds={selectedIds}
             setSelectedIds={setSelectedIds}
-            itemsPerPage={filters?.perPage}
+            itemsPerPage={filters?.limit}
             totalItems={data?.meta?.total}
             setPageNo={(data) => setFilters({ ...filters, page: data })}
             setPerPage={setPerPage}
-            perPage={filters?.perPage}
+            perPage={filters?.limit}
             isLoading={isLoading || deleteResult.isLoading}
             rows={data?.data?.map((d, i) => ({
               ...d,

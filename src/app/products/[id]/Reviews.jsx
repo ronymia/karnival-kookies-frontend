@@ -1,6 +1,6 @@
 "use client";
 import { getAllReviews } from "@/apis/reviews";
-import { useAuthContext, usePopupContext } from "@/Context/ProjectProvider";
+import { usePopupContext } from "@/Context/ProjectProvider";
 import Button from "@/Shared/Button";
 import { errorHandler } from "@/Utils/errorHandler";
 import { Rating } from "@smastrom/react-rating";
@@ -11,6 +11,7 @@ import "@smastrom/react-rating/style.css";
 import ReviewCard from "./ReviewCard";
 import { RiEdit2Fill } from "react-icons/ri";
 import { FaStar } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const Reviews = () => {
   const { setPopupOption, popupOption } = usePopupContext();

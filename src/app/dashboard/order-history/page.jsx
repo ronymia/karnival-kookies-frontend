@@ -5,6 +5,8 @@ import {
   updateStatus,
 } from "@/apis/carts";
 import { usePopupContext } from "@/Context/ProjectProvider";
+import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
+import { useGetOrderByUserIdQuery } from "@/redux/apis/orderApis";
 import PrivateRoute from "@/Routes/PrivateRoute";
 import ButtonLoading from "@/Shared/ButtonLoading";
 import CustomLoading from "@/Shared/CustomLoading";
@@ -23,39 +25,32 @@ import { useSelector } from "react-redux";
 const Page = () => {
   const router = useRouter();
   const { popupOption, setPopupOption } = usePopupContext();
-
-  // ALL SELECTED IDs
-  const [selectedIds, setSelectedIds] = useState([]);
-  const [isOrderLoading, setIsOrderLoading] = useState(false);
-
-  const [data, setData] = useState([]);
-  const [isUpdating, setIsUpdating] = useState();
   // USER FROM REDUX STORE
   const { user } = useSelector((state) => state.auth);
-
+  // ALL SELECTED IDs
+  const [selectedIds, setSelectedIds] = useState([]);
   // FILTERS
   const [filters, setFilters] = useState({
-    perPage: 20,
     page: 1,
-    email: user?.email,
+    limit: 20,
+    user_id: user?.id,
   });
 
+  // GET ORDERS BY USER ID
+  const { data, isLoading, isError, error } = useGetOrderByUserIdQuery(
+    {
+      user_id: filters?.user_id,
+      page: filters?.page,
+      limit: filters?.limit,
+    },
+    { skip: !filters?.user_id }
+  );
+
   useEffect(() => {
-    setIsOrderLoading(true);
-    getAllCheckouts(filters)
-      .then((res) => {
-        if (res?.data) {
-          console.log({ res });
-          setData(res?.data);
-          setIsOrderLoading(false);
-        }
-      })
-      .catch((err) => {
-        setIsOrderLoading(false);
-        console.log({ err });
-        errorHandler({ err, setLoading: setIsOrderLoading });
-      });
-  }, [isUpdating]);
+    if (isError) {
+      errorHandlerV2({ err: error });
+    }
+  }, []);
 
   // HANDLE PER PAGE
   const setPerPage = (count) => {
@@ -95,15 +90,22 @@ const Page = () => {
       isMainField: true,
     },
     {
-      name: "Order Id",
-      attribute_name: "orderId",
+      name: "Order ID",
+      attribute_name: "order_id",
       minWidth: 20,
       show: true,
       isMainField: true,
     },
     {
       name: "Email",
-      attribute_name: "userEmail",
+      attribute_name: "email",
+      minWidth: 20,
+      show: true,
+      isMainField: true,
+    },
+    {
+      name: "Products",
+      attribute_name: "products",
       minWidth: 20,
       show: true,
       isMainField: true,
@@ -111,13 +113,13 @@ const Page = () => {
 
     {
       name: "Amount",
-      attribute_name: "totalPayableAmount",
+      attribute_name: "totalAmount",
       minWidth: 20,
       show: true,
     },
     {
       name: "Payment Method",
-      attribute_name: "paymentMethod_table",
+      attribute_name: "payment_method",
       minWidth: 20,
       show: true,
     },
@@ -129,7 +131,7 @@ const Page = () => {
     },
   ]);
 
-  if (isOrderLoading) {
+  if (isLoading) {
     return <CustomLoading />;
   }
   return (
@@ -160,7 +162,8 @@ const Page = () => {
               heading={"All Orders"}
             />
             <p className={``}>
-              Total {data?.total} {data?.total > 1 ? "Orders" : "Order"} Found
+              Total {data?.meta?.total}{" "}
+              {data?.meta?.total > 1 ? "Orders" : "Order"} Found
             </p>
           </div>
         </div>
@@ -169,23 +172,36 @@ const Page = () => {
           <Table
             selectedIds={selectedIds}
             setSelectedIds={setSelectedIds}
-            itemsPerPage={filters?.perPage}
+            itemsPerPage={filters?.limit}
             totalItems={data?.total}
             setPageNo={(data) => setFilters({ ...filters, page: data })}
             setPerPage={setPerPage}
-            perPage={filters?.perPage}
-            isLoading={isOrderLoading}
+            perPage={filters?.limit}
+            isLoading={isLoading}
             rows={data?.data?.map((d, i) => ({
               ...d,
               count: (filters?.page - 1) * filters?.perPage + i + 1,
-              paymentMethod_table: formatRole(d?.paymentMethod),
+              payment_method: formatRole(d?.payment_method),
+              email: d?.shipping_info?.email,
+              products: d?.order_items
+                .map((item) => item?.product_id)
+                ?.join(","),
+              totalAmount: d?.order_items
+                .reduce(
+                  (total, item) => total ?? 0 + parseFloat(item?.price) ?? 0,
+                  0
+                )
+                .toFixed(2),
               status_table: (
                 <div
-                  className={`px-3 py-1 font-bold rounded-full inline-block ${
+                  onClick={() => handleOpenModal(d?.id)}
+                  className={`px-3 py-1 font-bold cursor-pointer rounded-full inline-block ${
                     d?.status === "pending"
                       ? "bg-primary"
                       : d?.status === "processing"
                       ? "bg-lime-500"
+                      : d?.status === "cancelled"
+                      ? "bg-red-500"
                       : "bg-green-500"
                   }  shadow-lg shadow-base-100  text-base-300 capitalize flex justify-center items-center`}
                 >
@@ -206,7 +222,7 @@ const Page = () => {
           <Pagination
             setFilters={setFilters}
             filters={filters}
-            total={data?.total}
+            total={data?.meta?.total}
           />
         </div>
       </div>

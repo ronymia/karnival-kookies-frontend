@@ -4,11 +4,8 @@ import { useEffect, useState } from "react";
 import "../../Shared/sharedAnimation.css";
 import { getFullImageLink } from "@/Utils/getFullImageLink";
 import { useRouter } from "next/navigation";
-import { postCart, updateQuantity } from "@/apis/carts";
-import { useAuthContext } from "@/Context/ProjectProvider";
-import Swal from "sweetalert2";
+import { updateQuantity } from "@/apis/carts";
 import toast from "react-hot-toast";
-import { errorHandler } from "@/Utils/errorHandler";
 import CustomToaster from "@/Shared/CustomToaster";
 import { BsEye } from "react-icons/bs";
 import { FaEye } from "react-icons/fa";
@@ -20,6 +17,7 @@ import {
 } from "@/redux/apis/favoriteProductApis";
 import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
 import { useSelector } from "react-redux";
+import { useAddToCartMutation } from "@/redux/apis/cartApis";
 
 export default function ProductCard({ product }) {
   const router = useRouter();
@@ -27,6 +25,7 @@ export default function ProductCard({ product }) {
   // USER FROM REDUX STORE
   const { user } = useSelector((state) => state.auth);
   const [quantity, setQuantity] = useState(1);
+  const [addToCart, addedResult] = useAddToCartMutation();
 
   // GET DIV WITH
   const useDeviceWidth = () => {
@@ -50,10 +49,13 @@ export default function ProductCard({ product }) {
     return width;
   };
 
-  const [isAddingToCart, setIsAddingToCart] = useState(false);
-  const handleAddToCart = () => {
-    setIsAddingToCart(true);
-    postCart({ productId: product?.id, quantity: quantity, email: user?.email })
+  const handleAddToCart = async () => {
+    await addToCart({
+      product_id: product?.id,
+      quantity: quantity,
+      email: user?.email,
+    })
+      .unwrap()
       .then((res) => {
         if (res?.success) {
           toast.custom((t) => (
@@ -63,34 +65,31 @@ export default function ProductCard({ product }) {
               text={`Product added to the cart successfully`}
             />
           ));
-          setIsAddingToCart(false);
         } else {
-          const info = {
-            exists: res?.exists,
-            quantity: res?.exists?.quantity + res?.quantity,
-          };
-
-          updateQuantity(info)
-            .then((res) => {
-              if (res?.success) {
-                toast.custom((t) => (
-                  <CustomToaster
-                    t={t}
-                    type={"success"}
-                    text={`Product already in the cart but we increased the quantity. You can decrease it from cart`}
-                  />
-                ));
-                setIsAddingToCart(false);
-              }
-            })
-            .catch((err) => {
-              setIsAddingToCart(false);
-              errorHandler({ err, setLoading: setIsAddingToCart });
-            });
+          // const info = {
+          //   exists: res?.exists,
+          //   quantity: res?.exists?.quantity + res?.quantity,
+          // };
+          // updateQuantity(info)
+          //   .then((res) => {
+          //     if (res?.success) {
+          //       toast.custom((t) => (
+          //         <CustomToaster
+          //           t={t}
+          //           type={"success"}
+          //           text={`Product already in the cart but we increased the quantity. You can decrease it from cart`}
+          //         />
+          //       ));
+          //       setIsAddingToCart(false);
+          //     }
+          //   })
+          //   .catch((err) => {
+          //     setIsAddingToCart(false);
+          //     errorHandler({ err, setLoading: setIsAddingToCart });
+          //   });
         }
       })
       .catch((err) => {
-        setIsAddingToCart(false);
         errorHandlerV2({ err });
       });
   };
@@ -180,7 +179,7 @@ export default function ProductCard({ product }) {
           <Button
             text={"Add to cart"}
             handler={handleAddToCart}
-            isLoading={isAddingToCart}
+            isLoading={addedResult.isLoading}
           />
         </div>
       </motion.div>
@@ -199,17 +198,19 @@ export default function ProductCard({ product }) {
         <div className="flex justify-center items-center gap-2">
           <p
             className={`${
-              product?.discountPrice ? "text-base-200" : "text-primary"
+              product?.discount_Price ? "text-base-200" : "text-primary"
             }`}
           >
-            ${product?.regularPrice}
+            ${product?.regular_Price}
           </p>
-          {product?.discountPrice && (
-            <p className={`text-red-500`}>${product?.discountPrice}</p>
+          {product?.discount_Price && (
+            <p className={`text-red-500`}>${product?.discount_Price}</p>
           )}
         </div>
       </motion.div>
-      {product?.discountPrice && (
+
+      {/* DISCOUNT */}
+      {product?.discount_price && (
         <div
           className={`bg-red-500 w-10 h-10 rounded-full text-base-300 font-medium absolute top-3 left-3 flex justify-center items-center text-[12px]`}
         >

@@ -3,29 +3,7 @@ import axios from "axios";
 // ----------------------------------------------------------------
 // UPLOAD API
 // ----------------------------------------------------------------
-export const uploadProductPic = async (files) => {
-  try {
-    const formData = new FormData();
-    files.forEach((file, i) => {
-      formData.append(`files`, file);
-    });
-    console.log(files);
-    const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/upload`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        withCredentials: true,
-      }
-    );
-    return res?.data;
-  } catch (error) {
-    throw error.response;
-  }
-};
+
 // ----------------------------------------------------------------
 // GET API
 // ----------------------------------------------------------------

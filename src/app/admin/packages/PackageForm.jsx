@@ -50,14 +50,14 @@ export default function PackageForm() {
       newErrors.name = "Name is required";
     }
     // VALIDATE PRICE
-    if (!state.regularPrice) {
-      newErrors.regularPrice = "Regular Price is required";
+    if (!state.regular_price) {
+      newErrors.regular_price = "Regular Price is required";
     }
-    if (state.regularPrice < 0) {
-      newErrors.regularPrice = "Regular Price cannot be negative";
+    if (state.regular_price < 0) {
+      newErrors.regular_price = "Regular Price cannot be negative";
     }
-    if (state.discountPrice < 0) {
-      newErrors.discountPrice = "Discount Price cannot be negative";
+    if (state.discount_price < 0) {
+      newErrors.discount_price = "Discount Price cannot be negative";
     }
     // VALIDATE STOCK
     if (!state.inStock) {
@@ -108,8 +108,8 @@ export default function PackageForm() {
         "id",
         "name",
         "description",
-        "regularPrice",
-        "discountPrice",
+        "regular_price",
+        "discount_price",
         "is_active",
         "inStock",
         "images",
@@ -246,13 +246,13 @@ export default function PackageForm() {
       />
       {/* REGULAR PRICE */}
       <CustomNumberField
-        value={state?.regularPrice}
+        value={state?.regular_price}
         disable={false}
         fieldClassName={"w-full"}
-        error={errors?.regularPrice}
-        id={"regularPrice"}
+        error={errors?.regular_price}
+        id={"regular_price"}
         label={"Regular Price"}
-        name={"regularPrice"}
+        name={"regular_price"}
         onChange={handleFormChange}
         placeholder={"Regular Price"}
         wrapperClassName={"w-full"}
@@ -260,13 +260,13 @@ export default function PackageForm() {
       />
       {/* DISCOUNT PRICE */}
       <CustomNumberField
-        value={state?.discountPrice}
+        value={state?.discount_price}
         disable={false}
         fieldClassName={"w-full"}
-        error={errors?.discountPrice}
-        id={"discountPrice"}
+        error={errors?.discount_price}
+        id={"discount_price"}
         label={"Discount Price"}
-        name={"discountPrice"}
+        name={"discount_price"}
         onChange={handleFormChange}
         placeholder={"Discount Price"}
         wrapperClassName={"w-full"}

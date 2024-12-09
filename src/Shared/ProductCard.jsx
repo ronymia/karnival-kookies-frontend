@@ -139,17 +139,17 @@ const ProductCard = ({ product }) => {
         <div className="flex justify-center items-center gap-2">
           <p
             className={`${
-              product?.discountPrice ? "text-base-200" : "text-primary"
+              product?.discount_price ? "text-base-200" : "text-primary"
             }`}
           >
-            ${product?.regularPrice}
+            ${product?.regular_price}
           </p>
-          {product?.discountPrice && (
-            <p className={`text-red-500`}>${product?.discountPrice}</p>
+          {product?.discount_price && (
+            <p className={`text-red-500`}>${product?.discount_price}</p>
           )}
         </div>
       </motion.div>
-      {product?.discountPrice && (
+      {product?.discount_price && (
         <div
           className={`bg-red-500 w-10 h-10 rounded-full text-base-300 font-medium absolute top-3 right-3 flex justify-center items-center text-[12px]`}
         >

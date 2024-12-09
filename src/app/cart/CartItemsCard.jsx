@@ -9,7 +9,12 @@ import { BsTrash } from "react-icons/bs";
 import { deleteCart, updateQuantity } from "@/apis/carts";
 import { errorHandler } from "@/Utils/errorHandler";
 
-const CartItemsCard = ({ item, setIsUpdating, handleChecked, checked }) => {
+export default function CartItemsCard({
+  item,
+  setIsUpdating,
+  handleChecked,
+  checked,
+}) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(item?.quantity);
 
@@ -96,9 +101,9 @@ const CartItemsCard = ({ item, setIsUpdating, handleChecked, checked }) => {
           </h3>
           <h3 className={`text-primary font-[20px]`}>
             ${" "}
-            {item?.product?.discountPrice
-              ? item?.product?.discountPrice
-              : item?.product?.regularPrice}
+            {item?.product?.discount_price
+              ? item?.product?.discount_price
+              : item?.product?.regular_price}
           </h3>
         </div>
         <div
@@ -160,6 +165,4 @@ const CartItemsCard = ({ item, setIsUpdating, handleChecked, checked }) => {
       </div>
     </div>
   );
-};
-
-export default CartItemsCard;
+}

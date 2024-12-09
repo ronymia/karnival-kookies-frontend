@@ -31,6 +31,15 @@ export const orderApis = baseApi.injectEndpoints({
       }),
       invalidatesTags: () => [TagTypes.orders],
     }),
+    // UPDATE ORDER STATUS
+    orderCheckIn: builder.mutation({
+      query: (payload) => ({
+        url: `${URL}/check-in`,
+        method: "POST",
+        data: payload,
+      }),
+      invalidatesTags: () => [TagTypes.orders],
+    }),
   }),
 });
 
@@ -38,4 +47,5 @@ export const {
   useOrderStatusChangeMutation,
   useGetAllOrdersQuery,
   useGetOrderByUserIdQuery,
+  useOrderCheckInMutation,
 } = orderApis;

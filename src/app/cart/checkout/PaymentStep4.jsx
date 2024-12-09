@@ -12,7 +12,7 @@ import {
 } from "@/redux/apis/paymentApis";
 import { useSelector } from "react-redux";
 
-export default function PaymentStep4({ formData }) {
+export default function PaymentStep4({ state }) {
   const { totalPrice: checkoutTotal } = useSelector((state) => state.cart);
   const router = useRouter();
 
@@ -66,7 +66,7 @@ export default function PaymentStep4({ formData }) {
       {clientSecret && stripePromise ? (
         <div className={`bg-base-300 text-base-300 p-10 rounded-lg`}>
           <Elements stripe={stripePromise} options={{ clientSecret }}>
-            <PaymentForm formData={formData} />
+            <PaymentForm state={state} />
           </Elements>
         </div>
       ) : (

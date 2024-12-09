@@ -1,15 +1,17 @@
 "use client";
 import CustomMultiStepper from "@/Shared/steppers/CustomMultiStepper";
 import { validationErrorHandler } from "@/Utils/validationErrorHandler";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CheckoutStep1 from "./CheckoutStep1";
 import CheckoutStep2 from "./CheckoutStep2";
 import CheckoutStep3 from "./CheckoutStep3";
 import PaymentStep4 from "./PaymentStep4";
 import PrivateRoute from "@/Routes/PrivateRoute";
 import useCheckoutReducer from "./checkoutReducer";
+import { useSelector } from "react-redux";
 
 const Page = () => {
+  const { user } = useSelector((state) => state.auth);
   const [step, setStep] = useState(1);
 
   const { state, dispatch } = useCheckoutReducer();
@@ -29,6 +31,19 @@ const Page = () => {
     },
   });
   console.log({ formData });
+
+  // SET USER
+  useEffect(() => {
+    ["email"].forEach((field) => {
+      dispatch({
+        type: "UPDATE_SHIPPING_INFO",
+        payload: {
+          field: field,
+          value: user?.email,
+        },
+      });
+    });
+  }, []);
 
   const handleNextStep = async (validateForm) => {
     if (step === 1) {
@@ -50,38 +65,44 @@ const Page = () => {
     const newErrors = {};
 
     // VALIDATE NAME
-    if (!formData.step1.name || formData.step1.name.trim() === "") {
+    if (!state.shipping_info.name || state.shipping_info.name.trim() === "") {
       newErrors.name = "Name is required";
     }
     // VALIDATE STREET
     if (
-      !formData.step1.streetAddress ||
-      formData.step1.streetAddress.trim() === ""
+      !state.shipping_info.streetAddress ||
+      state.shipping_info.streetAddress.trim() === ""
     ) {
       newErrors.streetAddress = "Street is required";
     }
     // VALIDATE CITY
-    if (!formData.step1.city || formData.step1.city.trim() === "") {
+    if (!state.shipping_info.city || state.shipping_info.city.trim() === "") {
       newErrors.city = "City is required";
     }
     // VALIDATE STATE
-    if (!formData.step1.state || formData.step1.state.trim() === "") {
+    if (!state.shipping_info.state || state.shipping_info.state.trim() === "") {
       newErrors.state = "State is required";
     }
     // VALIDATE COUNTRY
-    if (!formData.step1.country || formData.step1.country.trim() === "") {
+    if (
+      !state.shipping_info.country ||
+      state.shipping_info.country.trim() === ""
+    ) {
       newErrors.country = "Country is required";
     }
     // VALIDATE PHONE
-    if (!formData.step1.phone) {
+    if (!state.shipping_info.phone) {
       newErrors.phone = "Phone is required";
     }
     // VALIDATE EMAIL
-    if (!formData?.step1?.email || formData?.step1?.email.trim() === "") {
+    if (
+      !state?.shipping_info?.email ||
+      state?.shipping_info?.email.trim() === ""
+    ) {
       newErrors.email = "Email is required";
     } else if (
       !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i.test(
-        formData?.step1?.email?.trim()
+        state?.shipping_info?.email?.trim()
       )
     ) {
       newErrors.email = "Invalid email";
@@ -132,8 +153,6 @@ const Page = () => {
             <CheckoutStep1
               errors={errors1}
               setErrors={setErrors1}
-              setFormData={setFormData}
-              formData={formData}
               validateForm={validateForm1}
               handleNextStep={handleNextStep}
               state={state}
@@ -150,16 +169,13 @@ const Page = () => {
           )}
           {step === 3 && (
             <CheckoutStep3
-              formData={formData}
               handleNextStep={handleNextStep}
               handlePrevStep={handlePrevStep}
               state={state}
-              dispatch={dispatch}
             />
           )}
           {step === 4 && (
             <PaymentStep4
-              formData={formData}
               handleNextStep={handleNextStep}
               handlePrevStep={handlePrevStep}
               state={state}

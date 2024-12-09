@@ -55,7 +55,7 @@ const formReducer = (state, action) => {
         ...state,
         shipping_info: {
           ...state.shipping_info,
-          [action.payload.key]: action.payload.value,
+          [action.payload.field]: action.payload.value,
         },
       };
 

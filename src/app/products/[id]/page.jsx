@@ -100,7 +100,7 @@ export default function SingleProductPage({ params }) {
           {/* PRODUCT DETAILS */}
           <div className={`space-y-5 mt-10`}>
             <p className={`text-primary text-[30px]`}>
-              {product?.discountPrice ? (
+              {product?.discount_price ? (
                 <span className={`flex gap-3 items-center`}>
                   <del className={`text-base-200`}>
                     ${product?.regular_price}

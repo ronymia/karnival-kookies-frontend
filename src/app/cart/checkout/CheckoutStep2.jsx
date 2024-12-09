@@ -1,13 +1,12 @@
-import CustomField from "@/Shared/Fields/CustomField";
 import Heading from "@/Shared/Heading";
-import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
 const CheckoutStep2 = ({ handleNextStep, handlePrevStep }) => {
-  const { totalPrice: checkoutTotal, selectedItems } = useSelector(
-    (state) => state.cart
-  );
-  const [isCouponFieldActive, setIsCouponFieldActive] = useState(false);
+  const { totalPrice, selectedItems } = useSelector((state) => state.cart);
+
+  /* ====================================
+  
+  ============================================*/
   return (
     <div className={`space-y-5`}>
       <Heading isSubHeading={false} heading={"Payment Information"} />
@@ -21,17 +20,17 @@ const CheckoutStep2 = ({ handleNextStep, handlePrevStep }) => {
             <p className={` font-semibold`}>{item?.product?.name}</p>{" "}
             <p className={` text-primary`}>
               <span>
-                {item?.product?.discountPrice
-                  ? item?.product?.discountPrice
-                  : item?.product?.regularPrice}{" "}
+                {item?.product?.discount_price
+                  ? item?.product?.discount_price
+                  : item?.product?.regular_price}{" "}
                 * {item?.quantity}
               </span>{" "}
               ={" "}
               <span>
                 $
-                {item?.product?.discountPrice
-                  ? item?.product?.discountPrice * item?.quantity
-                  : item?.product?.regularPrice * item?.quantity}
+                {item?.product?.discount_price
+                  ? item?.product?.discount_price * item?.quantity
+                  : item?.product?.regular_price * item?.quantity}
               </span>
             </p>
           </div>
@@ -42,14 +41,14 @@ const CheckoutStep2 = ({ handleNextStep, handlePrevStep }) => {
         className={`flex justify-between items-center px-5 text-[14px] sm:text-xl`}
       >
         <p className={` font-semibold`}>Subtotal</p>{" "}
-        <p className={` text-primary`}>${checkoutTotal?.toFixed(2)}</p>
+        <p className={` text-primary`}>${totalPrice?.toFixed(2)}</p>
       </div>
       <div className={`border-b-2 border-primary`}></div>
       <div
         className={`flex justify-between items-center px-5 text-[14px] sm:text-xl`}
       >
         <p className={` font-semibold`}>Total</p>{" "}
-        <p className={` text-primary`}>${checkoutTotal?.toFixed(2)}</p>
+        <p className={` text-primary`}>${totalPrice?.toFixed(2)}</p>
       </div>
 
       <div className={`text-xl font-semibold space-y-3`}>

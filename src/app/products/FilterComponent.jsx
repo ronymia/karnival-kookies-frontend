@@ -46,7 +46,7 @@ const FilterComponent = ({ filters, setFilters, data }) => {
               }
               type="range"
               min={0}
-              max={parseFloat(data?.mostExpensiveProduct?.regularPrice)}
+              max={parseFloat(data?.mostExpensiveProduct?.regular_price)}
               value={componentFilters?.fromPrice}
               className="range range-xs range-primary"
             />
@@ -61,8 +61,8 @@ const FilterComponent = ({ filters, setFilters, data }) => {
                 }))
               }
               type="range"
-              min={parseFloat(data?.cheapestProduct?.regularPrice)}
-              max={parseFloat(data?.mostExpensiveProduct?.regularPrice)}
+              min={parseFloat(data?.cheapestProduct?.regular_price)}
+              max={parseFloat(data?.mostExpensiveProduct?.regular_price)}
               value={componentFilters?.toPrice}
               className="range range-xs range-primary"
             />

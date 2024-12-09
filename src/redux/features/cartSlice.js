@@ -6,6 +6,7 @@ const initialState = {
   selectedItems: [],
   checkedId: [],
   payment_method: "",
+  order_items: [],
 };
 
 const cartSlice = createSlice({
@@ -32,9 +33,9 @@ const cartSlice = createSlice({
 
       // Update total price
       state.totalPrice = state.selectedItems.reduce((total, item) => {
-        const price = item?.product?.discountPrice
-          ? parseFloat(item?.product?.discountPrice)
-          : parseFloat(item?.product?.regularPrice);
+        const price = item?.product?.discount_price
+          ? parseFloat(item?.product?.discount_price)
+          : parseFloat(item?.product?.regular_price);
         return total + price * Number(item?.quantity || 0);
       }, 0);
     },
@@ -55,9 +56,9 @@ const cartSlice = createSlice({
 
       // Update total price
       state.totalPrice = state.selectedItems.reduce((total, item) => {
-        const price = item?.product?.discountPrice
-          ? parseFloat(item?.product?.discountPrice)
-          : parseFloat(item?.product?.regularPrice);
+        const price = item?.product?.discount_price
+          ? parseFloat(item?.product?.discount_price)
+          : parseFloat(item?.product?.regular_price);
         return total + price * Number(item?.quantity || 0);
       }, 0);
     },

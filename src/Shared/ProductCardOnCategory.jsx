@@ -15,7 +15,7 @@ const ProductCardOnCategory = ({ product }) => {
         >
           <p className={` `}>{product?.name}</p>
           <div className={`h-[1px] bg-primary mx-3 flex-grow `}></div>
-          <p>{product?.regularPrice}</p>
+          <p>{product?.regular_price}</p>
         </div>
         <p>
           {product?.description

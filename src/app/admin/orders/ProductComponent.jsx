@@ -27,9 +27,9 @@ const ProductComponent = () => {
               </h3>
               <h3 className={`text-primary font-[20px]`}>
                 ${" "}
-                {item?.product?.discountPrice
-                  ? item?.product?.discountPrice
-                  : item?.product?.regularPrice}
+                {item?.product?.discount_price
+                  ? item?.product?.discount_price
+                  : item?.product?.regular_price}
               </h3>
               <h3 className={`text-primary font-[20px]`}>
                 Quantity: {item?.quantity}

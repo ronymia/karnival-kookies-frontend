@@ -1,4 +1,5 @@
 import { deleteCartItems, postCheckout } from "@/apis/carts";
+import { useOrderCheckInMutation } from "@/redux/apis/orderApis";
 import Button from "@/Shared/Button";
 import ButtonSpinner from "@/Shared/ButtonSpinner";
 import CustomToaster from "@/Shared/CustomToaster";
@@ -13,14 +14,15 @@ import toast from "react-hot-toast";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { useSelector } from "react-redux";
 
-const PaymentForm = ({ formData }) => {
+const PaymentForm = ({ state }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [message, setMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [orderCheckIn, checkInResult] = useOrderCheckInMutation();
   // USER FROM REDUX STORE
   const { user } = useSelector((state) => state.auth);
-  const { totalPrice: checkoutTotal, selectedItems } = useSelector(
+  const { totalPrice: total_amount, selectedItems } = useSelector(
     (state) => state.cart
   );
   const router = useRouter();
@@ -31,6 +33,8 @@ const PaymentForm = ({ formData }) => {
       return;
     }
     setIsProcessing(true);
+
+    // GET PAYMENT INTENT
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
@@ -38,6 +42,8 @@ const PaymentForm = ({ formData }) => {
       },
       redirect: "if_required",
     });
+
+    // GO FOR PAYMENT
     if (error) {
       setMessage({ error: error?.message });
     } else if (paymentIntent && paymentIntent.status === "succeeded") {
@@ -46,55 +52,63 @@ const PaymentForm = ({ formData }) => {
       const checkout = {
         userName: user?.name,
         userEmail: user?.email,
-        checkoutInfo: { ...formData?.step1 },
+        checkoutInfo: { ...state?.shipping_info },
         paymentInfo: selectedItems?.map((item) => ({
           productId: item?.productId,
           quantity: item?.quantity,
         })),
         paymentMethod: "stripe",
-        totalPayableAmount: checkoutTotal,
+        totalPayableAmount: total_amount,
         status: "pending",
         isPaid: true,
       };
-      postCheckout(checkout)
-        .then(async (res) => {
-          console.log({ resFromCheckout: res });
-          if (res?.success) {
-            deleteCartItems({
-              ids: selectedItems?.map((item) => item?.id),
-            }).then((res) => {
-              console.log({ resFromDelete: res });
-              if (res?.success) {
-                toast.custom((t) => (
-                  <CustomToaster
-                    t={t}
-                    type={"success"}
-                    text={`Order Placed Successfully`}
-                  />
-                ));
-                router.push("/dashboard/order-history");
-              }
-            });
-          }
-        })
-        .catch((err) => {
-          console.log({ err });
-        });
+      const resp = await orderCheckIn({
+        ...state,
+        payment_method: "stripe",
+        user_id: user?.id,
+        order_items: selectedItems,
+        total_amount: total_amount,
+        payment_info: {
+          payment_method: "card",
+          payment_status: "paid",
+        },
+      }).unwrap();
+      console.log({ resp });
+      // IF SUCCESS
+      if (resp?.success) {
+        toast.custom((t) => (
+          <CustomToaster
+            t={t}
+            type={"success"}
+            text={`Order Placed Successfully`}
+          />
+        ));
+        router.push("/dashboard/order-history");
+      }
     } else {
       setMessage({ error: "Unexpected error" });
     }
     setIsProcessing(false);
   };
+
+  /* ===================================================
+  
+  ==============================================================*/
   return (
     <form className={`space-y-5`} id="payment-form" onSubmit={handlePayment}>
+      {/* PAYMENT FORM */}
       <PaymentElement />
 
+      {/* SUCCESS */}
       {message?.success && (
         <p className="text-green-500 font-bold">{message?.success}</p>
       )}
+      {/* ERROR MESSAGE */}
       {message?.error && (
         <p className="text-red-500 font-bold">{message?.error}</p>
       )}
+
+      {/* PAYMENT BUTTON */}
       <div className={`flex justify-center `}>
         <button
           disabled={isProcessing}

@@ -153,14 +153,14 @@ const PackagePage = () => {
     },
     {
       name: "Regular Price",
-      attribute_name: "regularPrice",
+      attribute_name: "regular_price",
       minWidth: 10,
       show: true,
       isMainField: true,
     },
     {
       name: "Discount Price",
-      attribute_name: "discountPrice",
+      attribute_name: "discount_price",
       minWidth: 10,
       show: true,
       isMainField: true,

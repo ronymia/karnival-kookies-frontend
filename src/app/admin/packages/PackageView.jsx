@@ -13,10 +13,10 @@ export default function PackageView() {
         <ViewField
           title={"Price"}
           value={
-            popupOption?.data?.discountPrice &&
-            popupOption?.data?.discountPrice > 0
-              ? `$${popupOption?.data?.discountPrice}`
-              : `$${popupOption?.data?.regularPrice}`
+            popupOption?.data?.discount_price &&
+            popupOption?.data?.discount_price > 0
+              ? `$${popupOption?.data?.discount_price}`
+              : `$${popupOption?.data?.regular_price}`
           }
         />
         <ViewField title={"Stock Level"} value={popupOption?.data?.inStock} />

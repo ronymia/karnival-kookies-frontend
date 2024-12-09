@@ -7,8 +7,8 @@ import React from "react";
 const CheckoutStep1 = ({
   errors,
   setErrors,
-  formData,
-  setFormData,
+  state,
+  dispatch,
   validateForm,
   handleNextStep,
 }) => {
@@ -16,10 +16,13 @@ const CheckoutStep1 = ({
   const handleFormChange = (e) => {
     const { name, value } = e.target;
 
-    setFormData((prev) => ({
-      ...prev,
-      step1: { ...prev?.step1, [name]: value },
-    }));
+    dispatch({
+      type: "UPDATE_SHIPPING_INFO",
+      payload: {
+        field: name,
+        value: value,
+      },
+    });
     setErrors((prev) => ({
       ...prev,
       [name]: "",
@@ -32,7 +35,7 @@ const CheckoutStep1 = ({
       <div className={`grid grid-cols-1 md:grid-cols-2 gap-5`}>
         {/* NAME */}
         <CustomField
-          value={formData?.step1?.name}
+          value={state?.shipping_info?.name}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.name}
@@ -47,7 +50,7 @@ const CheckoutStep1 = ({
         />
         {/* EMAIL */}
         <CustomField
-          value={formData?.step1?.email}
+          value={state?.shipping_info?.email}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.email}
@@ -63,7 +66,7 @@ const CheckoutStep1 = ({
 
         {/* PHONE */}
         <CustomNumberField
-          value={formData?.step1?.phone}
+          value={state?.shipping_info?.phone}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.phone}
@@ -78,7 +81,7 @@ const CheckoutStep1 = ({
 
         {/* STREET ADDRESS */}
         <CustomField
-          value={formData?.step1?.streetAddress}
+          value={state?.shipping_info?.streetAddress}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.streetAddress}
@@ -93,7 +96,7 @@ const CheckoutStep1 = ({
         />
         {/* APARTMENT */}
         <CustomField
-          value={formData?.step1?.apartment}
+          value={state?.shipping_info?.apartment}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.apartment}
@@ -107,7 +110,7 @@ const CheckoutStep1 = ({
         />
         {/* STATE */}
         <CustomField
-          value={formData?.step1?.state}
+          value={state?.shipping_info?.state}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.state}
@@ -122,7 +125,7 @@ const CheckoutStep1 = ({
         />
         {/* CITY */}
         <CustomField
-          value={formData?.step1?.city}
+          value={state?.shipping_info?.city}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.city}
@@ -137,7 +140,7 @@ const CheckoutStep1 = ({
         />
         {/* COUNTRY */}
         <CustomField
-          value={formData?.step1?.country}
+          value={state?.shipping_info?.country}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.country}
@@ -152,7 +155,7 @@ const CheckoutStep1 = ({
         />
         {/* ZIP */}
         <CustomNumberField
-          value={formData?.step1?.postalCode}
+          value={state?.shipping_info?.postalCode}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.postalCode}
@@ -167,7 +170,7 @@ const CheckoutStep1 = ({
       </div>
       {/* DELIVERY INSTRUCTIONS */}
       <CustomTextareaField
-        value={formData?.step1?.deliveryInstruction}
+        value={state?.shipping_info?.deliveryInstruction}
         disable={false}
         fieldClassName={"w-full"}
         error={errors?.deliveryInstruction}

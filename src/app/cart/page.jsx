@@ -99,6 +99,7 @@ export default function Page() {
             />
           }
         />
+        {/* CARD ITEM */}
         {getCartByEmail.data?.data?.length > 0 ? (
           <div
             className={`grid grid-cols-1 md:grid-cols-3 gap-20 md:gap-6 w-full px-5 md:px-10`}

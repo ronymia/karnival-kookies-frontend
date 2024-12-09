@@ -2,6 +2,7 @@
 
 import { getFullImageLink } from "@/Utils/getFullImageLink";
 import { useState } from "react";
+import MagnifyImage from "./UI/ImageMagnify";
 
 /**
  * Component for rendering a slider of images.
@@ -76,6 +77,11 @@ export default function ImageSlider({ images }) {
 
       {/* Main Slider */}
       <div className="w-full max-w-2xl">
+        <MagnifyImage
+          largeSrc={getFullImageLink(images[0])}
+          smallSrc={getFullImageLink(images[0])}
+          // height={"100%"}
+        />
         <img
           src={getFullImageLink(images[0])}
           alt="Main Slide"

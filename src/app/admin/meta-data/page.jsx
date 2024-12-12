@@ -106,6 +106,13 @@ export default function MetaDataPage() {
       isMainField: true,
     },
     {
+      name: "URL",
+      attribute_name: "url",
+      minWidth: 20,
+      show: true,
+      isMainField: true,
+    },
+    {
       name: "Name",
       attribute_name: "title",
       minWidth: 20,
@@ -171,6 +178,7 @@ export default function MetaDataPage() {
             rows={data?.data?.map((d, i) => ({
               ...d,
               count: (filters?.page - 1) * filters?.limit + i + 1,
+              url: d?.url,
               title: d?.title,
               description_table: (
                 <SplitDescription text={d?.description} length={30} />

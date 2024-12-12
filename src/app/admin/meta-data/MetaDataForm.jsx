@@ -23,6 +23,7 @@ export default function MetaDataForm() {
   //
   const [formData, setFormData] = useState({
     id: popupOption?.data ? popupOption?.data?.id : null,
+    url: popupOption?.data ? popupOption?.data?.url : "",
     title: popupOption?.data ? popupOption?.data?.title : "",
     description: popupOption?.data ? popupOption?.data?.description : "",
   });
@@ -32,6 +33,10 @@ export default function MetaDataForm() {
   const validateForm = () => {
     const newErrors = {};
 
+    // VALIDATE URL
+    if (!formData.url || formData.url.trim() === "") {
+      newErrors.url = "URL is required";
+    }
     // VALIDATE TITLE
     if (!formData.title || formData.title.trim() === "") {
       newErrors.title = "Title is required";
@@ -132,6 +137,21 @@ export default function MetaDataForm() {
   return (
     <div className={` pb-12 h-full flex flex-col justify-between`}>
       <div>
+        {/* URL */}
+        <CustomField
+          value={formData?.url}
+          disable={false}
+          fieldClassName={"w-full"}
+          error={errors?.url}
+          id={"url"}
+          label={"URL"}
+          name={"url"}
+          onChange={handleFormChange}
+          placeholder={"URL"}
+          type={"text"}
+          wrapperClassName={"w-full"}
+          required={true}
+        />
         {/* TITLE */}
         <CustomField
           value={formData?.title}

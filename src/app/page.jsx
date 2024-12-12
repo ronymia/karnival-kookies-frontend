@@ -1,6 +1,3 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import NavigateHandler from "@/Shared/Buttons/NavigateHandler";
 import FixedBgComponent from "@/Shared/FixedBgComponent";
 import Heading from "@/Shared/Heading";
@@ -11,7 +8,7 @@ import Slider from "./slider";
 
 const fetchData = async (url) => {
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) throw new Error(`Failed to fetch ${url}`);
     return res.json();
   } catch (error) {
@@ -20,30 +17,31 @@ const fetchData = async (url) => {
   }
 };
 
-export default function HomePage() {
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [packages, setPackages] = useState([]);
-  const [loading, setLoading] = useState(true);
+export async function generateMetadata({ searchParams }) {
+  const currentUrl = searchParams.url || "";
+  const result = await fetchData(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/meta-data?url=${"home"}`
+  );
+  const metadata = result?.data[0];
 
-  useEffect(() => {
-    const fetchAllData = async () => {
-      setLoading(true);
-      const [productData, categoryData, packageData] = await Promise.all([
-        fetchData(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/get/random?page=1&perPage=8`
-        ),
-        fetchData(`${process.env.NEXT_PUBLIC_BACKEND_URL}/categories`),
-        fetchData(`${process.env.NEXT_PUBLIC_BACKEND_URL}/packages`),
-      ]);
-      setProducts(productData?.data || []);
-      setCategories(categoryData?.data || []);
-      setPackages(packageData?.data || []);
-      setLoading(false);
-    };
+  return {
+    title: metadata?.title || "check",
+    description: metadata?.description || "Default Description",
+  };
+}
 
-    fetchAllData();
-  }, []);
+export default async function HomePage() {
+  const [productData, categoryData, packageData] = await Promise.all([
+    fetchData(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/get/random?page=1&perPage=8`
+    ),
+    fetchData(`${process.env.NEXT_PUBLIC_BACKEND_URL}/categories`),
+    fetchData(`${process.env.NEXT_PUBLIC_BACKEND_URL}/packages`),
+  ]);
+
+  const products = productData?.data || [];
+  const categories = categoryData?.data || [];
+  const packages = packageData?.data || [];
 
   const tabs = categories.map((category) => ({
     id: category.id,
@@ -56,14 +54,6 @@ export default function HomePage() {
     { id: 3, image: "/cherry.jpg" },
     { id: 4, image: "/candy.jpg" },
   ].map((image) => image.image);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        Loading...
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col gap-20 overflow-hidden pb-20">

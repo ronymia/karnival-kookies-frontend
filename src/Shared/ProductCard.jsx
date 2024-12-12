@@ -6,7 +6,6 @@ import "./sharedAnimation.css";
 import { getFullImageLink } from "@/Utils/getFullImageLink";
 import { useRouter } from "next/navigation";
 import { postCart, updateQuantity } from "@/apis/carts";
-import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import CustomToaster from "./CustomToaster";
 import { errorHandler } from "@/Utils/errorHandler";
@@ -99,7 +98,7 @@ const ProductCard = ({ product }) => {
         className="overflow-hidden rotating-background"
       >
         <img
-          className="jump-image"
+          className="jump-image w-[400px] h-[500px]"
           src={getFullImageLink(
             product?.images?.length > 0 && product?.images[0]
           )}

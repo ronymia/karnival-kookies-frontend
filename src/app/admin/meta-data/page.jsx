@@ -1,0 +1,193 @@
+"use client";
+import { usePopupContext } from "@/Context/ProjectProvider";
+import { deleteDataV2 } from "@/helpers/DeleteDataV2";
+import {
+  useDeleteMetaDataMutation,
+  useGetAllMetaDataQuery,
+} from "@/redux/apis/metaDataApis";
+import AdminRoute from "@/Routes/AdminRoute";
+import Button from "@/Shared/Button";
+import CustomLoading from "@/Shared/CustomLoading";
+import Heading from "@/Shared/Heading";
+import { Pagination } from "@/Shared/Paginations/Pagination";
+import SplitDescription from "@/Shared/SplitDescription";
+import Table from "@/Shared/Table";
+import TableComponentHeading from "@/Shared/TableComponentHeading";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { AiFillEye } from "react-icons/ai";
+import { MdDelete } from "react-icons/md";
+import { RiEdit2Fill } from "react-icons/ri";
+
+export default function MetaDataPage() {
+  const router = useRouter();
+  const { popupOption, setPopupOption } = usePopupContext();
+
+  // ALL SELECTED IDs
+  const [selectedIds, setSelectedIds] = useState([]);
+
+  // FILTERS
+  const [filters, setFilters] = useState({
+    page: 1,
+    perPage: 20,
+    limit: 20,
+  });
+
+  //   GET ALL PACKAGES
+  const { data, isLoading } = useGetAllMetaDataQuery({});
+  //   DELETE PACKAGE
+  const [deleteMetaData, deleteResult] = useDeleteMetaDataMutation();
+
+  // HANDLE PER PAGE
+  const setPerPage = (count) => {
+    setFilters({ ...filters, perPage: count, page: 1 });
+  };
+
+  // HANDLE DELETE PRODUCT
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const handleDeleteMetaData = (data) => {
+    deleteDataV2({
+      handler: deleteMetaData,
+      data,
+      deleteMsg: "Package deleted successfully",
+    });
+  };
+
+  // HANDLE CREATE
+  const handleCreate = () => {
+    setPopupOption({
+      ...popupOption,
+      open: true,
+      type: "metaDataForm",
+      title: "Add New Meta Data",
+      //   setIsUpdating: setIsUpdating,
+    });
+  };
+  // HANDLE EDIT
+  const handleEdit = (data) => {
+    setPopupOption({
+      ...popupOption,
+      open: true,
+      type: "metaDataForm",
+      title: "Edit Meta Data",
+      data: data,
+      //   setIsUpdating: setIsUpdating,
+    });
+  };
+
+  // ALL ACTION BUTTONS
+  const [actions, setActions] = useState([
+    {
+      name: "edit",
+      handler: handleEdit,
+      Icon: RiEdit2Fill,
+      colorClass: "text-secondary",
+      backgroundColorClass: "bg-secondary-content",
+      disabledOn: [],
+    },
+    {
+      name: "delete",
+      handler: handleDeleteMetaData,
+      Icon: MdDelete,
+      colorClass: "text-red-600",
+      backgroundColorClass: "bg-red-200",
+      isLoading: deleteResult.isLoading,
+      disabledOn: [],
+    },
+  ]);
+
+  // ALL DISPLAYED COLUMNS IN TABLE
+  const [cols, setCols] = useState([
+    {
+      name: "#",
+      attribute_name: "count",
+      minWidth: 5,
+      show: true,
+      isMainField: true,
+    },
+    {
+      name: "Name",
+      attribute_name: "title",
+      minWidth: 20,
+      show: true,
+      isMainField: true,
+    },
+    {
+      name: "Description",
+      attribute_name: "description_table",
+      minWidth: 30,
+      show: true,
+    },
+  ]);
+
+  if (isLoading) {
+    return <CustomLoading />;
+  }
+  return (
+    <AdminRoute>
+      <div
+        className={`max-w-screen-xl mx-auto px-3 flex flex-col gap-10 pt-36 pb-40`}
+      >
+        <TableComponentHeading
+          routes={
+            <div className={`text-[14px]`}>
+              <span
+                onClick={() => router.push("/")}
+                className={`text-primary cursor-pointer`}
+              >
+                Home
+              </span>{" "}
+              {"//"} <span>All Meta Data</span>
+            </div>
+          }
+          heading={"Meta Data"}
+        />
+        {/* HEADING AREA */}
+        <div className={`flex justify-between items-center`}>
+          <div>
+            <Heading
+              isSubHeading={false}
+              isWave={false}
+              heading={"All Meta Data"}
+            />
+            <p className={``}>
+              Total {data?.meta?.total}{" "}
+              {data?.meta?.total > 1 ? "Meta Data" : "Meta Data"} Found
+            </p>
+          </div>
+          <Button text={"Add"} handler={handleCreate} />
+        </div>
+        {/* TABLE AREA */}
+        <div className={`space-y-10`}>
+          <Table
+            selectedIds={selectedIds}
+            setSelectedIds={setSelectedIds}
+            itemsPerPage={filters?.limit}
+            totalItems={data?.meta?.total}
+            setPageNo={(data) => setFilters({ ...filters, page: data })}
+            setPerPage={setPerPage}
+            perPage={filters?.limit}
+            isLoading={isLoading}
+            rows={data?.data?.map((d, i) => ({
+              ...d,
+              count: (filters?.page - 1) * filters?.limit + i + 1,
+              title: d?.title,
+              description_table: (
+                <SplitDescription text={d?.description} length={30} />
+              ),
+            }))}
+            actions={actions}
+            cols={cols}
+            getFullDataToActionHandler
+          />
+          {/* PAGINATION */}
+          <Pagination
+            setFilters={setFilters}
+            filters={filters}
+            total={data?.meta?.total}
+          />
+        </div>
+      </div>
+    </AdminRoute>
+  );
+}

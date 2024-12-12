@@ -36,6 +36,7 @@ const Navbar = () => {
   };
 
   const menus = [
+    // HOME
     {
       id: 1,
       name: "Home",
@@ -45,6 +46,7 @@ const Navbar = () => {
       permission: true,
       Children: [],
     },
+    // PRODUCTS
     {
       id: 2,
       name: "Product",
@@ -62,6 +64,7 @@ const Navbar = () => {
         },
       ],
     },
+    // ACCOUNT
     {
       id: 3,
       name: "Account",
@@ -86,7 +89,7 @@ const Navbar = () => {
         },
       ],
     },
-
+    // ADMIN
     {
       id: 4,
       name: "Admin Panel",
@@ -95,6 +98,7 @@ const Navbar = () => {
       path: "/admin",
       permission: isAdmin,
       Children: [
+        // ADMIN DASHBOARD
         {
           id: 7,
           name: "Admin Dashboard",
@@ -102,6 +106,7 @@ const Navbar = () => {
           // Icon: <Tag className="h-4 w-4" />,
           handler: handleCloseMenu,
         },
+        // PRODUCTS
         {
           id: 1,
           name: "Products",
@@ -109,6 +114,7 @@ const Navbar = () => {
           // Icon: <Tag className="h-4 w-4" />,
           handler: handleCloseMenu,
         },
+        // CATEGORY
         {
           id: 2,
           name: "Categories",
@@ -116,6 +122,7 @@ const Navbar = () => {
           // Icon: <Tag className="h-4 w-4" />,
           handler: handleCloseMenu,
         },
+        // PACKAGES
         {
           id: 8,
           name: "Packages",
@@ -123,6 +130,7 @@ const Navbar = () => {
           // Icon: <Tag className="h-4 w-4" />,
           handler: handleCloseMenu,
         },
+        // ORDER
         {
           id: 6,
           name: "Orders",
@@ -130,6 +138,7 @@ const Navbar = () => {
           // Icon: <Tag className="h-4 w-4" />,
           handler: handleCloseMenu,
         },
+        // USERS
         {
           id: 5,
           name: "Users",
@@ -137,6 +146,7 @@ const Navbar = () => {
           // Icon: <Tag className="h-4 w-4" />,
           handler: handleCloseMenu,
         },
+        // MESSAGES
         {
           id: 3,
           name: "Messages",
@@ -144,6 +154,7 @@ const Navbar = () => {
           // Icon: <Tag className="h-4 w-4" />,
           handler: handleCloseMenu,
         },
+        // FAQ
         {
           id: 4,
           name: "FAQ",
@@ -151,8 +162,17 @@ const Navbar = () => {
           // Icon: <Tag className="h-4 w-4" />,
           handler: handleCloseMenu,
         },
+        // META DATA
+        {
+          id: 5,
+          name: "Meta Data",
+          path: "/admin/meta-data",
+          // Icon: <Tag className="h-4 w-4" />,
+          handler: handleCloseMenu,
+        },
       ],
     },
+    // CONTACT
     {
       id: 5,
       name: "Contacts",

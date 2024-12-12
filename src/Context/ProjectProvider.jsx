@@ -4,6 +4,7 @@ import ViewProduct from "@/app/admin/all-products/ViewProduct";
 import CategoryForm from "@/app/admin/categories/CategoryForm";
 import CreateAndUpdateDiscountCode from "@/app/admin/dashboard/CreateAndUpdateDiscountCode";
 import CreateAndUpdateFaq from "@/app/admin/faq/CreateAndUpdateFaq";
+import MetaDataForm from "@/app/admin/meta-data/MetaDataForm";
 import ViewOrder from "@/app/admin/orders/ViewOrder";
 import PackageForm from "@/app/admin/packages/PackageForm";
 import PackageView from "@/app/admin/packages/PackageView";
@@ -110,6 +111,9 @@ export default function ProjectProvider({ children }) {
             {/* PACKAGES */}
             {popupOption?.type === "packageForm" && <PackageForm />}
             {popupOption?.type === "packageView" && <PackageView />}
+
+            {/* META DATA */}
+            {popupOption?.type === "metaDataForm" && <MetaDataForm />}
 
             {/* FILE VIEW */}
             {popupOption?.type === "viewFile" && <FileViewer />}

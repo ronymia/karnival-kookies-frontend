@@ -72,7 +72,7 @@ export default function CustomFileUploader({
   };
 
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       <CustomPopup
         popupClasses={`w-[70vw]`}
         popupOption={popupOption}

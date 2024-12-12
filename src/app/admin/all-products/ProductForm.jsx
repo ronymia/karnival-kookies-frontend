@@ -18,6 +18,7 @@ import CustomFileUploader from "@/Shared/Fields/CustomFileUploader";
 import { usePopupContext } from "@/Context/ProjectProvider";
 import { useGetAllCategoriesQuery } from "@/redux/apis/categoryApis";
 import toast from "react-hot-toast";
+import QuillEditor from "@/components/UI/QuillEditor";
 
 export default function ProductForm() {
   // FORM REDUCER
@@ -227,7 +228,7 @@ export default function ProductForm() {
   ***************************************************************/
 
   return (
-    <div className={` pb-12 h-full flex flex-col justify-between`}>
+    <div className={` pb-12 h-full flex flex-col gap-3 justify-between`}>
       <div>
         {/* NAME */}
         <CustomField
@@ -308,24 +309,28 @@ export default function ProductForm() {
         />
 
         {/* DESCRIPTION */}
-        <CustomTextareaField
+        <QuillEditor
           value={state?.description}
           disable={false}
-          fieldClassName={"w-full"}
+          quillClassName={"w-full"}
           error={errors?.description}
           id={"description"}
           label={"Description"}
           name={"description"}
-          onChange={handleFormChange}
+          onChange={(content) => {
+            dispatch({
+              type: "UPDATE_FIELD",
+              payload: { field: "description", value: content },
+            });
+          }}
           placeholder={"Description"}
-          type={"text"}
           wrapperClassName={"w-full"}
         />
         <CustomFileUploader
           details={`Allowed .png, .jpg, .jpeg, .pdf files under 5MB`}
           accept={".png, .jpg, .jpeg, .pdf"}
           files={state?.images}
-          fileFolder={"Products"}
+          label={"Upload Products Images"}
           required
           isFileUploading={uploadResult.isLoading}
           onFileSelect={async (e) => handleFilesUpload(e)}

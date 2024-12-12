@@ -237,7 +237,7 @@ export default function ProductPage() {
             isLoading={isLoading || deleteResult.isLoading}
             rows={data?.data?.map((d, i) => ({
               ...d,
-              count: (filters?.page - 1) * filters?.perPage + i + 1,
+              count: (filters?.page - 1) * filters?.limit + i + 1,
               name: d?.name,
               description_table: (
                 <SplitDescription text={d?.description} length={30} />

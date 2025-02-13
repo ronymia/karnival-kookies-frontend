@@ -56,12 +56,12 @@ export default function CategoryForm() {
     }));
   };
 
-  const createFunction = (data) => {
+  const createFunction = async (data) => {
     createCategory(data)
       .unwrap()
       .then((res) => {
-        console.log({ res });
         if (res?.success) {
+          // SHOW SUCCESS MESSAGE
           toast.custom((t) => (
             <CustomToaster
               t={t}
@@ -70,14 +70,13 @@ export default function CategoryForm() {
             />
           ));
 
+          // CLEAR FORM DATA
           setFormData({
             name: "",
-            price: "",
-            inStock: "",
-            category: "",
             description: "",
-            images: [],
           });
+
+          // CLOSE POPUP
           popupOption?.onClose();
         }
       })
@@ -86,11 +85,12 @@ export default function CategoryForm() {
       });
   };
 
-  const updateFunction = (data) => {
-    updateCategory(data)
+  const updateFunction = async (data) => {
+    await updateCategory(data)
       .unwrap()
       .then((res) => {
         if (res?.success) {
+          //  SHOW SUCCESS MESSAGE
           toast.custom((t) => (
             <CustomToaster
               t={t}
@@ -98,6 +98,14 @@ export default function CategoryForm() {
               text={`Category updated successfully`}
             />
           ));
+
+          // CLEAR FORM DATA
+          setFormData({
+            name: "",
+            description: "",
+          });
+
+          // CLOSE POPUP
           popupOption?.onClose();
         }
       })

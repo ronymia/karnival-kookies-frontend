@@ -18,8 +18,6 @@ const Navbar = () => {
   const [isExpanded, setIsExpanded] = useState("");
   const [openDropdown, seOpenDropdown] = useState(false);
 
-  console.log({ user });
-
   const handleLogin = () => {
     router.push("/login");
     setSidebar(false);

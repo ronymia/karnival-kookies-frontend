@@ -20,11 +20,6 @@ export const ProjectContext = createContext();
 
 //
 export default function ProjectProvider({ children }) {
-  // IF USER RELOAD THEN API WILL BE CALL
-  // const getUser = useGetUserQuery(undefined, { skip: !isUserComing });
-  const [isUserComing, setIsUserComing] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-
   // POPUP OPTIONS
   const [popupOption, setPopupOption] = useState({
     open: false,
@@ -40,16 +35,8 @@ export default function ProjectProvider({ children }) {
     // POPUP OPTIONS
     popupOption,
     setPopupOption,
-
-    // USER
-    isUserComing,
-    setIsUserComing,
-    isLoading,
   };
 
-  // if (!isLoading) {
-  //   return <CustomLoading />;
-  // }
   return (
     <ProjectContext.Provider value={value}>
       <CustomPopup
@@ -100,14 +87,7 @@ export default function ProjectProvider({ children }) {
 
 // AUTH CONTEXT
 export const useAuthContext = () => {
-  const { isUserComing, setIsUserComing, isLoading } =
-    useContext(ProjectContext);
-
-  return {
-    isUserComing,
-    setIsUserComing,
-    isLoading,
-  };
+  return null;
 };
 
 // CONTEXT FOR POPUP

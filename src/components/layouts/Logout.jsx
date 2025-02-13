@@ -1,6 +1,6 @@
 "use client";
 
-import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
+import { errorHandler } from "@/helpers/errorHandler";
 import { useLogOutUserMutation } from "@/redux/apis/authApis";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
@@ -43,13 +43,14 @@ export default function Logout() {
           }
         }
       } catch (err) {
-        errorHandlerV2({ err });
+        errorHandler({ err });
       }
     });
   };
   return (
     <button
       type="button"
+      disabled={logOutResult.isLoading}
       onClick={handleLogout}
       className="w-full px-4 py-2 text-sm font-medium bg-primary text-heading-main hover:text-gray-100 hover:bg-gray-700 rounded-md flex items-center justify-start"
     >

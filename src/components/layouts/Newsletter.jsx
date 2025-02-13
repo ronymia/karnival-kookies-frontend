@@ -62,7 +62,7 @@ const NewsletterSection = () => {
       <form onSubmit={handleOnSubmit} className="mt-6 flex justify-center">
         <input
           type="email"
-          id={`email`}
+          id={`Subscribe-email`}
           name={`email`}
           disabled={subscribeResult.loading}
           placeholder="E-mail"

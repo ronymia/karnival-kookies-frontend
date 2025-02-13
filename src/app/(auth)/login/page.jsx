@@ -1,17 +1,16 @@
 "use client";
-import { jwt } from "@/apis/auth";
-import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
+import VerificationCode from "@/components/layouts/Authentication/VerificationCode";
+import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
+import InputField from "@/components/UI/inputFields/InputField";
+import PasswordField from "@/components/UI/inputFields/PasswordField";
+import { errorHandler } from "@/helpers/errorHandler";
 import { useLoginUserMutation } from "@/redux/apis/authApis";
-import Code from "@/Shared/auth/Code";
-import Button from "@/Shared/Button";
 import CustomLoading from "@/Shared/CustomLoading";
 import CustomToaster from "@/Shared/CustomToaster";
-import CustomField from "@/Shared/Fields/CustomField";
-import CustomPasswordField from "@/Shared/Fields/CustomPasswordField";
-import { errorHandler } from "@/Utils/errorHandler";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { IoIosArrowRoundForward } from "react-icons/io";
 import Swal from "sweetalert2";
 
 export default function LoginPage() {
@@ -101,27 +100,23 @@ export default function LoginPage() {
     await login(formData)
       .unwrap()
       .then((res) => {
-        if (!res?.data?.user?.isVerified) {
+        // IF USER EMAIL UNVERIFIED
+        if (!res?.data?.user?.is_email_verified) {
           setCurrentTab("code");
           return;
         } else if (res?.success) {
-          jwt({ email: res?.data?.user?.email }).then((token) => {
-            console.log({ token });
-            if (token?.success) {
-              setFormData({
-                email: "",
-                password: "",
-              });
-              Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Login Successfully",
-                showConfirmButton: false,
-                timer: 1500,
-              });
-              router.push("/");
-            }
+          setFormData({
+            email: "",
+            password: "",
           });
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Login Successfully",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          router.push("/");
         }
       })
       .catch((err) => {
@@ -135,19 +130,18 @@ export default function LoginPage() {
 
           setErrors(obj);
         }
-        errorHandlerV2({ err });
+        errorHandler({ err });
       });
   };
 
   //   SUBMIT DATA
-  const handleSubmit = async () => {
-    try {
-      // Validate form
-      const isValid = await validateForm();
-      if (isValid) {
-        createFunction(formData);
-      }
-    } catch (err) {}
+  const handleOnSubmit = async (event) => {
+    event.preventDefault();
+    // Validate form
+    const isValid = validateForm();
+    if (isValid) {
+      await createFunction(formData);
+    }
   };
 
   /* **********************************************
@@ -158,28 +152,39 @@ export default function LoginPage() {
   } else {
     return (
       <>
+        {/* <div className="w-full pt-32">
+          <Table />
+        </div> */}
+
+        {/* <------------------------------------------ LOGIN ------------------------------------------> */}
         {currentTab === "login" && (
           <div className={` block overflow-auto pt-32 pb-60 space-y-10`}>
             <h2 className={`text-xl font-bold text-center`}>Login</h2>
             {/* LOGIN AREA */}
-            <div className={`max-w-[360px] mx-auto flex flex-col gap-6`}>
+            <form
+              noValidate
+              onSubmit={handleOnSubmit}
+              className={`max-w-[360px] mx-auto flex flex-col gap-6`}
+            >
               <h2 className={`text-xl font-bold`}>Welcome Back</h2>
               {/* EMAIL */}
-              <CustomField
+              <InputField
                 value={formData?.email}
                 disable={false}
                 fieldClassName={"w-full"}
                 error={errors?.email}
                 id={"email"}
                 name={"email"}
+                label={"Email"}
                 onChange={handleFormChange}
                 placeholder={"Email"}
                 type={"email"}
                 wrapperClassName={"w-full"}
                 required={true}
               />
+
               {/* PASSWORD */}
-              <CustomPasswordField
+              <PasswordField
                 required={true}
                 id="password"
                 onChange={handleFormChange}
@@ -189,6 +194,7 @@ export default function LoginPage() {
                 error={errors?.password}
                 wrapperClassName={`w-full`}
                 fieldClassName={`w-full`}
+                label={`Password`}
               />
               {/* FORGOT PASSWORD */}
               <p
@@ -197,13 +203,29 @@ export default function LoginPage() {
               >
                 Forgot password?
               </p>
-              <div className={`flex justify-center items-center`}>
-                <Button
-                  text={"Login"}
-                  handler={handleSubmit}
-                  isLoading={loginResult.isLoading}
-                />
+
+              {/* <------------------------------------------ SUBMIT BUTTON ------------------------------------------> */}
+              <div className={`flex justify-center items-center group`}>
+                <button
+                  type={`submit`}
+                  className={`text-primary border border-primary px-5 py-3 rounded-full flex items-center gap-2 group-hover:border-base-300 transition-[border]`}
+                >
+                  {loginResult.isLoading ? (
+                    <ButtonSpinner />
+                  ) : (
+                    <>
+                      <p className="group-hover:text-base-300 transition-[color] duration-700">
+                        {`Login`}
+                      </p>
+                      {
+                        <IoIosArrowRoundForward className="group-hover:text-base-300 group-hover:translate-x-2  transition-transform duration-300" />
+                      }
+                    </>
+                  )}
+                </button>
               </div>
+
+              {/* <------------------------------------------ CREATE ACCOUNT ------------------------------------------> */}
               <div className={`font-bold text-heading-main pb-10`}>
                 <span>First time here? </span>{" "}
                 <span
@@ -213,10 +235,12 @@ export default function LoginPage() {
                   Create account
                 </span>
               </div>
-            </div>
+            </form>
           </div>
         )}
-        {currentTab === "code" && <Code data={formData} />}
+
+        {/* <------------------------------------------ EMAIL VERIFICATION CODE ------------------------------------------> */}
+        {currentTab === "code" && <VerificationCode data={formData} />}
       </>
     );
   }

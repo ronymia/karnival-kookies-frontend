@@ -89,7 +89,8 @@ export const jwt = async (user) => {
 export const verifyUser = async ({ email, otp }) => {
   try {
     const res = await axios.put(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/user/verify/${email}?otp=${otp}`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1.0/auth/verify-user-email`,
+      { email, otp }
     );
     return res?.data;
   } catch (error) {

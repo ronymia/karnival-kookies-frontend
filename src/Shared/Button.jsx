@@ -8,10 +8,12 @@ const Button = ({
   parentClasses = "inline-block",
   handler,
   isLoading = false,
+  buttonType = "button",
 }) => {
   return (
     <div className={`${parentClasses} group`}>
       <button
+        type={buttonType}
         onClick={handler}
         className={`text-primary border border-primary ${paddings} rounded-full flex items-center gap-2 group-hover:border-base-300 transition-[border]`}
       >

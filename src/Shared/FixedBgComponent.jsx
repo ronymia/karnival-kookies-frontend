@@ -1,4 +1,5 @@
 "use client";
+import PropTypes from "prop-types";
 import React from "react";
 
 const FixedBgComponent = ({
@@ -19,6 +20,13 @@ const FixedBgComponent = ({
       </div>
     </div>
   );
+};
+
+// PROPS TYPE DEFINE
+FixedBgComponent.propTypes = {
+  component: PropTypes.element.isRequired,
+  url: PropTypes.string,
+  wrapperClass: PropTypes.string,
 };
 
 export default FixedBgComponent;

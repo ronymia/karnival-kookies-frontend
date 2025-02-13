@@ -2,16 +2,16 @@ import { baseApi } from "../baseAPi";
 import { TagTypes } from "../tagTypes";
 
 // BASE URL
-const URL = "/categories";
+const URL = "/v1.0/categories";
 
 export const categoryApis = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // GET ALL CATEGORY
     getAllCategories: builder.query({
-      query: ({ page, perPage, limit }) => ({
+      query: (arg) => ({
         url: `${URL}`,
         method: "GET",
-        params: { page, limit, perPage },
+        params: arg,
       }),
       providesTags: (result) => (result ? [TagTypes.categories] : []),
       keepUnusedDataFor: 0,

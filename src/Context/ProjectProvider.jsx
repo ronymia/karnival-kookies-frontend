@@ -11,10 +11,9 @@ import PackageView from "@/app/admin/packages/PackageView";
 import UserForm from "@/app/admin/users/UserForm";
 import ViewUser from "@/app/admin/users/ViewUser";
 import CreateAndUpdateReview from "@/app/products/[id]/CreateAndUpdateReview";
-import { useLazyGetUserQuery } from "@/redux/apis/authApis";
 import CustomPopup from "@/Shared/CustomPopup";
 import FileViewer from "@/Shared/FileViewer";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 // INITIALIZE PROJECT CONTEXT
 export const ProjectContext = createContext();
@@ -25,31 +24,6 @@ export default function ProjectProvider({ children }) {
   // const getUser = useGetUserQuery(undefined, { skip: !isUserComing });
   const [isUserComing, setIsUserComing] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [getUser, getUserResult] = useLazyGetUserQuery();
-  const token = window.localStorage.getItem("token")?.split(" ")[1];
-
-  useEffect(() => {
-    if (token) {
-      setIsUserComing(Math.random());
-    }
-  }, []);
-
-  // GET CURRENT USER
-  useEffect(() => {
-    if (isUserComing) {
-      setIsLoading(true);
-      getUser()
-        .unwrap()
-        .then((data) => {
-          console.log("Fetched user:", data);
-        })
-        .catch((err) => {
-          console.error("Error fetching user:", err);
-          window.localStorage.clear();
-        })
-        .finally(() => setIsLoading(false));
-    }
-  }, [isUserComing]);
 
   // POPUP OPTIONS
   const [popupOption, setPopupOption] = useState({
@@ -73,10 +47,9 @@ export default function ProjectProvider({ children }) {
     isLoading,
   };
 
-  // if (isLoading) {
+  // if (!isLoading) {
   //   return <CustomLoading />;
   // }
-
   return (
     <ProjectContext.Provider value={value}>
       <CustomPopup

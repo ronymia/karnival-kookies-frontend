@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import React from "react";
 
 export default function SmallSearchField({
@@ -17,3 +18,10 @@ export default function SmallSearchField({
     </div>
   );
 }
+
+/* <---------------------- PROP TYPES DEFINE ----------------------------> */
+SmallSearchField.propTypes = {
+  fieldClassName: PropTypes.string,
+  handleChange: PropTypes.func.isRequired,
+  wrapperClass: PropTypes.string,
+};

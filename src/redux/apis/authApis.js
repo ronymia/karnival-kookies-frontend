@@ -2,7 +2,7 @@ import { baseApi } from "../baseAPi";
 import { TagTypes } from "../tagTypes";
 
 // BASE URL
-const URL = "/auth";
+const URL = "/v1.0/auth";
 
 export const authApis = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -10,6 +10,11 @@ export const authApis = baseApi.injectEndpoints({
     getUser: builder.query({
       query: () => ({
         url: `${URL}/user/info`,
+      }),
+    }),
+    getUserByToken: builder.query({
+      query: () => ({
+        url: `${URL}/user-by-token`,
       }),
     }),
     // REGISTER
@@ -31,6 +36,7 @@ export const authApis = baseApi.injectEndpoints({
       }),
       invalidatesTags: () => [TagTypes?.user],
     }),
+    // LOGOUT
     logOutUser: builder.mutation({
       query: (payload) => ({
         url: `${URL}/logout`,
@@ -38,6 +44,14 @@ export const authApis = baseApi.injectEndpoints({
         data: payload,
       }),
       invalidatesTags: () => [TagTypes?.user],
+    }),
+    // VERIFY USER EMAIL
+    verifyUserEmail: builder.mutation({
+      query: (payload) => ({
+        url: `${URL}/verify-user-email`,
+        method: "PUT",
+        data: payload,
+      }),
     }),
   }),
 });
@@ -48,4 +62,6 @@ export const {
   useCreateUserMutation,
   useLoginUserMutation,
   useLogOutUserMutation,
+  useVerifyUserEmailMutation,
+  useLazyGetUserByTokenQuery,
 } = authApis;

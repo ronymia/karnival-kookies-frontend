@@ -7,18 +7,17 @@ import {
 } from "@/redux/apis/productApis";
 import ButtonSpinner from "@/Shared/ButtonSpinner";
 import CustomToaster from "@/Shared/CustomToaster";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useProductReducer from "./productReducer";
 import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
-import CustomField from "@/Shared/Fields/CustomField";
-import CustomNumberField from "@/Shared/Fields/CustomNumberField";
 import CustomMultiSelect from "@/Shared/Fields/CustomMultiSelect";
-import CustomTextareaField from "@/Shared/Fields/CustomTextAreaField";
 import CustomFileUploader from "@/Shared/Fields/CustomFileUploader";
 import { usePopupContext } from "@/Context/ProjectProvider";
 import { useGetAllCategoriesQuery } from "@/redux/apis/categoryApis";
 import toast from "react-hot-toast";
 import QuillEditor from "@/components/UI/QuillEditor";
+import InputField from "@/components/UI/inputFields/InputField";
+import NumberField from "@/components/UI/inputFields/NumberField";
 
 export default function ProductForm() {
   // FORM REDUCER
@@ -45,32 +44,32 @@ export default function ProductForm() {
   const validateForm = () => {
     const newErrors = {};
 
-    // VALIDATE NAME
-    if (!state.name || state.name.trim() === "") {
-      newErrors.name = "Name is required";
-    }
-    // VALIDATE PRICE
-    if (!state.regular_price) {
-      newErrors.regular_price = "Regular Price is required";
-    }
-    if (state.regular_price < 0) {
-      newErrors.regular_price = "Regular Price cannot be negative";
-    }
-    if (state.discount_price < 0) {
-      newErrors.discount_price = "Discount Price cannot be negative";
-    }
-    // VALIDATE STOCK
-    if (!state.quantity) {
-      newErrors.quantity = "Stock is required";
-    }
-    if (state.quantity < 0) {
-      newErrors.quantity = "Stock cannot be negative";
-    }
+    // // VALIDATE NAME
+    // if (!state.name || state.name.trim() === "") {
+    //   newErrors.name = "Name is required";
+    // }
+    // // VALIDATE PRICE
+    // if (!state.regular_price) {
+    //   newErrors.regular_price = "Regular Price is required";
+    // }
+    // if (state.regular_price < 0) {
+    //   newErrors.regular_price = "Regular Price cannot be negative";
+    // }
+    // if (state.discount_price < 0) {
+    //   newErrors.discount_price = "Discount Price cannot be negative";
+    // }
+    // // VALIDATE STOCK
+    // if (!state.quantity) {
+    //   newErrors.quantity = "Stock is required";
+    // }
+    // if (state.quantity < 0) {
+    //   newErrors.quantity = "Stock cannot be negative";
+    // }
 
-    // VALIDATE IMAGES
-    if (state?.images?.length === 0) {
-      newErrors.image = "At least one image is required";
-    }
+    // // VALIDATE IMAGES
+    // if (state?.images?.length === 0) {
+    //   newErrors.image = "At least one image is required";
+    // }
 
     setErrors(newErrors);
     // console.log({ newErrors });
@@ -98,28 +97,29 @@ export default function ProductForm() {
     }
 
     // Return true if there are no errors
-    return Object.keys(newErrors).length === 0;
+    // return Object.keys(newErrors).length === 0;
+    return true;
   };
 
   // UPDATE FIELD
   useEffect(() => {
     if (popupOption?.data) {
-      [
-        "id",
-        "name",
-        "description",
-        "regular_price",
-        "discount_price",
-        "category_id",
-        "quantity",
-        "images",
-        "is_discount_enable",
-        "status",
-      ].forEach((field) => {
-        dispatch({
-          type: "UPDATE_FIELD",
-          payload: { field, value: popupOption?.data[field] },
-        });
+      dispatch({
+        type: "SET_DATA",
+        payload: {
+          id: popupOption?.data?.id,
+          name: popupOption?.data?.name,
+          price: popupOption?.data?.price,
+          quantity: popupOption?.data?.quantity,
+          category_id: popupOption?.data?.category_id,
+          description: popupOption?.data?.description,
+          images: popupOption?.data?.images,
+          is_discount_enable: popupOption?.data?.is_discount_enable,
+          discount_value: popupOption?.data?.discount_value,
+          discount_type: popupOption?.data?.discount_type,
+          status: popupOption?.data?.status,
+          unit: popupOption?.data?.unit,
+        },
       });
     }
   }, []);
@@ -231,7 +231,7 @@ export default function ProductForm() {
     <div className={` pb-12 h-full flex flex-col gap-3 justify-between`}>
       <div>
         {/* NAME */}
-        <CustomField
+        <InputField
           value={state?.name}
           disable={false}
           fieldClassName={"w-full"}
@@ -246,43 +246,45 @@ export default function ProductForm() {
           required={true}
         />
         {/* PRICE */}
-        <CustomNumberField
-          value={state?.regular_price}
+        <NumberField
+          value={state?.price}
           disable={false}
           fieldClassName={"w-full"}
-          error={errors?.regular_price}
-          id={"regular_price"}
-          label={"Regular Price"}
-          name={"regular_price"}
+          error={errors?.price}
+          id={"price"}
+          label={"Price"}
+          name={"price"}
           onChange={handleFormChange}
-          placeholder={"Regular Price"}
+          placeholder={"Price"}
           wrapperClassName={"w-full"}
           required={true}
         />
-        <CustomNumberField
-          value={state?.discount_price}
+
+        {/* DISCOUNT VALUE*/}
+        <NumberField
+          value={state?.discount_value}
           disable={false}
           fieldClassName={"w-full"}
-          error={errors?.discount_price}
-          id={"discount_price"}
-          label={"Discount Price"}
-          name={"discount_price"}
+          error={errors?.discount_value}
+          id={"discount_value"}
+          label={"Discount Amount"}
+          name={"discount_value"}
           onChange={handleFormChange}
-          placeholder={"Discount Price"}
+          placeholder={"Discount Amount"}
           wrapperClassName={"w-full"}
         />
 
-        {/* STOCK */}
-        <CustomNumberField
+        {/* QUANTITY */}
+        <NumberField
           value={state?.quantity}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.quantity}
           id={"quantity"}
-          label={"Stock"}
+          label={"Quantity"}
           name={"quantity"}
           onChange={handleFormChange}
-          placeholder={"Stock"}
+          placeholder={"Quantity"}
           wrapperClassName={"w-full"}
           required={true}
         />
@@ -335,7 +337,7 @@ export default function ProductForm() {
           isFileUploading={uploadResult.isLoading}
           onFileSelect={async (e) => handleFilesUpload(e)}
           onDrop={(files) => handleFilesUpload(files)}
-          onRemove={(e) => {
+          onRemove={(selectedImage) => {
             // REMOVE FROM FORM STATE
             dispatch({
               type: "REMOVE_IMAGE",

@@ -10,7 +10,7 @@ import cartReducer from "./features/cartSlice";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["token"],
+  whitelist: ["user"],
 };
 
 const persistedAuthReducer = persistReducer(persistConfig, authReducer);

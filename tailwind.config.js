@@ -19,8 +19,8 @@ module.exports = {
   daisyui: {
     themes: [
       {
-        lighttheme: {
-          primary: "#581c87", // White as primary
+        defaultTheme: {
+          primary: "#d2982c", // White as primary
           secondary: "#2D2627", // Light gray for secondary elements
           "primary-content": "#F0E5C1",
           accent: "#e5e7eb", // Another light shade for accents
@@ -36,6 +36,6 @@ module.exports = {
       },
     ],
     // Set the default theme
-    defaultTheme: "lighttheme",
+    defaultTheme: "defaultTheme",
   },
 };

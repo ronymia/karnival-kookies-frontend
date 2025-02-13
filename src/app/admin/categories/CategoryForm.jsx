@@ -1,18 +1,18 @@
 "use client";
 import { usePopupContext } from "@/Context/ProjectProvider";
-import CustomLoading from "@/Shared/CustomLoading";
-import CustomToaster from "@/Shared/CustomToaster";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import ButtonSpinner from "@/Shared/ButtonSpinner";
-import CustomField from "@/Shared/Fields/CustomField";
-import CustomTextareaField from "@/Shared/Fields/CustomTextAreaField";
 import {
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
 } from "@/redux/apis/categoryApis";
-import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
 import { validationErrorHandler } from "@/Utils/validationErrorHandler";
+import { errorHandler } from "@/helpers/errorHandler";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
+import InputField from "@/components/UI/inputFields/InputField";
+import TextareaField from "@/components/UI/inputFields/TextareaField";
+import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
+import CustomToaster from "@/components/UI/toaster/CustomToaster";
 
 export default function CategoryForm() {
   const { popupOption } = usePopupContext();
@@ -56,7 +56,6 @@ export default function CategoryForm() {
     }));
   };
 
-  const [isCategoryCreating, setIsCategoryCreating] = useState(false);
   const createFunction = (data) => {
     createCategory(data)
       .unwrap()
@@ -83,7 +82,7 @@ export default function CategoryForm() {
         }
       })
       .catch((err) => {
-        errorHandlerV2({ err });
+        errorHandler({ err });
       });
   };
 
@@ -103,12 +102,12 @@ export default function CategoryForm() {
         }
       })
       .catch((err) => {
-        errorHandlerV2({ err });
+        errorHandler({ err });
       });
   };
 
   // SUBMIT DATA
-  const handleSubmit = async () => {
+  const handleOnSubmit = async () => {
     // Validate form
     if (validateForm()) {
       if (popupOption?.data) {
@@ -127,10 +126,14 @@ export default function CategoryForm() {
     return <CustomLoading />;
   }
   return (
-    <div className={` pb-12 h-full flex flex-col justify-between`}>
+    <form
+      noValidate
+      onSubmit={handleOnSubmit}
+      className={` pb-12 h-full flex flex-col justify-between`}
+    >
       <div>
         {/* NAME */}
-        <CustomField
+        <InputField
           value={formData?.name}
           disable={false}
           fieldClassName={"w-full"}
@@ -146,7 +149,7 @@ export default function CategoryForm() {
         />
 
         {/* DESCRIPTION */}
-        <CustomTextareaField
+        <TextareaField
           value={formData?.description}
           disable={false}
           fieldClassName={"w-full"}
@@ -160,6 +163,8 @@ export default function CategoryForm() {
           wrapperClassName={"w-full"}
         />
       </div>
+
+      {/* ACTION BUTTONS */}
       <div className="flex flex-col md:flex-row w-full justify-center md:justify-end items-center py-5 gap-2">
         <button
           disabled={createResult.isLoading || updateResult.isLoading}
@@ -169,8 +174,8 @@ export default function CategoryForm() {
           Cancel
         </button>
         <button
+          type="submit"
           disabled={createResult.isLoading || updateResult.isLoading}
-          onClick={handleSubmit}
           className="btn w-full md:btn-wide btn-primary"
         >
           {createResult.isLoading || updateResult.isLoading ? (
@@ -182,6 +187,6 @@ export default function CategoryForm() {
           )}
         </button>
       </div>
-    </div>
+    </form>
   );
 }

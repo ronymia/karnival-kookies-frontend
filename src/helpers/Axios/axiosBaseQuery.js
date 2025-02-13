@@ -5,7 +5,7 @@ export const axiosBaseQuery =
   async ({ url, method, data, params, contentType }) => {
     try {
       const result = await axiosInstance({
-        baseURL: baseUrl + url,
+        url: baseUrl + url,
         method,
         data,
         params,
@@ -15,7 +15,7 @@ export const axiosBaseQuery =
         withCredentials: true,
       });
 
-      return result;
+      return { data: result.data };
     } catch (err) {
       return {
         error: {
@@ -23,6 +23,5 @@ export const axiosBaseQuery =
           data: err.response?.data || err.message,
         },
       };
-      return err;
     }
   };

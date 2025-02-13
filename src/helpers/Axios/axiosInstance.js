@@ -1,46 +1,26 @@
 import axios from "axios";
 import { getFromLocalStorage } from "../local-storage";
-import { localDBKey } from "@/constatnts/localDBKey";
+import { localDBKey } from "@/constants/localDBKey";
 
 const instance = axios.create();
 instance.defaults.headers.post["Content-Type"] = "application/json";
 instance.defaults.headers["Accept"] = "application/json";
 instance.defaults.timeout = 60000;
 
-// add request interceptor
+// Add request interceptor
 instance.interceptors.request.use(
-  // request config
-  function (config) {
-    const accessToken = getFromLocalStorage(localDBKey.authKey);
-    if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
+  (config) => {
+    const accessToken = getFromLocalStorage(localDBKey.token);
+    if (accessToken) config.headers.Authorization = `${accessToken}`;
     return config;
   },
-  // request error
-  function (error) {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// add response interceptor
+// Add response interceptor
 instance.interceptors.response.use(
-  // @ts-ignore
-  function (response) {
-    // const responseObject = {
-    //   data: response?.data?.data,
-    //   meta: response?.data?.meta,
-    // };
-    return response;
-  },
-  // response error
-  async function (error) {
-    // const responseObject = {
-    //   statusCode: error?.response?.data?.statusCode || 500,
-    //   message: error?.response?.data?.message || "Something went wrong",
-    //   errorMessages: error?.response?.data?.message,
-    // };
-    // return responseObject;
-    return Promise.reject(error);
-  }
+  (response) => response,
+  (error) => Promise.reject(error)
 );
 
 export { instance };

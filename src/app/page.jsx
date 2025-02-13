@@ -1,14 +1,17 @@
-import NavigateHandler from "@/Shared/Buttons/NavigateHandler";
-import FixedBgComponent from "@/Shared/FixedBgComponent";
-import Heading from "@/Shared/Heading";
+"use client";
+
 import ProductCard from "@/Shared/ProductCard";
-import HomeSearchWrapper from "@/Shared/SearchFields/HomeSearchWrapper";
 import CategorySection from "./CategorySection";
 import Slider from "./slider";
+import Heading from "@/components/UI/Heading/Heading";
+import HomeSearchWrapper from "@/components/UI/SearchFields/HomeSearchWrapper";
+import NavigateHandler from "@/components/UI/buttons/NavigateHandler";
+import FixedBgComponent from "@/components/layouts/FixedBgComponent";
+import { useEffect, useState } from "react";
 
 const fetchData = async (url) => {
   try {
-    const res = await fetch(url, { cache: "no-store" });
+    const res = fetch(url, { cache: "no-store" });
     if (!res.ok) throw new Error(`Failed to fetch ${url}`);
     return res.json();
   } catch (error) {
@@ -17,31 +20,61 @@ const fetchData = async (url) => {
   }
 };
 
-export async function generateMetadata({ searchParams }) {
-  const currentUrl = searchParams.url || "";
-  const result = await fetchData(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/meta-data?url=${"home"}`
-  );
-  const metadata = result?.data[0];
+// export function generateMetadata({ searchParams }) {
+//   const currentUrl = searchParams.url || "";
+//   const result = fetchData(
+//     `${process.env.NEXT_PUBLIC_BACKEND_URL}/meta-data?url=${"home"}`
+//   );
+//   const metadata = result?.data[0];
 
-  return {
-    title: metadata?.title || "check",
-    description: metadata?.description || "Default Description",
-  };
-}
+//   return {
+//     title: metadata?.title || "check",
+//     description: metadata?.description || "Default Description",
+//   };
+// }
 
-export default async function HomePage() {
-  const [productData, categoryData, packageData] = await Promise.all([
-    fetchData(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/get/random?page=1&perPage=8`
-    ),
-    fetchData(`${process.env.NEXT_PUBLIC_BACKEND_URL}/categories`),
-    fetchData(`${process.env.NEXT_PUBLIC_BACKEND_URL}/packages`),
-  ]);
+export default function HomePage() {
+  // const [productData, categoryData] = await  Promise.all([
+  //   fetchData(
+  //     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1.0/products?page=1&perPage=8`
+  //   ),
+  //   fetchData(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1.0/categories`),
+  //   // fetchData(`${process.env.NEXT_PUBLIC_BACKEND_URL}/packages`),
+  // ]);
+  const [productData, setProductData] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [products, categories] = await Promise.all([
+          fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1.0/products?page=1&perPage=8`
+          ).then((res) => res.json()),
+          fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1.0/categories`
+          ).then((res) => res.json()),
+        ]);
+
+        setProductData(products);
+        setCategoryData(categories);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   const products = productData?.data || [];
   const categories = categoryData?.data || [];
-  const packages = packageData?.data || [];
+  // const packages = packageData?.data || [];
+  // const products = [];
+  // const categories = [];
+  const packages = [];
 
   const tabs = categories.map((category) => ({
     id: category.id,
@@ -57,7 +90,7 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col gap-20 overflow-hidden pb-20">
-      {/* SLIDER */}
+      {/* <------------------------ BANNER SLIDER ---------------------------> */}
       <Slider
         prevNextBtn
         img={slides}
@@ -67,25 +100,32 @@ export default async function HomePage() {
         borderClr={"#000"}
       />
 
-      {/* FEATURED PRODUCTS */}
+      {/* <------------------------------ FEATURED PRODUCTS ------------------------------------> */}
       <section className="space-y-10">
+        {/* <------------------------ HEADING --------------------------> */}
         <Heading
           subHeading={"Online Store"}
           heading={"Discover Sweet Delicious"}
         />
+
+        {/* <------------------------ SEARCH BOX FOR FEATURE PRODUCTS --------------------------> */}
         <HomeSearchWrapper />
+
+        {/* <------------------------ FEATURE PRODUCT LIST --------------------------> */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </section>
+
+        {/* <------------------------ NAVIGATION --------------------------> */}
         <div className="flex flex-col justify-center items-center">
           <NavigateHandler text={"Online Store"} route={"/products"} />
         </div>
       </section>
 
-      {/* FIXED COMPONENT */}
-      <div className="relative">
+      {/* <------------------------ FIX BG COMPONENT --------------------------> */}
+      <section className="relative">
         <FixedBgComponent
           component={
             <div className="text-3xl md:text-6xl font-bold text-base-300 space-y-5 text-center relative">
@@ -96,21 +136,26 @@ export default async function HomePage() {
             </div>
           }
         />
-      </div>
+      </section>
 
-      {/* CATEGORY */}
+      {/* <------------------------ CATEGORY SECTION --------------------------> */}
       <section className="px-5 md:px-10 mb-20">
         <CategorySection tabs={tabs} />
       </section>
 
-      {/* PACKAGES */}
+      {/* <------------------------ PACKAGES SECTION --------------------------> */}
       <section className="px-5 md:px-10 mb-20">
+        {/* <------------------------ HEADING --------------------------> */}
         <Heading subHeading={"Online Store"} heading={"Combo Packages"} />
+
+        {/* <------------------------ PACKAGE LIST --------------------------> */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {packages.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </section>
+
+        {/* <------------------------ NAVIGATE TO PRODUCT PAGE --------------------------> */}
         <div className="flex flex-col justify-center items-center">
           <NavigateHandler text={"See More"} route={"/products"} />
         </div>

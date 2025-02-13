@@ -2,37 +2,50 @@ import { useReducer } from "react";
 
 // INITIAL STATE
 const initialState = {
-  id: null /* number */,
+  id: null, // number
   name: "",
   description: "",
-  regular_price: null /* number  */,
-  discount_price: null /* number */,
-  category_id: null /* number */,
-  is_discount_enable: 1 /* boolean */,
-  quantity: null /* number */,
-  images: [] /* string[] */,
-  status: "in-stock" /* string */,
+  price: null, // number (renamed from regular_price)
+  is_discount_enable: 1, // boolean (0 or 1)
+  discount_value: null, // number
+  discount_type: "fixed", // "fixed" or "percent"
+  category_id: null, // number
+  quantity: null, // number
+  unit: "pcs", // Default unit ('kg', 'litre', 'pcs', 'bag')
+  images: [], // string[]
+  status: "in-stock", // 'in-stock', 'out-of-stock', 'discontinued'
 };
 
 // FORM REDUCER
 function formReducer(state, action) {
   console.log({ action });
   switch (action.type) {
-    // FOR UPDATE FIELD
+    // FOR UPDATING ANY FIELD
     case "UPDATE_FIELD":
       return { ...state, [action.payload.field]: action.payload.value };
+
+    // ADD IMAGE
     case "ADD_IMAGE":
       return {
         ...state,
-        [action.payload.field]: [...state?.images, ...action.payload.value],
+        images: [...state.images, ...action.payload.value],
       };
+
+    // REMOVE IMAGE
     case "REMOVE_IMAGE":
       return {
         ...state,
-        [action.payload.field]: state?.images?.filter(
-          (item) => item !== action.payload.value
-        ),
+        images: state.images.filter((item) => item !== action.payload.value),
       };
+
+    // SET DATA
+    case "SET_DATA":
+      return { ...state, ...action.payload };
+
+    // RESET FORM
+    case "RESET_FORM":
+      return initialState;
+
     default:
       throw new Error(`Unknown action type: ${action.type}`);
   }
@@ -41,7 +54,6 @@ function formReducer(state, action) {
 // REDUCER HOOK
 const useProductReducer = () => {
   const [state, dispatch] = useReducer(formReducer, initialState);
-
   return { state, dispatch };
 };
 

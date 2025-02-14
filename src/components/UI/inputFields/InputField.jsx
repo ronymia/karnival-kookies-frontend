@@ -57,11 +57,11 @@ export default function InputField({
         autoComplete="off" // Disable autocomplete
         spellCheck={false} // Disable spell checking
         autoFocus={false} // Don't auto-focus
-        className={`text-base-300 bg-secondary rounded border border-solid  px-3 py-2 placeholder:text-sm placeholder:capitalize input-md focus:outline-primary input-bordered
+        className={`text-base-300 bg-secondary rounded border border-solid  px-3 py-2 placeholder:text-sm placeholder:capitalize input-md
         ${
           error
             ? "border-red-500 focus:border-red-500"
-            : "input-bordered focus:border-primary"
+            : "input-bordered focus:border-primary focus:outline-primary "
         } 
         ${fieldClassName} `}
       />

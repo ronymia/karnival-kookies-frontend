@@ -8,7 +8,6 @@ const FileViewer = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { popupOption } = usePopupContext();
   const { files, onClose } = popupOption;
-  console.log({ popupOption });
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) =>
@@ -85,7 +84,7 @@ const FileViewer = () => {
         <h2 className={`pt-5 text-primary text-xl font-bold`}>
           Total {files?.length} {files?.length > 1 ? "files" : "file"} found{" "}
         </h2>
-        {files.map((file, index) => (
+        {files?.map((file, index) => (
           <div
             key={index}
             className={`file-slide pt-5 ${
@@ -97,7 +96,7 @@ const FileViewer = () => {
                 <div className="file-info flex justify-between items-center mb-3 pr-2">
                   <span className="file-name text-primary font-semibold">{`${
                     index + 1
-                  }. ${file.split("/")[file.split("/").length - 1]}`}</span>
+                  }. ${file?.split("/")[file.split("/").length - 1]}`}</span>
                 </div>
                 <iframe
                   data-auto={`file-viewer-iframe-all-page`}

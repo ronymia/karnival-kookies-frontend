@@ -1,31 +1,27 @@
 "use client";
+import Button from "@/components/UI/buttons/Button";
+import Heading from "@/components/UI/Heading/Heading";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
+import Pagination from "@/components/UI/table/Pagination";
+import Table from "@/components/UI/table/Table";
 import { usePopupContext } from "@/Context/ProjectProvider";
 import { deleteDataV2 } from "@/helpers/DeleteDataV2";
 import {
   useDeleteProductsMutation,
   useGetAllProductsQuery,
 } from "@/redux/apis/productApis";
-import AdminRoute from "@/Routes/AdminRoute";
-import Button from "@/Shared/Button";
-import CustomLoading from "@/Shared/CustomLoading";
-import Heading from "@/Shared/Heading";
-import { Pagination } from "@/Shared/Paginations/Pagination";
 import SplitDescription from "@/Shared/SplitDescription";
-import Table from "@/Shared/Table";
-import TableComponentHeading from "@/Shared/TableComponentHeading";
 import { getFullImageLink } from "@/Utils/getFullImageLink";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { AiFillEye } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 
 export default function ProductPage() {
-  const router = useRouter();
   const { popupOption, setPopupOption } = usePopupContext();
 
   // ALL SELECTED IDs
-  const [selectedIds, setSelectedIds] = useState([]);
   const [deleteProduct, deleteResult] = useDeleteProductsMutation();
 
   // FILTERS
@@ -43,11 +39,6 @@ export default function ProductPage() {
   useEffect(() => {
     refetch();
   }, [filters]);
-
-  // HANDLE PER PAGE
-  const setPerPage = (count) => {
-    setFilters({ ...filters, perPage: count, page: 1 });
-  };
 
   // HANDLE DELETE PRODUCT
   const handleDeleteProduct = (data) => {
@@ -109,7 +100,7 @@ export default function ProductPage() {
   };
 
   // ALL ACTION BUTTONS
-  const [actions, setActions] = useState([
+  const actions = [
     {
       name: "view",
       handler: handleView,
@@ -134,121 +125,130 @@ export default function ProductPage() {
       backgroundColorClass: "bg-red-200",
       disabledOn: [],
     },
-  ]);
+  ];
 
   // ALL DISPLAYED COLUMNS IN TABLE
-  const [cols, setCols] = useState([
+  const columns = [
     {
-      name: "#",
-      attribute_name: "count",
+      header: "#",
+      "data-label": "#",
+      accessorKey: "count",
       minWidth: 5,
       show: true,
       isMainField: true,
     },
     {
-      name: "Name",
-      attribute_name: "name",
+      header: "Name",
+      "data-label": "Name",
+      accessorKey: "name",
       minWidth: 20,
       show: true,
       isMainField: true,
     },
     {
-      name: "Image",
-      attribute_name: "image_table",
+      header: "Image",
+      "data-label": "Image",
+      accessorKey: "image_table",
       minWidth: 15,
       show: true,
       isMainField: true,
     },
     {
-      name: "Regular Price",
-      attribute_name: "regular_price",
+      header: "Price",
+      "data-label": "Price",
+      accessorKey: "mainPrice",
       minWidth: 10,
       show: true,
       isMainField: true,
     },
     {
-      name: "Discount Price",
-      attribute_name: "discount_price",
+      header: "Discount Amount",
+      "data-label": "Discount Amount",
+      accessorKey: "discountAmount",
       minWidth: 10,
       show: true,
       isMainField: true,
     },
     {
-      name: "Description",
-      attribute_name: "description_table",
+      header: "Net Price",
+      "data-label": "Net Price",
+      accessorKey: "netPrice",
       minWidth: 30,
       show: true,
     },
     {
-      name: "Category",
-      attribute_name: "category",
+      header: "Category",
+      "data-label": "Category",
+      accessorKey: "category",
       minWidth: 10,
       show: true,
     },
-  ]);
+    {
+      header: "Description",
+      "data-label": "Description",
+      accessorKey: "description_table",
+      minWidth: 10,
+      show: true,
+    },
+  ];
 
   if (isLoading) {
     return <CustomLoading />;
   }
   return (
-    <AdminRoute>
+    <>
       <div
         className={`max-w-screen-xl mx-auto px-3 flex flex-col gap-10 pt-36 pb-40`}
       >
-        <TableComponentHeading
-          routes={
-            <div className={`text-[14px]`}>
-              <span
-                onClick={() => router.push("/")}
-                className={`text-primary cursor-pointer`}
-              >
-                Home
-              </span>{" "}
-              {"//"} <span>All Products</span>
-            </div>
-          }
-          heading={"Products"}
-        />
-        {/* HEADING AREA */}
-        <div className={`flex justify-between items-center`}>
+        {/* <================== HEADING AREA ===============> */}
+        <header className={`flex justify-between items-center`}>
           <div>
             <Heading
               isSubHeading={false}
               isWave={false}
-              heading={"All Products"}
+              heading={"Product Management"}
             />
             <p className={``}>
               Total {data?.meta?.total}{" "}
               {data?.meta?.total > 1 ? "Products" : "Product"} Found
             </p>
           </div>
+          {/* <====================== ADD BUTTON =====================> */}
           <Button text={"Add"} handler={handleCreate} />
-        </div>
-        {/* TABLE AREA */}
+        </header>
+
+        {/* <================== TABLE AREA ===============> */}
         <div className={`space-y-10`}>
           <Table
-            selectedIds={selectedIds}
-            setSelectedIds={setSelectedIds}
-            itemsPerPage={filters?.limit}
-            totalItems={data?.meta?.total}
-            setPageNo={(data) => setFilters({ ...filters, page: data })}
-            setPerPage={setPerPage}
-            perPage={filters?.limit}
             isLoading={isLoading || deleteResult.isLoading}
             rows={data?.data?.map((d, i) => ({
               ...d,
               count: (filters?.page - 1) * filters?.limit + i + 1,
               name: d?.name,
+              mainPrice: `$ ${d?.price}`,
+              netPrice: `$ ${parseFloat(d?.net_price).toFixed(2)}`,
+              discountAmount:
+                d?.discount_type === "fixed"
+                  ? d?.discount_value !== null &&
+                    d?.discount_value !== undefined
+                    ? `$ ${d?.discount_value}`
+                    : "N/A"
+                  : d?.discount_value !== null &&
+                    d?.discount_value !== undefined
+                  ? `${d?.discount_value}%`
+                  : "N/A",
               description_table: (
                 <SplitDescription text={d?.description} length={30} />
               ),
               image_table: (
-                <img
+                <Image
                   onClick={() => handleViewImages(d?.images)}
                   src={getFullImageLink(
                     d?.images?.length > 0 ? d?.images[0] : "",
                     "Products"
                   )}
+                  width={100}
+                  height={100}
                   alt={d?.name}
                   className={`w-16 h-16 object-cover cursor-pointer`}
                 />
@@ -257,8 +257,7 @@ export default function ProductPage() {
               category: d?.category?.name,
             }))}
             actions={actions}
-            cols={cols}
-            getFullDataToActionHandler
+            columns={columns}
           />
           {/* PAGINATION */}
           <Pagination
@@ -268,6 +267,6 @@ export default function ProductPage() {
           />
         </div>
       </div>
-    </AdminRoute>
+    </>
   );
 }

@@ -16,6 +16,8 @@ const QuillEditor = ({
   placeholder,
   disable,
   error,
+  required,
+  testId,
 }) => {
   // MODULES
   const modules = {
@@ -52,9 +54,16 @@ const QuillEditor = ({
   return (
     <div className={`flex flex-col gap-2 mb-20 ${wrapperClassName}`}>
       {/* LABEL */}
-      <label htmlFor="" className="text-sm font-medium text-base-300">
-        {label}
-      </label>
+      {label && (
+        <label
+          htmlFor={id}
+          data-testid={`${testId}_label`}
+          className={`label-text text-md font-bold`}
+        >
+          {label}{" "}
+          {required && <span className="text-error font-bold text-md">*</span>}
+        </label>
+      )}
 
       {/* EDITOR */}
       <ReactQuill

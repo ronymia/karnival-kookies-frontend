@@ -9,15 +9,17 @@ import ButtonSpinner from "@/Shared/ButtonSpinner";
 import CustomToaster from "@/Shared/CustomToaster";
 import { useEffect, useState } from "react";
 import useProductReducer from "./productReducer";
-import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
-import CustomMultiSelect from "@/Shared/Fields/CustomMultiSelect";
-import CustomFileUploader from "@/Shared/Fields/CustomFileUploader";
 import { usePopupContext } from "@/Context/ProjectProvider";
 import { useGetAllCategoriesQuery } from "@/redux/apis/categoryApis";
 import toast from "react-hot-toast";
 import QuillEditor from "@/components/UI/QuillEditor";
 import InputField from "@/components/UI/inputFields/InputField";
 import NumberField from "@/components/UI/inputFields/NumberField";
+import RadioButton from "@/components/UI/inputFields/RadioButton";
+import { BiSolidCheckCircle } from "react-icons/bi";
+import Select from "@/components/UI/inputFields/Select";
+import FileUploader from "@/components/UI/inputFields/FileUploader";
+import { errorHandler } from "@/helpers/errorHandler";
 
 export default function ProductForm() {
   // FORM REDUCER
@@ -40,39 +42,76 @@ export default function ProductForm() {
     // SET TO STATE
     dispatch({ type: "UPDATE_FIELD", payload: { field: name, value } });
   };
-  //   VALIDATE FORM
+
+  /* <================= VALIDATE FORM ===================> */
   const validateForm = () => {
     const newErrors = {};
 
-    // // VALIDATE NAME
-    // if (!state.name || state.name.trim() === "") {
-    //   newErrors.name = "Name is required";
-    // }
-    // // VALIDATE PRICE
-    // if (!state.regular_price) {
-    //   newErrors.regular_price = "Regular Price is required";
-    // }
-    // if (state.regular_price < 0) {
-    //   newErrors.regular_price = "Regular Price cannot be negative";
-    // }
-    // if (state.discount_price < 0) {
-    //   newErrors.discount_price = "Discount Price cannot be negative";
-    // }
-    // // VALIDATE STOCK
-    // if (!state.quantity) {
-    //   newErrors.quantity = "Stock is required";
-    // }
-    // if (state.quantity < 0) {
-    //   newErrors.quantity = "Stock cannot be negative";
-    // }
+    // VALIDATE NAME
+    if (!state.name || state.name.trim() === "") {
+      newErrors.name = "Name is required";
+    }
+    // VALIDATE PRICE
+    if (!state?.price) {
+      newErrors.price = "Price is required";
+    } else if (state.price < 0) {
+      newErrors.price = "Regular Price cannot be negative";
+    }
+    // VALIDATE DISCOUNT ENABLE
+    if (state?.is_discount_enable !== 0 && state?.is_discount_enable !== 1) {
+      newErrors.is_discount_enable = "Discount Enable is required";
+    } else if (
+      state?.is_discount_enable === 0 &&
+      state?.is_discount_enable === 1
+    ) {
+      // VALIDATE DISCOUNT TYPE
+      if (!state?.discount_type) {
+        newErrors.discount_type = "Discount Type is required";
+      }
+      // VALIDATE DISCOUNT VALUE
+      if (!state?.discount_value) {
+        newErrors.discount_value = "Discount Value is required";
+      } else if (state?.discount_value < 0) {
+        newErrors.discount_value = "Discount Value cannot be negative";
+      } else if (
+        state?.discount_type === "fixed" &&
+        state?.discount_value > state?.price
+      ) {
+        newErrors.discount_value =
+          "Discount Value cannot be greater than price";
+      } else if (
+        state?.discount_type === "percent" &&
+        state?.discount_value > 100
+      ) {
+        newErrors.discount_value = "Discount Value cannot be greater than 100%";
+      }
+    }
 
-    // // VALIDATE IMAGES
-    // if (state?.images?.length === 0) {
-    //   newErrors.image = "At least one image is required";
-    // }
+    // VALIDATE UNIT
+    if (!state?.unit) {
+      newErrors.unit = "Unit is required";
+    }
 
+    // VALIDATE QUANTITY
+    if (!state.quantity) {
+      newErrors.quantity = "Quantity is required";
+    } else if (state.quantity < 0) {
+      newErrors.quantity = "Quantity cannot be negative";
+    }
+
+    // VALIDATE CATEGORY
+    if (!state?.category_id) {
+      newErrors.category_id = "Category is required";
+    }
+
+    // VALIDATE IMAGES
+    if (state?.images?.length === 0) {
+      newErrors.images = "At least one image is required";
+    }
+
+    // SET ERRORS
     setErrors(newErrors);
-    // console.log({ newErrors });
+
     // ValidationErrorHandler(newErrors);
     if (Object.keys(newErrors).length > 0) {
       toast.custom((t) => (
@@ -97,10 +136,10 @@ export default function ProductForm() {
     }
 
     // Return true if there are no errors
-    // return Object.keys(newErrors).length === 0;
-    return true;
+    return Object.keys(newErrors).length === 0;
   };
 
+  console.log({ state });
   // UPDATE FIELD
   useEffect(() => {
     if (popupOption?.data) {
@@ -131,7 +170,6 @@ export default function ProductForm() {
 
     // CHECK FILE SIZE
     fileArray.forEach((file) => {
-      console.log({ clickedFile: file });
       if (file.size > 5 * 1024 * 1024) {
         // File size exceeds 5MB, show error message
         toast.custom((t) => (
@@ -152,7 +190,7 @@ export default function ProductForm() {
 
       // IF GOT UPLOAD ERROR
       if (uploadResult.isError) {
-        const respErrors = errorHandlerV2({ err: uploadResult.error });
+        errorHandler({ err: uploadResult.error });
       }
       // IF IMAGE UPLOADED
       if (resp?.data?.success) {
@@ -182,7 +220,7 @@ export default function ProductForm() {
         popupOption?.onClose();
       })
       .catch((error) => {
-        const respErrors = errorHandlerV2({ err: error });
+        const respErrors = errorHandler({ err: error });
         setErrors(respErrors);
       });
   };
@@ -204,13 +242,14 @@ export default function ProductForm() {
         popupOption?.onClose();
       })
       .catch((error) => {
-        const respErrors = errorHandlerV2({ err: error });
+        const respErrors = errorHandler({ err: error });
         setErrors(respErrors);
       });
   };
 
   // FORM SUBMISSION
-  const handleSubmit = async () => {
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
     if (validateForm()) {
       if (popupOption?.data) {
         await updateFunction(state);
@@ -221,15 +260,17 @@ export default function ProductForm() {
     }
   };
 
-  console.log({ state });
-  console.log({ data: popupOption?.data });
   /* *********************************************************
   
   ***************************************************************/
 
   return (
-    <div className={` pb-12 h-full flex flex-col gap-3 justify-between`}>
-      <div>
+    <form
+      noValidate
+      onSubmit={handleOnSubmit}
+      className={`p-3 h-full grid grid-cols-1 md:grid-cols-2 gap-3 justify-between`}
+    >
+      <>
         {/* NAME */}
         <InputField
           value={state?.name}
@@ -242,9 +283,10 @@ export default function ProductForm() {
           onChange={handleFormChange}
           placeholder={"Name"}
           type={"text"}
-          wrapperClassName={"w-full"}
+          wrapperClassName={"md:col-span-2"}
           required={true}
         />
+
         {/* PRICE */}
         <NumberField
           value={state?.price}
@@ -260,18 +302,114 @@ export default function ProductForm() {
           required={true}
         />
 
-        {/* DISCOUNT VALUE*/}
-        <NumberField
-          value={state?.discount_value}
-          disable={false}
-          fieldClassName={"w-full"}
-          error={errors?.discount_value}
-          id={"discount_value"}
-          label={"Discount Amount"}
-          name={"discount_value"}
-          onChange={handleFormChange}
-          placeholder={"Discount Amount"}
+        {/* ENABLE DISCOUNT */}
+        <RadioButton
+          options={[
+            {
+              name: "is_discount_enable",
+              title: "Enable",
+              value: 1,
+              Icon: BiSolidCheckCircle,
+            },
+            {
+              name: "is_discount_enable",
+              title: "Disable",
+              value: 0,
+              Icon: BiSolidCheckCircle,
+            },
+          ]}
+          onChange={(e) => {
+            const { name, value } = e.target;
+            dispatch({
+              type: "UPDATE_FIELD",
+              payload: { field: name, value: Number(value) },
+            });
+          }}
           wrapperClassName={"w-full"}
+          inputFieldClassName={"grid-cols-2 gap-5"}
+          label={"Discount Enable"}
+          required={true}
+          defaultChecked={state?.is_discount_enable}
+          error={errors?.is_discount_enable}
+        />
+
+        {state?.is_discount_enable ? (
+          <>
+            {/* DISCOUNT TYPE */}
+            <RadioButton
+              options={[
+                {
+                  name: "discount_type",
+                  title: "Fixed",
+                  value: "fixed",
+                  Icon: BiSolidCheckCircle,
+                },
+                {
+                  name: "discount_type",
+                  title: "Percentage",
+                  value: "percent",
+                  Icon: BiSolidCheckCircle,
+                },
+              ]}
+              onChange={handleFormChange}
+              wrapperClassName={"w-full"}
+              inputFieldClassName={"grid-cols-2 gap-5"}
+              label={"Discount Type"}
+              required={true}
+              defaultChecked={state?.discount_type}
+              error={errors?.discount_type}
+            />
+            {/* DISCOUNT VALUE */}
+            <NumberField
+              value={state?.discount_value}
+              disable={false}
+              fieldClassName={"w-full"}
+              error={errors?.discount_value}
+              id={"discount_value"}
+              label={"Discount Amount"}
+              name={"discount_value"}
+              onChange={handleFormChange}
+              placeholder={"Discount Amount"}
+              wrapperClassName={"w-full"}
+            />
+          </>
+        ) : null}
+
+        {/* UNIT */}
+        <RadioButton
+          options={[
+            {
+              name: "unit",
+              title: "kg",
+              value: "kg",
+              Icon: BiSolidCheckCircle,
+            },
+            {
+              name: "unit",
+              title: "litre",
+              value: "litre",
+              Icon: BiSolidCheckCircle,
+            },
+            {
+              name: "unit",
+              title: "pcs",
+              value: "pcs",
+              Icon: BiSolidCheckCircle,
+            },
+            {
+              name: "unit",
+              title: "bag",
+              value: "bag",
+              Icon: BiSolidCheckCircle,
+            },
+          ]}
+          onChange={handleFormChange}
+          wrapperClassName={"w-full md:col-span-2"}
+          inputFieldClassName={"grid-cols-4 gap-5"}
+          label={"Product Unit"}
+          required={true}
+          defaultChecked={state?.unit}
+          error={errors?.unit}
         />
 
         {/* QUANTITY */}
@@ -290,24 +428,30 @@ export default function ProductForm() {
         />
 
         {/* CATEGORY */}
-        <CustomMultiSelect
-          singleSelect
+        <Select
+          id={`category_id`}
+          name={`category_id`}
+          label={`Category`}
+          placeholder={`Select Category`}
+          required={true}
           disable={false}
-          label={"Category"}
-          loading={categories.isLoading}
-          placeholder="Select Category"
-          selectedValues={categories.data?.data?.filter(
-            (item) => item?.id === state?.category_id
-          )}
-          setSelectedValues={(e) => {
-            // console.log({ e });
+          error={errors?.category_id}
+          value={categories.data?.data
+            ?.map((item) => ({
+              id: item?.id,
+              label: item?.name,
+            }))
+            .filter((item) => item?.id === state?.category_id)}
+          options={categories.data?.data?.map((item) => ({
+            id: item?.id,
+            label: item?.name,
+          }))}
+          handleOnSelect={(e) => {
             dispatch({
               type: "UPDATE_FIELD",
-              payload: { field: "category_id", value: e[0]?.id },
+              payload: { field: "category_id", value: e?.id || null },
             });
           }}
-          options={categories.data?.data}
-          error={errors?.category_id}
         />
 
         {/* DESCRIPTION */}
@@ -326,27 +470,33 @@ export default function ProductForm() {
             });
           }}
           placeholder={"Description"}
-          wrapperClassName={"w-full"}
+          wrapperClassName={"w-full md:col-span-2"}
         />
-        <CustomFileUploader
-          details={`Allowed .png, .jpg, .jpeg, .pdf files under 5MB`}
-          accept={".png, .jpg, .jpeg, .pdf"}
-          files={state?.images}
+
+        {/* PRODUCT IMAGES */}
+        <FileUploader
+          multiple={true}
+          accept={".png, .jpg, .jpeg"}
+          id={`product_images`}
           label={"Upload Products Images"}
-          required
+          required={true}
+          error={errors?.images}
+          wrapperClassName={`md:col-span-2`}
+          files={state?.images}
           isFileUploading={uploadResult.isLoading}
-          onFileSelect={async (e) => handleFilesUpload(e)}
-          onDrop={(files) => handleFilesUpload(files)}
+          onFileSelect={handleFilesUpload}
+          onDrop={handleFilesUpload}
           onRemove={(selectedImage) => {
-            // REMOVE FROM FORM STATE
             dispatch({
               type: "REMOVE_IMAGE",
               payload: { field: "images", value: selectedImage },
             });
           }}
         />
-      </div>
-      <div className="flex flex-col md:flex-row w-full justify-center md:justify-end items-center py-5 gap-2">
+      </>
+
+      {/* <==================== ACTION BUTTONS ====================> */}
+      <div className="md:col-span-2 flex flex-col md:flex-row w-full justify-center md:justify-end items-center gap-2 pb-10">
         <button
           disabled={
             createResult.isLoading ||
@@ -359,12 +509,12 @@ export default function ProductForm() {
           Cancel
         </button>
         <button
+          type="submit"
           disabled={
             createResult.isLoading ||
             updateResult.isLoading ||
             uploadResult.isLoading
           }
-          onClick={handleSubmit}
           className="btn w-full md:btn-wide btn-primary"
         >
           {createResult.isLoading ||
@@ -378,6 +528,6 @@ export default function ProductForm() {
           )}
         </button>
       </div>
-    </div>
+    </form>
   );
 }

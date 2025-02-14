@@ -6,19 +6,18 @@ const initialState = {
   name: "",
   description: "",
   price: null, // number (renamed from regular_price)
-  is_discount_enable: 1, // boolean (0 or 1)
+  is_discount_enable: null, // boolean (0 or 1)
   discount_value: null, // number
-  discount_type: "fixed", // "fixed" or "percent"
+  discount_type: "", // "fixed" or "percent"
   category_id: null, // number
   quantity: null, // number
-  unit: "pcs", // Default unit ('kg', 'litre', 'pcs', 'bag')
+  unit: "", // Default unit ('kg', 'litre', 'pcs', 'bag')
   images: [], // string[]
-  status: "in-stock", // 'in-stock', 'out-of-stock', 'discontinued'
+  status: "", // 'in-stock', 'out-of-stock', 'discontinued'
 };
 
 // FORM REDUCER
 function formReducer(state, action) {
-  console.log({ action });
   switch (action.type) {
     // FOR UPDATING ANY FIELD
     case "UPDATE_FIELD":

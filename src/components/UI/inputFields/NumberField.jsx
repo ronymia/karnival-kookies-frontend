@@ -53,7 +53,7 @@ export default function NumberField({
         onChange={onChange}
         onInput={handleInput}
         value={value}
-        defaultValue={defaultValue}
+        // defaultValue={defaultValue}
         maxLength={maxLength}
         minLength={minLength}
         disabled={disabled}

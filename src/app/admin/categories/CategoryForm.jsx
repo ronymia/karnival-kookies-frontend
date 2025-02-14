@@ -137,9 +137,9 @@ export default function CategoryForm() {
     <form
       noValidate
       onSubmit={handleOnSubmit}
-      className={` pb-12 h-full flex flex-col justify-between`}
+      className={`p-4 h-full flex flex-col gap-3`}
     >
-      <div>
+      <>
         {/* NAME */}
         <InputField
           value={formData?.name}
@@ -170,10 +170,10 @@ export default function CategoryForm() {
           type={"text"}
           wrapperClassName={"w-full"}
         />
-      </div>
+      </>
 
       {/* ACTION BUTTONS */}
-      <div className="flex flex-col md:flex-row w-full justify-center md:justify-end items-center py-5 gap-2">
+      <div className="flex flex-col md:flex-row w-full justify-center md:justify-end items-center mt-auto py-5 gap-2">
         <button
           disabled={createResult.isLoading || updateResult.isLoading}
           onClick={popupOption?.onClose}

@@ -184,219 +184,216 @@ const Navbar = () => {
     },
   ];
   return (
-    <div
-      className={`h-32 w-full bg-transparent relative flex flex-col justify-center text-base-300 px-5 xl:px-20`}
+    <nav
+      className={`sticky top-0 left-0 right-0 z-[100] h-24 w-full bg-[#0b0a0b]  flex flex-col justify-center text-base-300 px-5 xl:px-20`}
     >
-      <div className={`w-full px-3 mx-auto z-50`}>
-        <div className={`flex justify-between items-center w-full `}>
+      <div className={`flex justify-between items-center w-full `}>
+        <img
+          className={`w-20 h-auto hidden xl:block`}
+          src="/cremeLogo.png"
+          alt="logo"
+        />
+        <div
+          className={`flex justify-between items-center gap-2 w-full xl:w-auto`}
+        >
+          <div onClick={() => setSidebar(true)} className={`xl:hidden `}>
+            <FiAlignLeft className={`text-4xl text-primary `} />
+          </div>
           <img
-            className={`w-20 h-auto hidden xl:block`}
+            className={`w-20 h-auto xl:hidden`}
             src="/cremeLogo.png"
             alt="logo"
           />
-          <div
-            className={`flex justify-between items-center gap-2 w-full xl:w-auto`}
-          >
-            <div onClick={() => setSidebar(true)} className={`xl:hidden `}>
-              <FiAlignLeft className={`text-4xl text-primary `} />
-            </div>
-            <img
-              className={`w-20 h-auto xl:hidden`}
-              src="/cremeLogo.png"
-              alt="logo"
-            />
-            <div className={`xl:hidden`}></div>
-            <ul className="hidden xl:flex">
-              {menus?.map((menu, i) =>
-                menu?.permission ? (
-                  menu?.Children?.length > 0 ? (
-                    <NavItemWithChildren
-                      key={i}
-                      icon={menu?.Icon}
-                      label={menu?.name}
-                      isExpanded={isExpanded}
-                      setIsExpanded={setIsExpanded}
-                    >
-                      {menu?.Children?.map((menu, i) => (
-                        <NavItemForDesktop
-                          key={i}
-                          icon={menu?.Icon}
-                          href={menu?.path}
-                        >
-                          {menu?.name}
-                        </NavItemForDesktop>
-                      ))}
-                    </NavItemWithChildren>
-                  ) : (
-                    <NavItemForDesktop
-                      key={i}
-                      icon={menu?.Icon}
-                      href={menu?.path}
-                      handler={menu?.handler}
-                    >
-                      {menu?.name}
-                    </NavItemForDesktop>
-                  )
-                ) : (
-                  ""
-                )
-              )}
-            </ul>
-          </div>
-          <div className={`flex items-center gap-6`}>
-            <div
-              onClick={() =>
-                user ? router.push("/cart") : router.push("/login")
-              }
-              className={`p-3 rounded-full bg-transparent cursor-pointer`}
-            >
-              <CgShoppingCart className={`text-2xl font-bold text-primary`} />
-            </div>
-            {user ? (
-              <Logout />
-            ) : (
-              <div className={`flex items-center gap-3`}>
-                <button
-                  data-tip="Sign In"
-                  onClick={() => router.push("/login")}
-                  className={`tooltip  tooltip-custom-primary tooltip-bottom items-center gap-1 hidden xl:flex px-3 sm:px-6 py-2 sm:py-3 bg-base-200 text-base-300 rounded-full font-bold `}
-                >
-                  Login
-                </button>
-                <button
-                  data-tip="register"
-                  onClick={() => router.push("/register")}
-                  className={`tooltip tooltip-custom-primary tooltip-bottom items-center gap-1 hidden xl:flex px-3 sm:px-6 py-2 sm:py-3 bg-base-200 text-base-300 rounded-full font-bold `}
-                >
-                  Register
-                </button>
-              </div>
-            )}
-          </div>
-          <OutsideClickHandler
-            onOutsideClick={() => {
-              setSidebar(false);
-            }}
-            className={` h-screen bg-base-100 fixed transition-all ${
-              sidebar ? "left-0" : "-left-[320px]"
-            } bottom-0 top-0 shadow-xl z-[1000] overflow-y-auto`}
-          >
-            <div className="flex flex-col h-screen w-[320px] overflow-hidden bg-base-100 border-r ">
-              <div className="p-4 flex justify-between items-center">
-                <img
-                  className={`w-20 h-auto`}
-                  src="/cremeLogo.png"
-                  alt="logo"
-                />
-                <FiX
-                  onClick={() => setSidebar(false)}
-                  className={`text-4xl m-5 p-2 rounded-full w-auto text-primary bg-secondary `}
-                />
-              </div>
-              <nav className="flex-1 p-4 overflow-y-auto">
-                <ul className="space-y-2">
-                  {menus?.map((menu, i) =>
-                    menu?.permission ? (
-                      menu?.Children?.length > 0 ? (
-                        <NavItemWithChildren
-                          key={i}
-                          icon={menu?.Icon}
-                          label={menu?.name}
-                          isExpanded={isExpanded}
-                          setIsExpanded={setIsExpanded}
-                        >
-                          {menu?.Children?.map((menu, i) => (
-                            <NavItem
-                              key={i}
-                              icon={menu?.Icon}
-                              href={menu?.path}
-                              handler={menu?.handler}
-                            >
-                              {menu?.name}
-                            </NavItem>
-                          ))}
-                        </NavItemWithChildren>
-                      ) : (
-                        <NavItem
-                          key={i}
-                          icon={menu?.Icon}
-                          href={menu?.path}
-                          handler={menu?.handler}
-                        >
-                          {menu?.name}
-                        </NavItem>
-                      )
-                    ) : (
-                      ""
-                    )
-                  )}
-                </ul>
-              </nav>
-              <div className="p-4 border-t dark:border-gray-700 pb-5">
-                <div className="flex items-center">
-                  <div className="h-9 w-9 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                    <span className="text-sm font-medium text-primary ">
-                      {user?.name
-                        ?.split(" ")
-                        ?.map((char) => char.charAt(0).toUpperCase())}
-                    </span>
-                  </div>
-                  {user ? (
-                    <div className="ml-3">
-                      <p className="text-sm font-medium text-heading-main ">
-                        {user?.name}
-                      </p>
-                      <p className="text-xs font-semibold text-heading-main ">
-                        {user?.email}
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="ml-3 text-sm font-semibold text-heading-main">
-                      Please{" "}
-                      <span
-                        className={`link link-hover hover:text-heading-brand`}
-                        onClick={handleLogin}
-                      >
-                        Login
-                      </span>{" "}
-                      or{" "}
-                      <span
-                        className={`link link-hover hover:text-heading-brand`}
-                        onClick={handleRegister}
-                      >
-                        Register
-                      </span>
-                    </div>
-                  )}
-                </div>
+          <div className={`xl:hidden`}></div>
 
-                {user ? (
-                  <Logout />
+          <ul className="hidden xl:flex">
+            {menus?.map((menu, i) =>
+              menu?.permission ? (
+                menu?.Children?.length > 0 ? (
+                  <NavItemWithChildren
+                    key={i}
+                    icon={menu?.Icon}
+                    label={menu?.name}
+                    isExpanded={isExpanded}
+                    setIsExpanded={setIsExpanded}
+                  >
+                    {menu?.Children?.map((menu, i) => (
+                      <NavItemForDesktop
+                        key={i}
+                        icon={menu?.Icon}
+                        href={menu?.path}
+                      >
+                        {menu?.name}
+                      </NavItemForDesktop>
+                    ))}
+                  </NavItemWithChildren>
                 ) : (
-                  <div className={`grid grid-cols-2 gap-3`}>
-                    <button
+                  <NavItemForDesktop
+                    key={i}
+                    icon={menu?.Icon}
+                    href={menu?.path}
+                    handler={menu?.handler}
+                  >
+                    {menu?.name}
+                  </NavItemForDesktop>
+                )
+              ) : (
+                ""
+              )
+            )}
+          </ul>
+        </div>
+
+        <div className={`flex items-center gap-6`}>
+          <div
+            onClick={() =>
+              user ? router.push("/cart") : router.push("/login")
+            }
+            className={`p-3 rounded-full bg-transparent cursor-pointer`}
+          >
+            <CgShoppingCart className={`text-2xl font-bold text-primary`} />
+          </div>
+          {user ? (
+            <Logout />
+          ) : (
+            <div className={`flex items-center gap-3`}>
+              <button
+                data-tip="Sign In"
+                onClick={() => router.push("/login")}
+                className={`tooltip  tooltip-custom-primary tooltip-bottom items-center gap-1 hidden xl:flex px-3 sm:px-6 py-2 sm:py-3 bg-base-200 text-base-300 rounded-full font-bold `}
+              >
+                Login
+              </button>
+              <button
+                data-tip="register"
+                onClick={() => router.push("/register")}
+                className={`tooltip tooltip-custom-primary tooltip-bottom items-center gap-1 hidden xl:flex px-3 sm:px-6 py-2 sm:py-3 bg-base-200 text-base-300 rounded-full font-bold `}
+              >
+                Register
+              </button>
+            </div>
+          )}
+        </div>
+        <OutsideClickHandler
+          onOutsideClick={() => {
+            setSidebar(false);
+          }}
+          className={` h-screen bg-base-100 fixed transition-all ${
+            sidebar ? "left-0" : "-left-[320px]"
+          } bottom-0 top-0 shadow-xl z-[1000] overflow-y-auto`}
+        >
+          <div className="flex flex-col h-screen w-[320px] overflow-hidden bg-base-100 border-r ">
+            <div className="p-4 flex justify-between items-center">
+              <img className={`w-20 h-auto`} src="/cremeLogo.png" alt="logo" />
+              <FiX
+                onClick={() => setSidebar(false)}
+                className={`text-4xl m-5 p-2 rounded-full w-auto text-primary bg-secondary `}
+              />
+            </div>
+            <nav className="flex-1 p-4 overflow-y-auto">
+              <ul className="space-y-2">
+                {menus?.map((menu, i) =>
+                  menu?.permission ? (
+                    menu?.Children?.length > 0 ? (
+                      <NavItemWithChildren
+                        key={i}
+                        icon={menu?.Icon}
+                        label={menu?.name}
+                        isExpanded={isExpanded}
+                        setIsExpanded={setIsExpanded}
+                      >
+                        {menu?.Children?.map((menu, i) => (
+                          <NavItem
+                            key={i}
+                            icon={menu?.Icon}
+                            href={menu?.path}
+                            handler={menu?.handler}
+                          >
+                            {menu?.name}
+                          </NavItem>
+                        ))}
+                      </NavItemWithChildren>
+                    ) : (
+                      <NavItem
+                        key={i}
+                        icon={menu?.Icon}
+                        href={menu?.path}
+                        handler={menu?.handler}
+                      >
+                        {menu?.name}
+                      </NavItem>
+                    )
+                  ) : (
+                    ""
+                  )
+                )}
+              </ul>
+            </nav>
+            <div className="p-4 border-t dark:border-gray-700 pb-5">
+              <div className="flex items-center">
+                <div className="h-9 w-9 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                  <span className="text-sm font-medium text-primary ">
+                    {user?.name
+                      ?.split(" ")
+                      ?.map((char) => char.charAt(0).toUpperCase())}
+                  </span>
+                </div>
+                {user ? (
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-heading-main ">
+                      {user?.name}
+                    </p>
+                    <p className="text-xs font-semibold text-heading-main ">
+                      {user?.email}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="ml-3 text-sm font-semibold text-heading-main">
+                    Please{" "}
+                    <span
+                      className={`link link-hover hover:text-heading-brand`}
                       onClick={handleLogin}
-                      className="w-full mt-4 px-4 py-2 text-sm font-medium bg-transparent text-heading-main hover:text-gray-100 hover:bg-gray-700 rounded-md flex items-center justify-start"
                     >
                       Login
-                    </button>
-                    <button
+                    </span>{" "}
+                    or{" "}
+                    <span
+                      className={`link link-hover hover:text-heading-brand`}
                       onClick={handleRegister}
-                      className="w-full mt-4 px-4 py-2 text-sm font-medium bg-transparent text-heading-main hover:text-gray-100 hover:bg-gray-700 rounded-md flex items-center justify-start"
                     >
                       Register
-                    </button>
+                    </span>
                   </div>
                 )}
               </div>
+
+              {user ? (
+                <Logout />
+              ) : (
+                <div className={`grid grid-cols-2 gap-3`}>
+                  <button
+                    onClick={handleLogin}
+                    className="w-full mt-4 px-4 py-2 text-sm font-medium bg-transparent text-heading-main hover:text-gray-100 hover:bg-gray-700 rounded-md flex items-center justify-start"
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={handleRegister}
+                    className="w-full mt-4 px-4 py-2 text-sm font-medium bg-transparent text-heading-main hover:text-gray-100 hover:bg-gray-700 rounded-md flex items-center justify-start"
+                  >
+                    Register
+                  </button>
+                </div>
+              )}
             </div>
-          </OutsideClickHandler>
-        </div>
+          </div>
+        </OutsideClickHandler>
       </div>
-      <div className={`w-full`}>
+
+      {/* <div className={`w-full`}>
         <div className={`wavy-line-nav`}></div>
-      </div>
-    </div>
+      </div> */}
+    </nav>
   );
 };
 

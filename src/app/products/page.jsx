@@ -6,14 +6,17 @@ import TableComponentHeading from "@/Shared/TableComponentHeading";
 import NavigateComponent from "@/Utils/navigate";
 import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
-import { RiSoundModuleFill } from "react-icons/ri";
 import FilterComponent from "./FilterComponent";
 import ProductCard from "@/components/UI/ProductCard";
 import { useGetAllCategoriesQuery } from "@/redux/apis/categoryApis";
-import { useGetAllClientProductsQuery } from "@/redux/apis/productApis";
+import { useGetAllProductsQuery } from "@/redux/apis/productApis";
+import { RiSoundModuleFill } from "react-icons/ri";
 
-const Page = () => {
+export default function ProductPage() {
+  // FILTER SIDEBAR
   const [sidebar, setSidebar] = useState(false);
+
+  // DATABASE FILTER
   const [filters, setFilters] = useState({
     searchTerm: "",
     page: 1,
@@ -27,29 +30,33 @@ const Page = () => {
     lowToHigh: "",
   });
 
+  // GET CATEGORIES
   const categories = useGetAllCategoriesQuery({});
-  const products = useGetAllClientProductsQuery({
+  // GET PRODUCTS
+  const products = useGetAllProductsQuery({
     searchTerm: filters?.searchTerm,
     page: filters?.page,
     limit: filters?.limit,
     category_id: filters?.category_id,
     fromPrice: filters?.fromPrice,
     toPrice: filters?.toPrice,
-    sortByNewest: filters?.sortByNewest,
+    sortBy: filters?.sortByNewest,
     HighToLow: filters?.HighToLow,
     lowToHigh: filters?.lowToHigh,
   });
 
+  // REFETCH IF FILTERS CHANGE
   useEffect(() => {
     products.refetch();
   }, [filters]);
 
+  // LOADING STATE
   if (categories.isLoading || products.isLoading) {
     return <CustomLoading />;
   }
   return (
-    <div className={`space-y-20 pb-40`}>
-      {/* PAGE HEADER */}
+    <div className={``}>
+      {/* <============================= PAGE HEADER ============================> */}
       <FixedBgComponent
         url="/chocolate_bg.jpg"
         wrapperClass={`pt-60 pb-40`}
@@ -68,37 +75,46 @@ const Page = () => {
         }
       />
 
-      {/* PRODUCTS SHOW */}
-      <div
-        className={`grid grid-cols-1 lg:grid-cols-3 mx-5 md:mx-10 relative h-full`}
-      >
+      {/* <============================= PRODUCTS SHOW HERE ============================> */}
+      <div className={`flex gap-5 mx-5 md:mx-10 relative h-full`}>
         {/* FILTERS SIDE BAR */}
         {!sidebar && (
+          /* <============================= FILTERS SIDE BAR CLOSE BUTTON ============================> */
           <div
+            role="button"
+            onClick={() => setSidebar(true)}
             className={`fixed lg:hidden left-0 bottom-40 z-[1000] py-4 pr-4 rounded-r-full bg-primary text-2xl text-base-300 font-bold  hover:bg-secondary transition-all active:scale-95`}
           >
-            <RiSoundModuleFill
-              className={`rotate-90`}
-              onClick={() => setSidebar(true)}
-            />
+            <RiSoundModuleFill className={`rotate-90`} />
           </div>
         )}
 
+        {/* FILTERS SIDE BAR */}
         <div
-          className={`fixed overflow-auto bottom-0 bg-base-100 px-3  lg:static top-0 w-[300px] z-[1000] transition-all  ${
-            sidebar ? "left-0" : "-left-[340px]"
-          }`}
+          className={`overflow-auto bg-base-100 px-3 transition-all min-w-[300px] ${
+            sidebar
+              ? "fixed left-0 top-0 z-[1000] h-full"
+              : "fixed -left-[340px] bottom-0"
+          } lg:sticky lg:top-[96px] lg:h-[calc(100vh-96px)]`}
         >
           {/* FILTERS */}
           <div className={`relative py-16 space-y-10`}>
+            {/* TOTAL SEARCH RESULTS */}
+            <h2 className={`text-xl font-bold text-primary`}>
+              Total{" "}
+              <span className={`text-4xl font-bold`}>
+                {products.data?.meta?.total}
+              </span>{" "}
+              {products.data?.meta?.total > 1 ? "Products" : "Product"} Found
+            </h2>
             {/* FILTERS COMPONENT */}
-            <FilterComponent filters={filters} setFilters={setFilters} />
+            <FilterComponent setFilters={setFilters} />
 
             {/* SELECT PRODUCT CATEGORY */}
             <div>
               <div className={`flex flex-col justify-center items-start`}>
                 <div className={`flex justify-between items-center w-full`}>
-                  <h2 className={`text-2xl lg:text-4xl font-bold text-primary`}>
+                  <h2 className={`text-2xl lg:text-3xl font-bold text-primary`}>
                     Product Categories
                   </h2>
                   <FiX
@@ -150,15 +166,9 @@ const Page = () => {
         {products.isLoading ? (
           <CustomLoading />
         ) : (
-          <div className={`col-span-2 space-y-5`}>
-            <div>
-              <h2 className={`text-xl font-bold text-primary`}>
-                Total {products?.meta?.total}{" "}
-                {products?.meta?.total > 1 ? "Products" : "Product"} Found
-              </h2>
-            </div>
+          <div className={`space-y-5`}>
             <div
-              className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 `}
+              className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 gap-5 `}
             >
               {products?.data?.data?.map((product, i) => (
                 <ProductCard key={i} product={product} />
@@ -175,6 +185,4 @@ const Page = () => {
       </div>
     </div>
   );
-};
-
-export default Page;
+}

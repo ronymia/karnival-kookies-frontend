@@ -36,12 +36,21 @@ export const apis = baseApi.injectEndpoints({
     }),
     // GET ALL PACKAGES
     getAllProducts: builder.query({
-      query: ({ page, searchTerm, limit }) => ({
-        url: `${URL}/all-products`,
+      query: (arg = {}) => ({
+        url: `${URL}`,
         method: "GET",
-        params: { page, limit, searchTerm },
+        params: arg,
       }),
       providesTags: (result) => (result ? [TagTypes.products] : []),
+      keepUnusedDataFor: 0,
+    }),
+    getPriceBounds: builder.query({
+      query: (arg = {}) => ({
+        url: `${URL}/get-price-bounds`,
+        method: "GET",
+        params: arg,
+      }),
+      keepUnusedDataFor: 0,
     }),
     // GET PACKAGE BY ID
     getProductsById: builder.query({
@@ -99,6 +108,7 @@ export const apis = baseApi.injectEndpoints({
 
 export const {
   useGetAllProductsQuery,
+  useGetPriceBoundsQuery,
   useGetProductsByIdQuery,
   useCreateProductsMutation,
   useUpdateProductsMutation,

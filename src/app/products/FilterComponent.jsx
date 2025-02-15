@@ -1,30 +1,18 @@
 "use client";
+import { useGetPriceBoundsQuery } from "@/redux/apis/productApis";
 // import { getFilterData } from "@/apis/products";
 import Button from "@/Shared/Button";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 
-const FilterComponent = ({ filters, setFilters, data }) => {
+export default function FilterComponent({ setFilters }) {
   const [componentFilters, setComponentFilters] = useState({
     fromPrice: "",
     toPrice: "",
     sortByNewest: "",
     sortOrder: "",
   });
-  console.log({ componentFilters });
-  // const [data, setData] = useState({});
-
-  // useEffect(() => {
-  //   getFilterData()
-  //     .then((res) => {
-  //       console.log({ res });
-  //       setData(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log({ err });
-  //     });
-  // }, []);
-
-  console.log({ data });
+  // GET PRICE BOUNDS MAX AND MIN
+  const productPriceBounds = useGetPriceBoundsQuery();
 
   return (
     <div className="collapse bg-secondary">
@@ -33,6 +21,7 @@ const FilterComponent = ({ filters, setFilters, data }) => {
         Filters
       </div>
       <div className="collapse-content space-y-3">
+        {/* <======================= MIN PRICE FILTER =======================> */}
         <div>
           <p className={`font-semibold text-xl text-primary `}>Price</p>
           <div className={`space-y-2`}>
@@ -46,11 +35,13 @@ const FilterComponent = ({ filters, setFilters, data }) => {
               }
               type="range"
               min={0}
-              max={parseFloat(data?.mostExpensiveProduct?.regular_price)}
+              max={parseFloat(productPriceBounds.data?.data?.max_price)}
               value={componentFilters?.fromPrice}
               className="range range-xs range-primary"
             />
           </div>
+
+          {/* <======================= MAX PRICE FILTER =======================> */}
           <div>
             <p>Highest: ${componentFilters?.toPrice}</p>
             <input
@@ -61,8 +52,8 @@ const FilterComponent = ({ filters, setFilters, data }) => {
                 }))
               }
               type="range"
-              min={parseFloat(data?.cheapestProduct?.regular_price)}
-              max={parseFloat(data?.mostExpensiveProduct?.regular_price)}
+              min={parseFloat(productPriceBounds.data?.data?.min_price)}
+              max={parseFloat(productPriceBounds.data?.data?.max_price)}
               value={componentFilters?.toPrice}
               className="range range-xs range-primary"
             />
@@ -93,7 +84,7 @@ const FilterComponent = ({ filters, setFilters, data }) => {
             </label>
           </div>
 
-          {/* LOW TO HIGHT */}
+          {/* <======================= LOW TO HIGHT FILTER =======================> */}
           <div>
             <label className={`flex items-center gap-2`}>
               <input
@@ -120,7 +111,7 @@ const FilterComponent = ({ filters, setFilters, data }) => {
             </label>
           </div>
 
-          {/* HIGH TO LOW */}
+          {/* <======================= HIGH TO LOW FILTER =======================> */}
           <div>
             <label className={`flex items-center gap-2`}>
               <input
@@ -156,6 +147,4 @@ const FilterComponent = ({ filters, setFilters, data }) => {
       </div>
     </div>
   );
-};
-
-export default FilterComponent;
+}

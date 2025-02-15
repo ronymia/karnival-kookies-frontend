@@ -1,5 +1,4 @@
 import ProjectProvider from "@/Context/ProjectProvider";
-import Navbar from "@/Shared/Navbar";
 import { Cormorant } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
@@ -7,7 +6,7 @@ import Footer from "@/Shared/Footer";
 import ReduxProvider from "@/redux/ReduxProvider";
 import LiveChat from "@/components/layouts/LiveChat";
 import AuthProvider from "@/Context/AuthProvider";
-// import AuthProvider from "@/Context/AuthProvider";
+import Navbar from "@/components/layouts/Navbar";
 
 const cormorant = Cormorant({ subsets: ["latin"] });
 
@@ -23,19 +22,19 @@ export default function RootLayout({ children }) {
         <ReduxProvider>
           <AuthProvider>
             <ProjectProvider>
-              {/* NAV BAR */}
-              <nav className="absolute top-0 left-0 right-0 z-[100]">
-                <Navbar />
-              </nav>
-              {/* MAIN CONTENT */}
+              {/* <=================== NAVBAR ===================> */}
+              <Navbar />
+
+              {/* <=================== MAIN CONTENT ==================> */}
               <main className="">{children}</main>
-              {/* FOOTER */}
-              <>
-                <Footer />
-              </>
-              {/*  */}
+
+              {/* <=================== FOOTER ===================> */}
+              <Footer />
+
+              {/* <=================== LIVE CHAT ===================> */}
               <LiveChat />
-              {/* NOTIFICATION TOASTER */}
+
+              {/* <=================== NOTIFICATION TOASTER ===================> */}
               <Toaster position="top-right" />
             </ProjectProvider>
           </AuthProvider>

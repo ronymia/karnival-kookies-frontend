@@ -2,7 +2,7 @@
 
 import CategoryForm from "@/app/admin/categories/CategoryForm";
 import PackageForm from "@/app/admin/packages/PackageForm";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FiX } from "react-icons/fi";
 import Popup from "reactjs-popup";
 

@@ -1,9 +1,5 @@
 "use client";
 import CustomLoading from "@/Shared/CustomLoading";
-import FixedBgComponent from "@/Shared/FixedBgComponent";
-import { Pagination } from "@/Shared/Paginations/Pagination";
-import TableComponentHeading from "@/Shared/TableComponentHeading";
-import NavigateComponent from "@/Utils/navigate";
 import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import FilterComponent from "./FilterComponent";
@@ -11,6 +7,10 @@ import ProductCard from "@/components/UI/ProductCard";
 import { useGetAllCategoriesQuery } from "@/redux/apis/categoryApis";
 import { useGetAllProductsQuery } from "@/redux/apis/productApis";
 import { RiSoundModuleFill } from "react-icons/ri";
+import Pagination from "@/components/UI/table/Pagination";
+import FixedBgComponent from "@/components/layouts/FixedBgComponent";
+import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
+import NavigateComponent from "@/components/UI/navigate/navigate";
 
 export default function ProductPage() {
   // FILTER SIDEBAR

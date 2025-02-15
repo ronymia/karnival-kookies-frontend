@@ -5,7 +5,7 @@ import CustomField from "@/Shared/Fields/CustomField";
 import CustomFileUploader from "@/Shared/Fields/CustomFileUploader";
 import CustomNumberField from "@/Shared/Fields/CustomNumberField";
 import CustomTextareaField from "@/Shared/Fields/CustomTextAreaField";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import usePackageReducer from "./packageReducer";
 import { usePopupContext } from "@/Context/ProjectProvider";
 import {
@@ -16,10 +16,8 @@ import {
 import { errorHandler } from "@/Utils/errorHandler";
 import CustomToaster from "@/Shared/CustomToaster";
 import toast from "react-hot-toast";
-import CustomRadioButton from "@/components/UI/CustomRadioButton";
 import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
-import { useGetCategoryByIdQuery } from "@/redux/apis/categoryApis";
-import CustomLoading from "@/Shared/CustomLoading";
+import RadioButton from "@/components/UI/inputFields/RadioButton";
 
 export default function PackageForm() {
   // FORM REDUCER
@@ -286,7 +284,7 @@ export default function PackageForm() {
         wrapperClassName={"w-full"}
         required={true}
       />
-      <CustomRadioButton
+      <RadioButton
         defaultChecked={state.is_active.toString()}
         label={`Package Activate`}
         required={true}

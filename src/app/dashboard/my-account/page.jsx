@@ -1,19 +1,16 @@
 "use client";
 import { getAllUserDashboardItems } from "@/apis/dashboardApis";
-import PrivateRoute from "@/Routes/PrivateRoute";
-import CustomLoading from "@/Shared/CustomLoading";
+import Heading from "@/components/UI/Heading/Heading";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
+import { errorHandler } from "@/helpers/errorHandler";
 import DashboardCard from "@/Shared/DashboardCard";
-import Heading from "@/Shared/Heading";
-import { errorHandler } from "@/Utils/errorHandler";
 import { formatRole } from "@/Utils/formatRole";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-const Page = () => {
+export default function Page() {
   // USER FROM REDUX STORE
   const { user } = useSelector((state) => state.auth);
-  const router = useRouter();
   const [data, setData] = useState({});
   const [isDashboardLoading, setIsDashboardLoading] = useState(false);
   useEffect(() => {
@@ -29,13 +26,12 @@ const Page = () => {
         errorHandler({ err, setLoading: setIsDashboardLoading });
       });
   }, [user]);
-  console.log({ data });
 
   if (isDashboardLoading) {
     return <CustomLoading />;
   }
   return (
-    <PrivateRoute>
+    <>
       <div className={`max-w-screen-xl mx-auto px-3 space-y-10 pt-36 pb-40`}>
         <div
           className={`flex flex-col md:flex-row md:justify-between md:items-center gap-5`}
@@ -64,8 +60,8 @@ const Page = () => {
               <div className={`text-[14px] font-bold grid grid-cols-2 gap-1`}>
                 <p>Total: {data?.totalOrders}</p>
                 {/* <p>Checked In: {data?.today_bookings?.check_in}</p>
-            <p>Pending: {data?.today_bookings?.pending}</p>
-            <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
+                <p>Pending: {data?.today_bookings?.pending}</p>
+                <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
               </div>
             }
             containerClass={"bg-gradient-to-r from-green-700 to-green-950"}
@@ -76,8 +72,8 @@ const Page = () => {
               <div className={`text-[14px] font-bold grid grid-cols-2 gap-1`}>
                 <p>Total: {data?.last7DaysOrders}</p>
                 {/* <p>Checked In: {data?.today_bookings?.check_in}</p>
-            <p>Pending: {data?.today_bookings?.pending}</p>
-            <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
+                <p>Pending: {data?.today_bookings?.pending}</p>
+                <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
               </div>
             }
             containerClass={"bg-gradient-to-r from-green-700 to-green-950"}
@@ -88,8 +84,8 @@ const Page = () => {
               <div className={`text-[14px] font-bold grid grid-cols-2 gap-1`}>
                 <p>Total: {data?.last30DaysOrders}</p>
                 {/* <p>Checked In: {data?.today_bookings?.check_in}</p>
-            <p>Pending: {data?.today_bookings?.pending}</p>
-            <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
+                <p>Pending: {data?.today_bookings?.pending}</p>
+                <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
               </div>
             }
             containerClass={"bg-gradient-to-r from-green-700 to-green-950"}
@@ -122,8 +118,8 @@ const Page = () => {
               <div className={`text-[14px] font-bold grid grid-cols-2 gap-1`}>
                 <p>Total: {data?.totalCartItems}</p>
                 {/* <p>Checked In: {data?.today_bookings?.check_in}</p>
-            <p>Pending: {data?.today_bookings?.pending}</p>
-            <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
+                <p>Pending: {data?.today_bookings?.pending}</p>
+                <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
               </div>
             }
             containerClass={"bg-gradient-to-r from-emerald-700 to-emerald-950"}
@@ -158,8 +154,6 @@ const Page = () => {
           </div>
         </div>
       </div>
-    </PrivateRoute>
+    </>
   );
-};
-
-export default Page;
+}

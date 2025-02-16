@@ -1,15 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FaRegFileLines } from "react-icons/fa6";
 import { FiPlus } from "react-icons/fi";
 import { ImFilesEmpty } from "react-icons/im";
 import { IoCloudUploadSharp } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import { getFullImageLink } from "@/Utils/getFullImageLink";
-import CustomPopup from "../CustomPopup";
-import FileViewer from "../FileViewer";
 import { usePopupContext } from "@/Context/ProjectProvider";
+import CustomPopup from "@/components/UI/modal/CustomPopup";
+import FileViewer from "@/components/UI/modal/FileViewer";
 
 export default function CustomFileUploader({
   fileFolder,

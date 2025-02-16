@@ -101,7 +101,7 @@ export default function Navbar() {
       // Icon: <LayoutDashboard className="h-4 w-4" />,
       handler: handleOpenDropdown,
       path: "/admin",
-      permission: isAdmin,
+      permission: true,
       Children: [
         // ADMIN DASHBOARD
         {

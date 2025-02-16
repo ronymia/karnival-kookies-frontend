@@ -1,12 +1,12 @@
 "use client";
-import Button from "@/Shared/Button";
 import React, { useState } from "react";
 import Quantity from "./Quantity";
 import { postCart, updateQuantity } from "@/apis/carts";
 import toast from "react-hot-toast";
-import CustomToaster from "@/Shared/CustomToaster";
-import { errorHandler } from "@/Utils/errorHandler";
 import { useSelector } from "react-redux";
+import CustomToaster from "@/components/UI/toaster/CustomToaster";
+import { errorHandler } from "@/helpers/errorHandler";
+import Button from "@/components/UI/buttons/Button";
 
 const ButtonWrapper = ({ text, id }) => {
   const [quantity, setQuantity] = useState(1);

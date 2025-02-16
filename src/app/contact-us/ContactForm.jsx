@@ -1,15 +1,13 @@
 "use client";
 import { useState } from "react";
 import toast from "react-hot-toast";
-
-import CustomLoading from "@/Shared/CustomLoading";
-import CustomToaster from "@/Shared/CustomToaster";
-import { errorHandler } from "@/Utils/errorHandler";
 import CustomField from "@/Shared/Fields/CustomField";
 import CustomTextareaField from "@/Shared/Fields/CustomTextAreaField";
-import ButtonSpinner from "@/Shared/ButtonSpinner";
 import { postMessage } from "@/apis/messages";
-import Button from "@/Shared/Button";
+import CustomToaster from "@/components/UI/toaster/CustomToaster";
+import { errorHandler } from "@/helpers/errorHandler";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
+import Button from "@/components/UI/buttons/Button";
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({

@@ -1,4 +1,7 @@
 "use client";
+import ButtonLoading from "@/components/UI/buttons/ButtonLoading";
+import CustomToaster from "@/components/UI/toaster/CustomToaster";
+import useClickOutside from "@/Hooks/useClickOutside";
 import truncateText from "@/Utils/truncateText";
 import { Fragment, useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -7,9 +10,6 @@ import { IoInformationCircleSharp } from "react-icons/io5";
 import { RxCrossCircled } from "react-icons/rx";
 import { TfiExchangeVertical } from "react-icons/tfi";
 import { TiTick } from "react-icons/ti";
-import ButtonLoading from "../ButtonLoading";
-import CustomToaster from "../CustomToaster";
-import { OutsideClickHandler } from "../OutsideClickHandler";
 export default function CustomMultiSelect({
   options = [], // required []
 
@@ -59,6 +59,9 @@ export default function CustomMultiSelect({
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const [componentLoading, setComponentLoading] = useState(true);
   const [searchFieldValue, setSearchFieldValue] = useState("");
+  const wrapperOptionRef = useClickOutside(() => {
+    setIsOptionOpen(false);
+  });
 
   const [isAllSelected, setIsAllSelected] = useState(
     options.length === selectedValues?.length
@@ -349,15 +352,13 @@ export default function CustomMultiSelect({
       </div>
 
       {/* OPTIONS  */}
-      <OutsideClickHandler
+      <div
+        ref={wrapperOptionRef}
         className={`absolute ${
           top ? "bottom-full -mb-7" : "top-full mt-2"
         } z-30 bg-secondary text-base-300 duration-200 transition-all overflow-hidden  ${
           isOptionOpen ? "opacity-100 h-auto block" : "opacity-0 h-0 hidden"
         }  shadow-lg border-2 border-primary rounded-md w-full left-0`}
-        onOutsideClick={() => {
-          setIsOptionOpen(false);
-        }}
         dataAuto={`${dataAuto}-option-wrapper`}
       >
         <h3 className={`text-center py-2 font-medium shadow-md`}>
@@ -505,7 +506,7 @@ export default function CustomMultiSelect({
             Add New
           </button>
         )}
-      </OutsideClickHandler>
+      </div>
 
       {/* VALIDATION MESSAGE  */}
       {error && (

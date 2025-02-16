@@ -5,18 +5,18 @@ import { useSelector } from "react-redux";
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated } = useSelector((state) => state.auth);
-  const { isLoading } = useAuthContext(); // Use your context or state for loading
+  const { isLoading } = useAuthContext();
   const router = useRouter();
 
   // Handle loading state
   if (isLoading) {
-    return <CustomLoading />; // Show a loading spinner while resolving authentication
+    return <CustomLoading />;
   }
 
   // If not authenticated, redirect to login
   if (!isAuthenticated) {
     router.push("/login");
-    return null; // Avoid rendering children during redirection
+    return null;
   }
 
   // Render the protected component

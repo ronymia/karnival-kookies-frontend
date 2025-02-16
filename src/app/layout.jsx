@@ -7,6 +7,7 @@ import ReduxProvider from "@/redux/ReduxProvider";
 import LiveChat from "@/components/layouts/LiveChat";
 import AuthProvider from "@/Context/AuthProvider";
 import Navbar from "@/components/layouts/Navbar";
+import AppErrorBoundary from "@/components/AppErrorBoundary";
 
 const cormorant = Cormorant({ subsets: ["latin"] });
 
@@ -18,27 +19,35 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      {/* <=================== HEAD ===================> */}
+      <head>
+        <link rel="icon" type="image/svg+xml" href="/cremeLogo.png" />
+      </head>
+
+      {/* <=================== BODY ===================> */}
       <body className={`${cormorant.className} antialiased relative`}>
-        <ReduxProvider>
-          <AuthProvider>
-            <ProjectProvider>
-              {/* <=================== NAVBAR ===================> */}
-              <Navbar />
+        <AppErrorBoundary>
+          <ReduxProvider>
+            <AuthProvider>
+              <ProjectProvider>
+                {/* <=================== NAVBAR ===================> */}
+                <Navbar />
 
-              {/* <=================== MAIN CONTENT ==================> */}
-              <main className="">{children}</main>
+                {/* <=================== MAIN CONTENT ==================> */}
+                <main className="">{children}</main>
 
-              {/* <=================== FOOTER ===================> */}
-              <Footer />
+                {/* <=================== FOOTER ===================> */}
+                <Footer />
 
-              {/* <=================== LIVE CHAT ===================> */}
-              <LiveChat />
+                {/* <=================== LIVE CHAT ===================> */}
+                <LiveChat />
 
-              {/* <=================== NOTIFICATION TOASTER ===================> */}
-              <Toaster position="top-right" />
-            </ProjectProvider>
-          </AuthProvider>
-        </ReduxProvider>
+                {/* <=================== NOTIFICATION TOASTER ===================> */}
+                <Toaster position="top-right" />
+              </ProjectProvider>
+            </AuthProvider>
+          </ReduxProvider>
+        </AppErrorBoundary>
       </body>
     </html>
   );

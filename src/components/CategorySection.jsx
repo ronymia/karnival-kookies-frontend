@@ -1,14 +1,13 @@
 "use client";
-import { getProductsByCategory } from "@/apis/products";
-import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
-import { useGetAllClientProductsQuery } from "@/redux/apis/productApis";
-import Button from "@/Shared/Button";
-import CustomLoading from "@/Shared/CustomLoading";
-import Heading from "@/Shared/Heading";
-import ProductCardOnCategory from "@/Shared/ProductCardOnCategory";
-import Tabs from "@/Shared/Tabs";
+import { errorHandler } from "@/helpers/errorHandler";
+import { useGetAllProductsQuery } from "@/redux/apis/productApis";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import CustomLoading from "./UI/loader/CustomLoading";
+import Heading from "./UI/Heading/Heading";
+import Button from "./UI/buttons/Button";
+import Tabs from "./UI/tab/Tabs";
+import ProductCardOnCategory from "./UI/ProductCardOnCategory";
 
 export default function CategorySection({ tabs }) {
   const router = useRouter();
@@ -16,10 +15,7 @@ export default function CategorySection({ tabs }) {
   const [activeTab, setActiveTab] = useState(tabs[0]?.id);
 
   // GET PRODUCT BY CATEGORY ID
-  const products = useGetAllClientProductsQuery({
-    searchTerm: "",
-    page: 1,
-    limit: 10,
+  const products = useGetAllProductsQuery({
     category_id: activeTab,
   });
 
@@ -31,7 +27,7 @@ export default function CategorySection({ tabs }) {
   // IF ANY ERROR
   useEffect(() => {
     if (products.isError) {
-      errorHandlerV2({ err: products.error });
+      errorHandler({ err: products.error });
     }
   }, []);
 
@@ -43,13 +39,20 @@ export default function CategorySection({ tabs }) {
   }
   return (
     <div className="space-y-10">
+      {/* <============= HEADING =============> */}
       <Heading subHeading={"Online Store"} heading={"Explore Categories"} />
+
+      {/* <============= TABS =============> */}
       <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+
+      {/* <============= PRODUCTS =============> */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {products.data?.data?.map((product) => (
           <ProductCardOnCategory key={product?.id} product={product} />
         ))}
       </div>
+
+      {/* <============= NAVIGATE TO ALL PRODUCTS PAGE =============> */}
       <div className="flex flex-col justify-center items-center">
         <Button
           text={"See More"}

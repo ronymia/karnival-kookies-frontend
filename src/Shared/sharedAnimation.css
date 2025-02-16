@@ -1,6 +1,7 @@
 .rotating-background {
   position: relative;
   overflow: hidden;
+  z-index: 1;
 }
 
 .rotating-background::before {
@@ -18,6 +19,12 @@
   scale: 1.5;
 }
 
+.rotating-background img {
+  position: relative;
+  z-index: 1;
+  transform-origin: center;
+}
+
 @keyframes rotate {
   from {
     transform: rotate(0deg);
@@ -25,15 +32,6 @@
   to {
     transform: rotate(360deg);
   }
-}
-
-.rotating-square {
-  animation: rotate 30s linear infinite;
-}
-
-.rotating-background img {
-  position: relative;
-  z-index: 1;
 }
 
 @keyframes jump {
@@ -56,7 +54,6 @@
   0% {
     transform: translateY(-100%);
   }
-
   100% {
     transform: translateY(0%);
   }
@@ -65,5 +62,7 @@
 @media (min-width: 768px) {
   .image-hover:hover .cart-button {
     animation: upToDown 0.7s ease;
+    position: relative;
+    z-index: 2;
   }
 }

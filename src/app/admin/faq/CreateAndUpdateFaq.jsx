@@ -1,14 +1,14 @@
 "use client";
 import { usePopupContext } from "@/Context/ProjectProvider";
-import CustomLoading from "@/Shared/CustomLoading";
-import CustomToaster from "@/Shared/CustomToaster";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import ButtonSpinner from "@/Shared/ButtonSpinner";
 import CustomField from "@/Shared/Fields/CustomField";
 import CustomTextareaField from "@/Shared/Fields/CustomTextAreaField";
-import { errorHandler } from "@/Utils/errorHandler";
 import { postFaq, updateFaq } from "@/apis/faqs";
+import CustomToaster from "@/components/UI/toaster/CustomToaster";
+import { errorHandler } from "@/helpers/errorHandler";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
+import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
 
 const CreateAndUpdateFaq = () => {
   const { popupOption } = usePopupContext();

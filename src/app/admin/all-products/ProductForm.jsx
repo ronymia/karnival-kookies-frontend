@@ -5,8 +5,6 @@ import {
   useUpdateProductsMutation,
   useUploadProductsImagesMutation,
 } from "@/redux/apis/productApis";
-import ButtonSpinner from "@/Shared/ButtonSpinner";
-import CustomToaster from "@/Shared/CustomToaster";
 import { useEffect, useState } from "react";
 import useProductReducer from "./productReducer";
 import { usePopupContext } from "@/Context/ProjectProvider";
@@ -20,6 +18,8 @@ import { BiSolidCheckCircle } from "react-icons/bi";
 import Select from "@/components/UI/inputFields/Select";
 import FileUploader from "@/components/UI/inputFields/FileUploader";
 import { errorHandler } from "@/helpers/errorHandler";
+import CustomToaster from "@/components/UI/toaster/CustomToaster";
+import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
 
 export default function ProductForm() {
   // FORM REDUCER
@@ -268,7 +268,7 @@ export default function ProductForm() {
     <form
       noValidate
       onSubmit={handleOnSubmit}
-      className={`p-3 h-full grid grid-cols-1 md:grid-cols-2 gap-3 justify-between`}
+      className={`p-3 h-full grid grid-cols-1 md:grid-cols-2 gap-3`}
     >
       <>
         {/* NAME */}

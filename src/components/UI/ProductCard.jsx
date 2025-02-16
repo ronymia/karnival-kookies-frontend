@@ -4,20 +4,19 @@ import { useEffect, useState } from "react";
 import "../../Shared/sharedAnimation.css";
 import { getFullImageLink } from "@/Utils/getFullImageLink";
 import { useRouter } from "next/navigation";
-import { updateQuantity } from "@/apis/carts";
 import toast from "react-hot-toast";
-import CustomToaster from "@/Shared/CustomToaster";
-import { BsEye } from "react-icons/bs";
 import { FaEye } from "react-icons/fa";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
-import Button from "@/Shared/Button";
 import {
   useAddToFavoriteMutation,
   useRemoveFromFavoriteMutation,
 } from "@/redux/apis/favoriteProductApis";
-import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
 import { useSelector } from "react-redux";
 import { useAddToCartMutation } from "@/redux/apis/cartApis";
+import CustomToaster from "./toaster/CustomToaster";
+import { errorHandler } from "@/helpers/errorHandler";
+import Button from "./buttons/Button";
+import Image from "next/image";
 
 export default function ProductCard({ product }) {
   const router = useRouter();
@@ -90,7 +89,7 @@ export default function ProductCard({ product }) {
         }
       })
       .catch((err) => {
-        errorHandlerV2({ err });
+        errorHandler({ err });
       });
   };
 
@@ -118,7 +117,7 @@ export default function ProductCard({ product }) {
         ));
       }
     } catch (err) {
-      errorHandlerV2({ err });
+      errorHandler({ err });
     }
   };
   const handleRemoveFavorite = async () => {
@@ -140,7 +139,7 @@ export default function ProductCard({ product }) {
         ));
       }
     } catch (err) {
-      errorHandlerV2({ err });
+      errorHandler({ err });
     }
   };
   /* **********************************************
@@ -150,19 +149,21 @@ export default function ProductCard({ product }) {
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="relative image-hover cursor-pointer"
+      className="relative image-hover cursor-pointer "
     >
       <div
         onClick={() => router.push(`/products/${product?.id}`)}
-        // style={{ backgroundImage: `url(/dots.png)` }}
-        className="overflow-hidden rotating-background"
+        className="relative w-full h-[400px] overflow-hidden rotating-background"
       >
-        <img
-          className="jump-image"
+        <Image
+          width={400}
+          height={400}
+          className="jump-image object-cover w-full h-auto"
           src={getFullImageLink(
             product?.images?.length > 0 && product?.images[0]
           )}
           alt={product?.name}
+          priority
         />
       </div>
       <motion.div
@@ -197,24 +198,40 @@ export default function ProductCard({ product }) {
         </p>
         <div className="flex justify-center items-center gap-2">
           <p
-            className={`${
-              product?.discount_Price ? "text-base-200" : "text-primary"
+            className={` ${
+              product?.is_discount_enable === 1
+                ? "text-base-200 line-through text-lg"
+                : "text-primary text-2xl"
             }`}
           >
-            ${product?.regular_Price}
+            ${product?.price}
           </p>
-          {product?.discount_Price && (
-            <p className={`text-red-500`}>${product?.discount_Price}</p>
+          {product?.is_discount_enable === 1 && (
+            <p className={`text-2xl text-red-500`}>
+              ${parseFloat(product?.net_price).toFixed(2)}
+            </p>
           )}
         </div>
       </motion.div>
 
       {/* DISCOUNT */}
-      {product?.discount_price && (
+      {product?.is_discount_enable === 1 && (
         <div
-          className={`bg-red-500 w-10 h-10 rounded-full text-base-300 font-medium absolute top-3 left-3 flex justify-center items-center text-[12px]`}
+          className={`bg-red-500 w-12 h-12 rounded-full text-base-300 font-medium absolute top-3 left-3 flex flex-col justify-center items-center text-base `}
         >
-          <p>Sale</p>
+          <>
+            {product?.discount_type === "fixed" ? (
+              <>
+                <span>${parseInt(product?.discount_value)}</span>
+                {/* <span>off</span> */}
+              </>
+            ) : (
+              <>
+                <span>{parseInt(product?.discount_value)}%</span>
+                {/* <span>off</span> */}
+              </>
+            )}
+          </>
         </div>
       )}
 

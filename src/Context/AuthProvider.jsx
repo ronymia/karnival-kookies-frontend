@@ -2,7 +2,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useLazyGetUserByTokenQuery } from "@/redux/apis/authApis";
 import { useSelector } from "react-redux";
-import CustomLoading from "@/Shared/CustomLoading";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
 
 // INITIALIZE PROJECT CONTEXT
 export const AuthContext = createContext();

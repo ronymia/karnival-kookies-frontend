@@ -1,31 +1,43 @@
 "use client";
-import { usePopupContext } from "@/Context/ProjectProvider";
+import Button from "@/components/UI/buttons/Button";
+import Heading from "@/components/UI/Heading/Heading";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
+import CustomPopup from "@/components/UI/modal/CustomPopup";
+import Pagination from "@/components/UI/table/Pagination";
+import Table from "@/components/UI/table/Table";
+import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
 import { deleteDataV2 } from "@/helpers/DeleteDataV2";
 import {
   useDeletePackageMutation,
   useGetAllPackagesQuery,
 } from "@/redux/apis/packageApis";
-import AdminRoute from "@/Routes/AdminRoute";
-import Button from "@/Shared/Button";
-import CustomLoading from "@/Shared/CustomLoading";
-import Heading from "@/Shared/Heading";
-import { Pagination } from "@/Shared/Paginations/Pagination";
 import SplitDescription from "@/Shared/SplitDescription";
-import Table from "@/Shared/Table";
-import TableComponentHeading from "@/Shared/TableComponentHeading";
 import { getFullImageLink } from "@/Utils/getFullImageLink";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AiFillEye } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
+import PackageForm from "./PackageForm";
+import withPermission from "@/Hoc/WithPermission";
 
-const PackagePage = () => {
+function PackagePage() {
   const router = useRouter();
-  const { popupOption, setPopupOption } = usePopupContext();
+  //
+  const [popupOption, setPopupOption] = useState({
+    open: false,
+    type: "",
+    title: "",
+    data: null,
+    closeOnDocumentClick: false,
+    overlayStyle: { background: "red" },
+    onClose: () => {
+      setPopupOption({ ...popupOption, open: false });
+    },
+  });
 
   // ALL SELECTED IDs
-  const [selectedIds, setSelectedIds] = useState([]);
 
   // FILTERS
   const [filters, setFilters] = useState({
@@ -38,11 +50,6 @@ const PackagePage = () => {
   const { data, isLoading } = useGetAllPackagesQuery({});
   //   DELETE PACKAGE
   const [deletePackage, deleteResult] = useDeletePackageMutation();
-
-  // HANDLE PER PAGE
-  const setPerPage = (count) => {
-    setFilters({ ...filters, perPage: count, page: 1 });
-  };
 
   // HANDLE DELETE PRODUCT
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
@@ -59,7 +66,7 @@ const PackagePage = () => {
     setPopupOption({
       ...popupOption,
       open: true,
-      type: "packageView",
+      type: "view",
       title: "Package Details",
       data: data,
     });
@@ -69,20 +76,22 @@ const PackagePage = () => {
     setPopupOption({
       ...popupOption,
       open: true,
-      type: "packageForm",
+      data: null,
+      type: "create",
+      form: "packageForm",
       title: "Add New Combo Package",
-      //   setIsUpdating: setIsUpdating,
     });
   };
   // HANDLE EDIT
   const handleEdit = (data) => {
+    console.log({ dataaaaaa: data });
     setPopupOption({
       ...popupOption,
       open: true,
-      type: "packageForm",
-      title: "Edit Combo Package",
       data: data,
-      //   setIsUpdating: setIsUpdating,
+      type: "update",
+      form: "packageForm",
+      title: "Update Combo Package",
     });
   };
   //
@@ -100,7 +109,7 @@ const PackagePage = () => {
   };
 
   // ALL ACTION BUTTONS
-  const [actions, setActions] = useState([
+  const actions = [
     {
       name: "view",
       handler: handleView,
@@ -126,60 +135,125 @@ const PackagePage = () => {
       isLoading: isDeleteLoading,
       disabledOn: [],
     },
-  ]);
+  ];
 
   // ALL DISPLAYED COLUMNS IN TABLE
-  const [cols, setCols] = useState([
+  const columns = [
     {
-      name: "#",
-      attribute_name: "count",
+      header: "#",
+      "data-label": "#",
+      accessorKey: "count",
       minWidth: 5,
       show: true,
       isMainField: true,
     },
     {
-      name: "Name",
-      attribute_name: "name",
+      header: "Name",
+      "data-label": "Name",
+      accessorKey: "name",
       minWidth: 20,
       show: true,
       isMainField: true,
     },
     {
-      name: "Image",
-      attribute_name: "image_table",
+      header: "Image",
+      "data-label": "Image",
+      accessorKey: "image_table",
       minWidth: 15,
       show: true,
       isMainField: true,
     },
     {
-      name: "Regular Price",
-      attribute_name: "regular_price",
+      header: "Price",
+      "data-label": "Price",
+      accessorKey: "mainPrice",
       minWidth: 10,
       show: true,
       isMainField: true,
     },
     {
-      name: "Discount Price",
-      attribute_name: "discount_price",
+      header: "Discount Amount",
+      "data-label": "Discount Amount",
+      accessorKey: "discountAmount",
       minWidth: 10,
       show: true,
       isMainField: true,
     },
     {
-      name: "Description",
-      attribute_name: "description_table",
+      header: "Net Price",
+      "data-label": "Net Price",
+      accessorKey: "netPrice",
       minWidth: 30,
       show: true,
     },
-  ]);
-
-  console.log({ package: data });
+    {
+      header: "Description",
+      "data-label": "Description",
+      accessorKey: "description_table",
+      minWidth: 30,
+      show: true,
+    },
+  ];
 
   if (isLoading) {
     return <CustomLoading />;
   }
   return (
-    <AdminRoute>
+    <>
+      <CustomPopup
+        popupOption={popupOption}
+        setPopupOption={setPopupOption}
+        Component={
+          <>
+            {/* CREATE */}
+            {popupOption?.type === "create" && (
+              <PackageForm
+                data={popupOption?.data}
+                handleClosePopup={() => {
+                  setPopupOption((prev) => ({
+                    ...prev,
+                    open: false,
+                    type: "",
+                    title: "",
+                    data: null,
+                  }));
+                }}
+              />
+            )}
+            {/* UPDATE */}
+            {popupOption?.type === "update" && (
+              <PackageForm
+                data={popupOption?.data}
+                handleClosePopup={() => {
+                  setPopupOption((prev) => ({
+                    ...prev,
+                    open: false,
+                    type: "",
+                    title: "",
+                    data: null,
+                  }));
+                }}
+              />
+            )}
+            {/* view */}
+            {popupOption?.type === "view" && (
+              <PackageForm
+                data={popupOption?.data}
+                handleClosePopup={() => {
+                  setPopupOption((prev) => ({
+                    ...prev,
+                    open: false,
+                    type: "",
+                    title: "",
+                    data: null,
+                  }));
+                }}
+              />
+            )}
+          </>
+        }
+      />
+
       <div
         className={`max-w-screen-xl mx-auto px-3 flex flex-col gap-10 pt-36 pb-40`}
       >
@@ -192,7 +266,7 @@ const PackagePage = () => {
               >
                 Home
               </span>{" "}
-              {"//"} <span>All Packages</span>
+              {"//"} <span>Combo Package Management</span>
             </div>
           }
           heading={"Packages"}
@@ -203,7 +277,7 @@ const PackagePage = () => {
             <Heading
               isSubHeading={false}
               isWave={false}
-              heading={"All Packages"}
+              heading={"Combo Package Management"}
             />
             <p className={``}>
               Total {data?.meta?.total}{" "}
@@ -215,13 +289,6 @@ const PackagePage = () => {
         {/* TABLE AREA */}
         <div className={`space-y-10`}>
           <Table
-            selectedIds={selectedIds}
-            setSelectedIds={setSelectedIds}
-            itemsPerPage={filters?.perPage}
-            totalItems={data?.meta?.total}
-            setPageNo={(data) => setFilters({ ...filters, page: data })}
-            setPerPage={setPerPage}
-            perPage={filters?.perPage}
             isLoading={isLoading}
             rows={data?.data?.map((d, i) => ({
               ...d,
@@ -230,21 +297,34 @@ const PackagePage = () => {
               description_table: (
                 <SplitDescription text={d?.description} length={30} />
               ),
+              mainPrice: `$ ${d?.price}`,
+              netPrice: `$ ${parseFloat(d?.net_price).toFixed(2)}`,
+              discountAmount:
+                d?.discount_type === "fixed"
+                  ? d?.discount_value !== null &&
+                    d?.discount_value !== undefined
+                    ? `$ ${d?.discount_value}`
+                    : "N/A"
+                  : d?.discount_value !== null &&
+                    d?.discount_value !== undefined
+                  ? `${d?.discount_value}%`
+                  : "N/A",
               image_table: (
-                <img
+                <Image
                   onClick={() => handleViewImages(d?.images)}
                   src={getFullImageLink(
-                    d?.images?.length > 0 ? d?.images[0] : ""
+                    d?.images?.length > 0 ? d?.images[0] : "",
+                    "Products"
                   )}
+                  width={100}
+                  height={100}
                   alt={d?.name}
                   className={`w-16 h-16 object-cover cursor-pointer`}
                 />
               ),
-              price: d?.price,
             }))}
             actions={actions}
-            cols={cols}
-            getFullDataToActionHandler
+            columns={columns}
           />
           {/* PAGINATION */}
           <Pagination
@@ -254,8 +334,8 @@ const PackagePage = () => {
           />
         </div>
       </div>
-    </AdminRoute>
+    </>
   );
-};
+}
 
-export default PackagePage;
+export default withPermission(PackagePage, ["admin"]);

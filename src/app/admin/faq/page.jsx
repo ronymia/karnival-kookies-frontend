@@ -1,27 +1,23 @@
 "use client";
 import { deleteFaq, getAllFaqs } from "@/apis/faqs";
+import Button from "@/components/UI/buttons/Button";
+import Heading from "@/components/UI/Heading/Heading";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
+import Table from "@/components/UI/table/Table";
+import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
 import { usePopupContext } from "@/Context/ProjectProvider";
-import AdminRoute from "@/Routes/AdminRoute";
-import Button from "@/Shared/Button";
-import CustomLoading from "@/Shared/CustomLoading";
-import Heading from "@/Shared/Heading";
-import { Pagination } from "@/Shared/Paginations/Pagination";
-import Table from "@/Shared/Table";
-import TableComponentHeading from "@/Shared/TableComponentHeading";
 import { deleteData } from "@/Utils/deleteData";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 
-const Page = () => {
+export default function Page() {
   const router = useRouter();
   const { popupOption, setPopupOption } = usePopupContext();
 
   // ALL SELECTED IDs
-  const [selectedIds, setSelectedIds] = useState([]);
   const [isFaqLoading, setIsFaqLoading] = useState(false);
-  console.log({ isFaqLoading });
   const [data, setData] = useState([]);
   const [isUpdating, setIsUpdating] = useState();
 
@@ -136,7 +132,7 @@ const Page = () => {
     return <CustomLoading />;
   }
   return (
-    <AdminRoute>
+    <>
       <div
         className={`max-w-screen-xl mx-auto px-3 flex flex-col gap-10 pt-36 pb-40`}
       >
@@ -167,26 +163,16 @@ const Page = () => {
         {/* TABLE AREA */}
         <div className={`space-y-10`}>
           <Table
-            selectedIds={selectedIds}
-            setSelectedIds={setSelectedIds}
-            itemsPerPage={filters?.perPage}
-            totalItems={data?.total}
-            setPageNo={(data) => setFilters({ ...filters, page: data })}
-            setPerPage={setPerPage}
-            perPage={filters?.perPage}
             isLoading={isFaqLoading}
             rows={data?.data?.map((d, i) => ({
               ...d,
               count: (filters?.page - 1) * filters?.perPage + i + 1,
             }))}
             actions={actions}
-            cols={cols}
-            getFullDataToActionHandler
+            columns={cols}
           />
         </div>
       </div>
-    </AdminRoute>
+    </>
   );
-};
-
-export default Page;
+}

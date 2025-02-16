@@ -1,11 +1,7 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  IoArrowBackOutline,
-  IoArrowForwardOutline,
-  IoArrowForwardSharp,
-} from "react-icons/io5";
+import { IoArrowBackOutline, IoArrowForwardOutline } from "react-icons/io5";
 
 const Slider = ({
   img,

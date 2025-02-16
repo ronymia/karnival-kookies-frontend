@@ -1,26 +1,22 @@
 "use client";
-import { getAllCheckoutsForAdmin } from "@/apis/carts";
+import Heading from "@/components/UI/Heading/Heading";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
+import Pagination from "@/components/UI/table/Pagination";
+import Table from "@/components/UI/table/Table";
+import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
 import { usePopupContext } from "@/Context/ProjectProvider";
-import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
+import { errorHandler } from "@/helpers/errorHandler";
 import {
   useGetAllOrdersQuery,
   useOrderStatusChangeMutation,
 } from "@/redux/apis/orderApis";
-import AdminRoute from "@/Routes/AdminRoute";
-import ButtonLoading from "@/Shared/ButtonLoading";
-import CustomLoading from "@/Shared/CustomLoading";
-import Heading from "@/Shared/Heading";
-import { Pagination } from "@/Shared/Paginations/Pagination";
-import Table from "@/Shared/Table";
-import TableComponentHeading from "@/Shared/TableComponentHeading";
-import { errorHandler } from "@/Utils/errorHandler";
 import { formatRole } from "@/Utils/formatRole";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AiFillEye } from "react-icons/ai";
 import { FiX } from "react-icons/fi";
 
-const Page = () => {
+export default function Page() {
   const router = useRouter();
   const { popupOption, setPopupOption } = usePopupContext();
   // FILTERS
@@ -29,8 +25,6 @@ const Page = () => {
     page: 1,
     limit: 10,
   });
-  // ALL SELECTED IDs
-  const [selectedIds, setSelectedIds] = useState([]);
 
   const [isUpdating, setIsUpdating] = useState();
   const [statusChangeId, setStatusChangeId] = useState(null);
@@ -43,13 +37,8 @@ const Page = () => {
   });
 
   if (isError) {
-    errorHandlerV2({ err: error });
+    errorHandler({ err: error });
   }
-
-  // HANDLE PER PAGE
-  const setPerPage = (count) => {
-    setFilters({ ...filters, perPage: count, page: 1 });
-  };
 
   // HANDLE VIEW
   const handleView = (data) => {
@@ -77,49 +66,56 @@ const Page = () => {
   // ALL DISPLAYED COLUMNS IN TABLE
   const [cols, setCols] = useState([
     {
-      name: "#",
-      attribute_name: "count",
+      header: "#",
+      "data-label": "#",
+      accessorKey: "count",
       minWidth: 5,
       show: true,
       isMainField: true,
     },
     {
-      name: "Order ID",
-      attribute_name: "order_id",
+      header: "Order ID",
+      "data-label": "Order ID",
+      accessorKey: "order_id",
       minWidth: 20,
       show: true,
       isMainField: true,
     },
     {
-      name: "Email",
-      attribute_name: "email",
+      header: "Email",
+      "data-label": "Email",
+      accessorKey: "email",
       minWidth: 20,
       show: true,
       isMainField: true,
     },
     {
-      name: "Products",
-      attribute_name: "products",
+      header: "Products",
+      "data-label": "Products",
+      accessorKey: "products",
       minWidth: 20,
       show: true,
       isMainField: true,
     },
 
     {
-      name: "Amount",
-      attribute_name: "totalAmount",
+      header: "Amount",
+      "data-label": "Amount",
+      accessorKey: "totalAmount",
       minWidth: 20,
       show: true,
     },
     {
-      name: "Payment Method",
-      attribute_name: "payment_method",
+      header: "Payment Method",
+      "data-label": "Payment Method",
+      accessorKey: "payment_method",
       minWidth: 20,
       show: true,
     },
     {
-      name: "Status",
-      attribute_name: "status_table",
+      header: "Status",
+      "data-label": "Status",
+      accessorKey: "status_table",
       minWidth: 10,
       show: true,
     },
@@ -143,7 +139,7 @@ const Page = () => {
         setIsUpdating(Math.random());
       }
     } catch (err) {
-      errorHandlerV2({ err });
+      errorHandler({ err });
     }
   };
   const handleCancelBookingModal = () => {
@@ -154,7 +150,7 @@ const Page = () => {
     return <CustomLoading />;
   }
   return (
-    <AdminRoute>
+    <>
       <div
         className={`max-w-screen-xl mx-auto px-3 flex flex-col gap-10 pt-36 pb-40`}
       >
@@ -228,13 +224,6 @@ const Page = () => {
         {/* TABLE AREA */}
         <div className={`space-y-10`}>
           <Table
-            selectedIds={selectedIds}
-            setSelectedIds={setSelectedIds}
-            itemsPerPage={filters?.limit}
-            totalItems={data?.total}
-            setPageNo={(data) => setFilters({ ...filters, page: data })}
-            setPerPage={setPerPage}
-            perPage={filters?.limit}
             isLoading={isLoading}
             rows={data?.data?.map((d, i) => ({
               ...d,
@@ -269,11 +258,10 @@ const Page = () => {
               //   isChangingRole?.id === d?.id && isChangingRole?.isLoading ? (
               //     <ButtonLoading />
               //   ) : (
-
               //   ),
             }))}
             actions={actions}
-            cols={cols}
+            columns={cols}
             getFullDataToActionHandler
           />
           {/* PAGINATION */}
@@ -284,8 +272,6 @@ const Page = () => {
           />
         </div>
       </div>
-    </AdminRoute>
+    </>
   );
-};
-
-export default Page;
+}

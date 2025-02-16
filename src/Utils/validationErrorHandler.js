@@ -1,4 +1,4 @@
-import CustomToaster from "@/Shared/CustomToaster";
+import CustomToaster from "@/components/UI/toaster/CustomToaster";
 import toast from "react-hot-toast";
 
 export const validationErrorHandler = (newErrors) => {

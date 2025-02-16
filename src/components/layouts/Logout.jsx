@@ -18,34 +18,37 @@ export default function Logout() {
         confirmButton: "bg-primary",
         cancelButton: "bg-error",
       },
-    }).then(async (result) => {
-      try {
-        if (result.isConfirmed) {
-          // CALL LOGOUT API
-          const res = await userLogOut().unwrap();
-          if (res?.success) {
-            setIsUserComing(Math.random());
-            // NAVIGATE TO LOGIN PAGE
-            router.push("/login");
-            // Clear storage
-            if (typeof window !== "undefined") {
-              localStorage.clear();
-            }
+    })
+      .then(async (result) => {
+        try {
+          if (result.isConfirmed) {
+            // CALL LOGOUT API
+            const res = await userLogOut().unwrap();
+            if (res?.success) {
+              // NAVIGATE TO LOGIN PAGE
+              router.push("/login");
+              // Clear storage
+              if (typeof window !== "undefined") {
+                localStorage.clear();
+              }
 
-            // SUCCESS MESSAGE
-            Swal.fire({
-              position: "center",
-              icon: "success",
-              title: "Logout successful",
-              showConfirmButton: false,
-              timer: 1500,
-            });
+              // SUCCESS MESSAGE
+              Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Logout successful",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            }
           }
+        } catch (err) {
+          errorHandler({ err });
         }
-      } catch (err) {
+      })
+      .catch((err) => {
         errorHandler({ err });
-      }
-    });
+      });
   };
   return (
     <button

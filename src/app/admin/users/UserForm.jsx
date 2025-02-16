@@ -1,9 +1,9 @@
 "use client";
 
+import Button from "@/components/UI/buttons/Button";
+import CustomToaster from "@/components/UI/toaster/CustomToaster";
 import { usePopupContext } from "@/Context/ProjectProvider";
 import { useCreateUserMutation } from "@/redux/apis/authApis";
-import Button from "@/Shared/Button";
-import CustomToaster from "@/Shared/CustomToaster";
 import CustomField from "@/Shared/Fields/CustomField";
 import CustomMultiSelect from "@/Shared/Fields/CustomMultiSelect";
 import CustomNumberField from "@/Shared/Fields/CustomNumberField";

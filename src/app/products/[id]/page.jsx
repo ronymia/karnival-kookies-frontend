@@ -1,15 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import FixedBgComponent from "@/Shared/FixedBgComponent";
-import TableComponentHeading from "@/Shared/TableComponentHeading";
-import NavigateComponent from "@/Utils/navigate";
 import axios from "axios";
-import ButtonWrapper from "./ButtonWrapper";
-import ProductCard from "@/Shared/ProductCard";
 import Reviews from "./Reviews";
 import Image from "next/image";
 import ImageSlider from "@/components/ImageSlider";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
+import FixedBgComponent from "@/components/layouts/FixedBgComponent";
+import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
+import NavigateComponent from "@/components/UI/navigate/navigate";
+import ProductCard from "@/components/UI/ProductCard";
+import ButtonWrapper from "./ButtonWrapper";
 
 export default function SingleProductPage({ params }) {
   const [product, setProduct] = useState(null);
@@ -21,15 +22,18 @@ export default function SingleProductPage({ params }) {
       try {
         setLoading(true);
 
-        const productUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/${params?.id}`;
+        const productUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1.0/products/${params?.id}`;
+        // GET SINGLE PRODUCT
         const productResponse = await axios.get(productUrl);
-
         const productData = productResponse?.data?.data;
-
+        // GET RELATED PRODUCTS
         const relatedProductsUrl = `${
           process.env.NEXT_PUBLIC_BACKEND_URL
-        }/products?limit=4&page=${1}&category_id=${productData?.category_id}`;
+        }/api/v1.0/products?limit=4&page=${1}&category_id=${
+          productData?.category_id
+        }`;
 
+        // GET RELATED PRODUCTS
         const [product, relatedProducts] = await Promise.all([
           axios.get(productUrl),
           axios.get(relatedProductsUrl),
@@ -48,7 +52,7 @@ export default function SingleProductPage({ params }) {
   }, [params?.id]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <CustomLoading />;
   }
 
   return (

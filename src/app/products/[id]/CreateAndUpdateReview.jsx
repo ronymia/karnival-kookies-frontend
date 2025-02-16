@@ -1,9 +1,6 @@
 "use client";
 
 import { usePopupContext } from "@/Context/ProjectProvider";
-import ButtonSpinner from "@/Shared/ButtonSpinner";
-import CustomLoading from "@/Shared/CustomLoading";
-import CustomToaster from "@/Shared/CustomToaster";
 import CustomTextareaField from "@/Shared/Fields/CustomTextAreaField";
 import { useParams } from "next/navigation";
 import { useState } from "react";
@@ -11,8 +8,11 @@ import toast from "react-hot-toast";
 import { Rating } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
 import { postReview, updateReview } from "@/apis/reviews";
-import { errorHandler } from "@/Utils/errorHandler";
 import { useSelector } from "react-redux";
+import CustomToaster from "@/components/UI/toaster/CustomToaster";
+import { errorHandler } from "@/helpers/errorHandler";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
+import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
 
 const CreateAndUpdateReview = () => {
   const { popupOption } = usePopupContext();

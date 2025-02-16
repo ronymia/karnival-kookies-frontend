@@ -1,21 +1,17 @@
 "use client";
-import { deleteCategory, getAllCategories } from "@/apis/categories";
 import { deleteDiscount, getAllDiscounts } from "@/apis/discounts";
+import Button from "@/components/UI/buttons/Button";
+import Heading from "@/components/UI/Heading/Heading";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
+import Table from "@/components/UI/table/Table";
 import { usePopupContext } from "@/Context/ProjectProvider";
-import Button from "@/Shared/Button";
-import CustomLoading from "@/Shared/CustomLoading";
-import Heading from "@/Shared/Heading";
-import { Pagination } from "@/Shared/Paginations/Pagination";
-import SplitDescription from "@/Shared/SplitDescription";
-import Table from "@/Shared/Table";
 import { deleteData } from "@/Utils/deleteData";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { AiFillEye } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 
-const DiscountComponent = () => {
+export default function DiscountComponent() {
   const router = useRouter();
   const { popupOption, setPopupOption } = usePopupContext();
 
@@ -122,36 +118,41 @@ const DiscountComponent = () => {
   // ALL DISPLAYED COLUMNS IN TABLE
   const [cols, setCols] = useState([
     {
-      name: "",
-      attribute_name: "count",
+      header: "",
+      "data-label": "",
+      accessorKey: "count",
       minWidth: 5,
       show: true,
       isMainField: true,
     },
     {
-      name: "Code",
-      attribute_name: "code",
+      header: "Code",
+      "data-label": "Code",
+      accessorKey: "code",
       minWidth: 20,
       show: true,
       isMainField: true,
     },
     {
-      name: "Discount Type",
-      attribute_name: "discountType",
+      header: "Discount Type",
+      "data-label": "Discount Type",
+      accessorKey: "discountType",
       minWidth: 20,
       show: true,
       isMainField: true,
     },
     {
-      name: "Discount Amount",
-      attribute_name: "discountAmountTable",
+      header: "Discount Amount",
+      "data-label": "Discount Amount",
+      accessorKey: "discountAmountTable",
       minWidth: 20,
       show: true,
       isMainField: true,
     },
     {
-      name: "Minimum Spend",
-      attribute_name: "minimumSpend",
+      header: "Minimum Spend",
+      "data-label": "Minimum Spend",
+      accessorKey: "minimumSpend",
       minWidth: 20,
       show: true,
       isMainField: true,
@@ -181,13 +182,6 @@ const DiscountComponent = () => {
       {/* TABLE AREA */}
       <div className={`space-y-10`}>
         <Table
-          selectedIds={selectedIds}
-          setSelectedIds={setSelectedIds}
-          itemsPerPage={filters?.perPage}
-          totalItems={data?.total}
-          setPageNo={(data) => setFilters({ ...filters, page: data })}
-          setPerPage={setPerPage}
-          perPage={filters?.perPage}
           isLoading={isCategoryLoading}
           rows={data?.data?.map((d, i) => ({
             ...d,
@@ -198,18 +192,15 @@ const DiscountComponent = () => {
                 : `$${d?.discountAmount}`,
           }))}
           actions={actions}
-          cols={cols}
-          getFullDataToActionHandler
+          columns={cols}
         />
         {/* PAGINATION */}
         {/* <Pagination
-          setFilters={setFilters}
-          filters={filters}
-          total={data?.total}
-        /> */}
+              setFilters={setFilters}
+              filters={filters}
+              total={data?.total}
+            /> */}
       </div>
     </div>
   );
-};
-
-export default DiscountComponent;
+}

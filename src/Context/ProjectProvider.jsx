@@ -11,8 +11,8 @@ import PackageView from "@/app/admin/packages/PackageView";
 import UserForm from "@/app/admin/users/UserForm";
 import ViewUser from "@/app/admin/users/ViewUser";
 import CreateAndUpdateReview from "@/app/products/[id]/CreateAndUpdateReview";
-import CustomPopup from "@/Shared/CustomPopup";
-import FileViewer from "@/Shared/FileViewer";
+import CustomPopup from "@/components/UI/modal/CustomPopup";
+import FileViewer from "@/components/UI/modal/FileViewer";
 import { createContext, useContext, useState } from "react";
 
 // INITIALIZE PROJECT CONTEXT

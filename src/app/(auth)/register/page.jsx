@@ -1,18 +1,18 @@
 "use client";
 import { createUser } from "@/apis/auth";
-import Code from "@/Shared/auth/Code";
-import Button from "@/Shared/Button";
-import CustomLoading from "@/Shared/CustomLoading";
-import CustomToaster from "@/Shared/CustomToaster";
-import CustomField from "@/Shared/Fields/CustomField";
-import CustomNumberField from "@/Shared/Fields/CustomNumberField";
-import CustomPasswordField from "@/Shared/Fields/CustomPasswordField";
-import Heading from "@/Shared/Heading";
+import VerificationCode from "@/components/layouts/Authentication/VerificationCode";
+import Button from "@/components/UI/buttons/Button";
+import Heading from "@/components/UI/Heading/Heading";
+import InputField from "@/components/UI/inputFields/InputField";
+import NumberField from "@/components/UI/inputFields/NumberField";
+import PasswordField from "@/components/UI/inputFields/PasswordField";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
+import CustomToaster from "@/components/UI/toaster/CustomToaster";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-const Page = () => {
+export default function RegisterPage() {
   const [currentTab, setCurrentTab] = useState("register");
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -23,8 +23,6 @@ const Page = () => {
     role: "customer",
   });
 
-  console.log({ formData });
-
   // CHANGE FORM DATA
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -34,6 +32,7 @@ const Page = () => {
       [name]: value,
     }));
   };
+
   // VALIDATION
   const [errors, setErrors] = useState({});
   const [codeError, setCodeError] = useState("");
@@ -146,6 +145,11 @@ const Page = () => {
     }
   };
 
+  // Set Page Title in Client Component
+  useEffect(() => {
+    document.title = "Karnival Cookies | Sing up";
+  }, []);
+
   /* ****************************************
   
   ********************************************************/
@@ -164,7 +168,7 @@ const Page = () => {
               </h2>
               <div>
                 {/* NAME */}
-                <CustomField
+                <InputField
                   value={formData?.name}
                   disable={false}
                   fieldClassName={"w-full"}
@@ -179,7 +183,7 @@ const Page = () => {
                   required={true}
                 />
                 {/* PHONE */}
-                <CustomNumberField
+                <NumberField
                   value={formData?.phone}
                   disable={false}
                   fieldClassName={"w-full"}
@@ -192,7 +196,7 @@ const Page = () => {
                   wrapperClassName={"w-full"}
                 />
                 {/* EMAIL */}
-                <CustomField
+                <InputField
                   value={formData?.email}
                   disable={false}
                   fieldClassName={"w-full"}
@@ -207,7 +211,7 @@ const Page = () => {
                   required={true}
                 />
                 {/* PASSWORD */}
-                <CustomPasswordField
+                <PasswordField
                   required={true}
                   id="password"
                   onChange={handleFormChange}
@@ -240,10 +244,10 @@ const Page = () => {
             </div>
           </div>
         )}
-        {currentTab === "code" && <Code error={codeError} data={formData} />}
+        {currentTab === "code" && (
+          <VerificationCode error={codeError} data={formData} />
+        )}
       </>
     );
   }
-};
-
-export default Page;
+}

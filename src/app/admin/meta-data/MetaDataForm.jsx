@@ -1,18 +1,18 @@
 "use client";
 import { usePopupContext } from "@/Context/ProjectProvider";
-import CustomLoading from "@/Shared/CustomLoading";
-import CustomToaster from "@/Shared/CustomToaster";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import ButtonSpinner from "@/Shared/ButtonSpinner";
 import CustomField from "@/Shared/Fields/CustomField";
 import CustomTextareaField from "@/Shared/Fields/CustomTextAreaField";
-import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
 import { validationErrorHandler } from "@/Utils/validationErrorHandler";
 import {
   useCreateMetaDataMutation,
   useUpdateMetaDataMutation,
 } from "@/redux/apis/metaDataApis";
+import CustomToaster from "@/components/UI/toaster/CustomToaster";
+import { errorHandler } from "@/helpers/errorHandler";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
+import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
 
 export default function MetaDataForm() {
   const { popupOption } = usePopupContext();
@@ -87,7 +87,7 @@ export default function MetaDataForm() {
         }
       })
       .catch((err) => {
-        errorHandlerV2({ err });
+        errorHandler({ err });
       });
   };
 
@@ -111,7 +111,7 @@ export default function MetaDataForm() {
         }
       })
       .catch((err) => {
-        errorHandlerV2({ err });
+        errorHandler({ err });
       });
   };
 

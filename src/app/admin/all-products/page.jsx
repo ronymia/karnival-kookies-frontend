@@ -6,6 +6,7 @@ import Pagination from "@/components/UI/table/Pagination";
 import Table from "@/components/UI/table/Table";
 import { usePopupContext } from "@/Context/ProjectProvider";
 import { deleteDataV2 } from "@/helpers/DeleteDataV2";
+import withPermission from "@/Hoc/WithPermission";
 import {
   useDeleteProductsMutation,
   useGetAllProductsQuery,
@@ -18,7 +19,7 @@ import { AiFillEye } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 
-export default function ProductPage() {
+function ProductPage() {
   const { popupOption, setPopupOption } = usePopupContext();
 
   // ALL SELECTED IDs
@@ -253,7 +254,6 @@ export default function ProductPage() {
                   className={`w-16 h-16 object-cover cursor-pointer`}
                 />
               ),
-              price: d?.price,
               category: d?.category?.name,
             }))}
             actions={actions}
@@ -270,3 +270,5 @@ export default function ProductPage() {
     </>
   );
 }
+
+export default withPermission(ProductPage, ["admin"]);

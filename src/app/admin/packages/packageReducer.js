@@ -2,14 +2,17 @@ import { useReducer } from "react";
 
 // INITIAL STATE
 const initialState = {
-  id: null /* number */,
+  id: null, // number
   name: "",
   description: "",
-  regular_price: null /* number  */,
-  discount_price: null /* number */,
-  is_active: 1 /* boolean */,
-  inStock: null /* number */,
-  images: [] /* string[] */,
+  price: null, // number (renamed from regular_price)
+  is_discount_enable: null, // boolean (0 or 1)
+  discount_value: null, // number
+  discount_type: "", // "fixed" or "percent"
+  quantity: null, // number
+  unit: "", // Default unit ('kg', 'litre', 'pcs', 'bag')
+  images: [], // string[]
+  status: "", // 'in-stock', 'out-of-stock', 'discontinued'
 };
 
 // FORM REDUCER

@@ -1,11 +1,10 @@
 "use client";
 
-import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
 import { useSubscriptionForNewsletterMutation } from "@/redux/apis/newsletterApis";
-import CustomToaster from "@/Shared/CustomToaster";
-import { validationErrorHandler } from "@/Utils/validationErrorHandler";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import CustomToaster from "../UI/toaster/CustomToaster";
+import { errorHandler } from "@/helpers/errorHandler";
 
 const NewsletterSection = () => {
   const [subscription, subscribeResult] =
@@ -46,7 +45,7 @@ const NewsletterSection = () => {
     } catch (err) {
       console.log("Subscription failed:", err);
       //
-      errorHandlerV2({ err });
+      errorHandler({ err });
 
       setError(err?.data?.message);
     }

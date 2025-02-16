@@ -1,5 +1,4 @@
 "use client";
-import CustomLoading from "@/Shared/CustomLoading";
 import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import FilterComponent from "./FilterComponent";
@@ -11,6 +10,7 @@ import Pagination from "@/components/UI/table/Pagination";
 import FixedBgComponent from "@/components/layouts/FixedBgComponent";
 import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
 import NavigateComponent from "@/components/UI/navigate/navigate";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
 
 export default function ProductPage() {
   // FILTER SIDEBAR

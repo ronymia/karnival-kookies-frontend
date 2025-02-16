@@ -1,30 +1,25 @@
 "use client";
+import Button from "@/components/UI/buttons/Button";
+import Heading from "@/components/UI/Heading/Heading";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
+import Pagination from "@/components/UI/table/Pagination";
+import Table from "@/components/UI/table/Table";
+import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
 import { usePopupContext } from "@/Context/ProjectProvider";
 import { deleteDataV2 } from "@/helpers/DeleteDataV2";
 import {
   useDeleteMetaDataMutation,
   useGetAllMetaDataQuery,
 } from "@/redux/apis/metaDataApis";
-import AdminRoute from "@/Routes/AdminRoute";
-import Button from "@/Shared/Button";
-import CustomLoading from "@/Shared/CustomLoading";
-import Heading from "@/Shared/Heading";
-import { Pagination } from "@/Shared/Paginations/Pagination";
 import SplitDescription from "@/Shared/SplitDescription";
-import Table from "@/Shared/Table";
-import TableComponentHeading from "@/Shared/TableComponentHeading";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { AiFillEye } from "react-icons/ai";
+import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 
 export default function MetaDataPage() {
   const router = useRouter();
   const { popupOption, setPopupOption } = usePopupContext();
-
-  // ALL SELECTED IDs
-  const [selectedIds, setSelectedIds] = useState([]);
 
   // FILTERS
   const [filters, setFilters] = useState({
@@ -44,7 +39,6 @@ export default function MetaDataPage() {
   };
 
   // HANDLE DELETE PRODUCT
-  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
   const handleDeleteMetaData = (data) => {
     deleteDataV2({
       handler: deleteMetaData,
@@ -131,7 +125,7 @@ export default function MetaDataPage() {
     return <CustomLoading />;
   }
   return (
-    <AdminRoute>
+    <>
       <div
         className={`max-w-screen-xl mx-auto px-3 flex flex-col gap-10 pt-36 pb-40`}
       >
@@ -167,13 +161,6 @@ export default function MetaDataPage() {
         {/* TABLE AREA */}
         <div className={`space-y-10`}>
           <Table
-            selectedIds={selectedIds}
-            setSelectedIds={setSelectedIds}
-            itemsPerPage={filters?.limit}
-            totalItems={data?.meta?.total}
-            setPageNo={(data) => setFilters({ ...filters, page: data })}
-            setPerPage={setPerPage}
-            perPage={filters?.limit}
             isLoading={isLoading}
             rows={data?.data?.map((d, i) => ({
               ...d,
@@ -185,8 +172,7 @@ export default function MetaDataPage() {
               ),
             }))}
             actions={actions}
-            cols={cols}
-            getFullDataToActionHandler
+            columns={cols}
           />
           {/* PAGINATION */}
           <Pagination
@@ -196,6 +182,6 @@ export default function MetaDataPage() {
           />
         </div>
       </div>
-    </AdminRoute>
+    </>
   );
 }

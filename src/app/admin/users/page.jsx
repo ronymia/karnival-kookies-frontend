@@ -1,35 +1,29 @@
 "use client";
 import { updateUser } from "@/apis/auth";
-import { deleteFaq, getAllFaqs } from "@/apis/faqs";
+import Button from "@/components/UI/buttons/Button";
+import ButtonLoading from "@/components/UI/buttons/ButtonLoading";
+import Heading from "@/components/UI/Heading/Heading";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
+import Pagination from "@/components/UI/table/Pagination";
+import Table from "@/components/UI/table/Table";
+import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
+import CustomToaster from "@/components/UI/toaster/CustomToaster";
 import { usePopupContext } from "@/Context/ProjectProvider";
+import { errorHandler } from "@/helpers/errorHandler";
 import { useGetAllUsersQuery } from "@/redux/apis/userApis";
-import AdminRoute from "@/Routes/AdminRoute";
-import Button from "@/Shared/Button";
-import ButtonLoading from "@/Shared/ButtonLoading";
-import CustomLoading from "@/Shared/CustomLoading";
-import CustomToaster from "@/Shared/CustomToaster";
-import Heading from "@/Shared/Heading";
-import { Pagination } from "@/Shared/Paginations/Pagination";
-import Table from "@/Shared/Table";
-import TableComponentHeading from "@/Shared/TableComponentHeading";
-import { deleteData } from "@/Utils/deleteData";
-import { errorHandler } from "@/Utils/errorHandler";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { AiFillEye } from "react-icons/ai";
-import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 import Swal from "sweetalert2";
 
-const UserList = () => {
+export default function UserList() {
   const router = useRouter();
   const { popupOption, setPopupOption } = usePopupContext();
 
   // ALL SELECTED IDs
-  const [selectedIds, setSelectedIds] = useState([]);
   const [isUserLoading, setIsUserLoading] = useState(false);
-  console.log({ isUserLoading });
 
   // FILTERS
   const [filters, setFilters] = useState({
@@ -45,10 +39,7 @@ const UserList = () => {
   });
 
   // USER DELETE
-
   const [isUpdating, setIsUpdating] = useState();
-
-  console.log({ data: data?.data });
 
   const [isChangingRole, setIsChangingRole] = useState({
     id: null,
@@ -65,40 +56,39 @@ const UserList = () => {
         confirmButton: "bg-primary",
         cancelButton: "bg-error",
       },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setIsChangingRole({ id: data?.id, isLoading: true });
-        updateUser({
-          email: data?.email,
-          role: data?.role === "admin" ? "user" : "admin",
-        })
-          .then((res) => {
-            console.log({ res });
-            if (res?.success) {
-              setIsUpdating(Math.random());
-              toast.custom((t) => (
-                <CustomToaster
-                  t={t}
-                  type={"success"}
-                  text={`Role Changed successfully`}
-                />
-              ));
-              setIsChangingRole({ id: null, isLoading: false });
-            }
-            setIsChangingRole({ id: null, isLoading: false });
+    })
+      .then((result) => {
+        if (result.isConfirmed) {
+          setIsChangingRole({ id: data?.id, isLoading: true });
+          updateUser({
+            email: data?.email,
+            role: data?.role === "admin" ? "user" : "admin",
           })
-          .catch((err) => {
-            setIsChangingRole({ id: null, isLoading: false });
-            console.log({ err });
-            errorHandler({ err, setLoading: setIsUserLoading });
-          });
-      }
-    });
-  };
-
-  // HANDLE PER PAGE
-  const setPerPage = (count) => {
-    setFilters({ ...filters, perPage: count, page: 1 });
+            .then((res) => {
+              console.log({ res });
+              if (res?.success) {
+                setIsUpdating(Math.random());
+                toast.custom((t) => (
+                  <CustomToaster
+                    t={t}
+                    type={"success"}
+                    text={`Role Changed successfully`}
+                  />
+                ));
+                setIsChangingRole({ id: null, isLoading: false });
+              }
+              setIsChangingRole({ id: null, isLoading: false });
+            })
+            .catch((err) => {
+              setIsChangingRole({ id: null, isLoading: false });
+              console.log({ err });
+              errorHandler({ err, setLoading: setIsUserLoading });
+            });
+        }
+      })
+      .catch((err) => {
+        console.log({ err });
+      });
   };
 
   // HANDLE CREATE
@@ -157,43 +147,49 @@ const UserList = () => {
   // ALL DISPLAYED COLUMNS IN TABLE
   const [cols, setCols] = useState([
     {
-      name: "#",
-      attribute_name: "count",
+      header: "#",
+      "data-label": "#",
+      accessorKey: "count",
       minWidth: 5,
       show: true,
       isMainField: true,
     },
     {
-      name: "Name",
-      attribute_name: "name",
+      header: "Name",
+      "data-label": "Name",
+      accessorKey: "name",
       minWidth: 20,
       show: true,
       isMainField: true,
     },
     {
-      name: "Email",
-      attribute_name: "email",
+      header: "Email",
+      "data-label": "Email",
+      accessorKey: "email",
       minWidth: 20,
       show: true,
       isMainField: true,
     },
     {
-      name: "Phone",
-      attribute_name: "phone",
+      header: "Phone",
+      "data-label": "Phone",
+      accessorKey: "phone",
       minWidth: 20,
       show: true,
       isMainField: true,
     },
     {
-      name: "Is Verified",
-      attribute_name: "verified",
+      header: "Is Verified",
+      "data-label": "Is Verified",
+      accessorKey: "verified",
       minWidth: 15,
       show: true,
       isMainField: true,
     },
     {
-      name: "Role",
-      attribute_name: "user_role",
+      header: "Role",
+      "data-label": "Role",
+      accessorKey: "user_role",
       minWidth: 20,
       show: true,
       isMainField: true,
@@ -208,7 +204,7 @@ const UserList = () => {
   
   ***************************************************************/
   return (
-    <AdminRoute>
+    <>
       <div
         className={`max-w-screen-xl mx-auto px-3 flex flex-col gap-10 pt-36 pb-40`}
       >
@@ -240,13 +236,6 @@ const UserList = () => {
         {/* TABLE AREA */}
         <div className={`space-y-10`}>
           <Table
-            selectedIds={selectedIds}
-            setSelectedIds={setSelectedIds}
-            itemsPerPage={filters?.perPage}
-            totalItems={data?.meta?.total}
-            setPageNo={(data) => setFilters({ ...filters, page: data })}
-            setPerPage={setPerPage}
-            perPage={filters?.perPage}
             isLoading={isLoading}
             rows={data?.data?.map((d, i) => ({
               ...d,
@@ -267,8 +256,7 @@ const UserList = () => {
                 ),
             }))}
             actions={actions}
-            cols={cols}
-            getFullDataToActionHandler
+            columns={cols}
           />
           {/* PAGINATION */}
           <Pagination
@@ -278,8 +266,6 @@ const UserList = () => {
           />
         </div>
       </div>
-    </AdminRoute>
+    </>
   );
-};
-
-export default UserList;
+}

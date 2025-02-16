@@ -2,7 +2,7 @@ import { baseApi } from "../baseAPi";
 import { TagTypes } from "../tagTypes";
 
 // BASE URL
-const URL = "/packages";
+const URL = "/v1.0/packages";
 
 export const apis = baseApi.injectEndpoints({
   endpoints: (builder) => ({

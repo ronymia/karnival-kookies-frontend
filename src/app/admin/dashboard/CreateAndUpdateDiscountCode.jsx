@@ -1,19 +1,14 @@
 "use client";
 import { usePopupContext } from "@/Context/ProjectProvider";
-import CustomLoading from "@/Shared/CustomLoading";
-import CustomToaster from "@/Shared/CustomToaster";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
-
-import ButtonSpinner from "@/Shared/ButtonSpinner";
 import CustomField from "@/Shared/Fields/CustomField";
-import CustomTextareaField from "@/Shared/Fields/CustomTextAreaField";
 import { errorHandler } from "@/Utils/errorHandler";
-import { postCategory, updateCategory } from "@/apis/categories";
-import { getAllIdAndNameOfProducts, uploadProductPic } from "@/apis/products";
 import CustomMultiSelect from "@/Shared/Fields/CustomMultiSelect";
 import CustomNumberField from "@/Shared/Fields/CustomNumberField";
 import { postDiscount, updateDiscount } from "@/apis/discounts";
+import CustomToaster from "@/components/UI/toaster/CustomToaster";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
 
 const CreateAndUpdateDiscountCode = () => {
   const { popupOption } = usePopupContext();

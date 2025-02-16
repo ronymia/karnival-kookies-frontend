@@ -1,15 +1,14 @@
 "use client";
 import { getAllAdminDashboardItems } from "@/apis/dashboardApis";
 import { usePopupContext } from "@/Context/ProjectProvider";
-import Button from "@/Shared/Button";
-import CustomLoading from "@/Shared/CustomLoading";
 import DashboardCard from "@/Shared/DashboardCard";
 import { errorHandler } from "@/Utils/errorHandler";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import DiscountComponent from "./DiscountComponent";
-import AdminRoute from "@/Routes/AdminRoute";
 import { useSelector } from "react-redux";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
+import Button from "@/components/UI/buttons/Button";
 
 const Page = () => {
   // USER FROM REDUX STORE
@@ -47,7 +46,7 @@ const Page = () => {
     return <CustomLoading />;
   }
   return (
-    <AdminRoute>
+    <>
       <div className={`max-w-screen-xl mx-auto px-3 space-y-10 pt-36 pb-40`}>
         {/* TOP SECTION */}
         <div
@@ -183,7 +182,7 @@ const Page = () => {
         </div>
         <DiscountComponent />
       </div>
-    </AdminRoute>
+    </>
   );
 };
 

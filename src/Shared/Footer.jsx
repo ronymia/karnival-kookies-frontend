@@ -1,9 +1,9 @@
 import React from "react";
 import { FaTwitter, FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
-import Heading from "./Heading";
 import ShowSocialCard from "./ShowSocialCard";
 import { FiPhoneCall } from "react-icons/fi";
 import NewsletterSection from "@/components/layouts/Newsletter";
+import Heading from "@/components/UI/Heading/Heading";
 
 const Footer = () => {
   return (

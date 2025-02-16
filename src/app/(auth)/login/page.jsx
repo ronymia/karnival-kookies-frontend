@@ -3,12 +3,12 @@ import VerificationCode from "@/components/layouts/Authentication/VerificationCo
 import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
 import InputField from "@/components/UI/inputFields/InputField";
 import PasswordField from "@/components/UI/inputFields/PasswordField";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
+import CustomToaster from "@/components/UI/toaster/CustomToaster";
 import { errorHandler } from "@/helpers/errorHandler";
 import { useLoginUserMutation } from "@/redux/apis/authApis";
-import CustomLoading from "@/Shared/CustomLoading";
-import CustomToaster from "@/Shared/CustomToaster";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import Swal from "sweetalert2";
@@ -144,6 +144,11 @@ export default function LoginPage() {
     }
   };
 
+  // Set Page Title in Client Component
+  useEffect(() => {
+    document.title = "Karnival Cookies | Login";
+  }, []);
+
   /* **********************************************
   
   ***************************************************/
@@ -152,10 +157,6 @@ export default function LoginPage() {
   } else {
     return (
       <>
-        {/* <div className="w-full pt-32">
-          <Table />
-        </div> */}
-
         {/* <------------------------------------------ LOGIN ------------------------------------------> */}
         {currentTab === "login" && (
           <div className={` block overflow-auto pt-32 pb-60 space-y-10`}>

@@ -1,84 +1,59 @@
-"use client";
-
-import ProductCard from "@/Shared/ProductCard";
-import CategorySection from "./CategorySection";
+import ProductCard from "@/components/UI/ProductCard";
 import Slider from "./slider";
 import Heading from "@/components/UI/Heading/Heading";
 import HomeSearchWrapper from "@/components/UI/SearchFields/HomeSearchWrapper";
 import NavigateHandler from "@/components/UI/buttons/NavigateHandler";
 import FixedBgComponent from "@/components/layouts/FixedBgComponent";
-import { useEffect, useState } from "react";
+import axios from "axios";
+import CategorySection from "@/components/CategorySection";
 
-const fetchData = async (url) => {
+const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL, // Set Base URL
+  headers: {
+    "Content-Type": "application/json",
+  },
+  timeout: 6000, // Optional: Set request timeout
+});
+
+// Fetch Data Function
+const fetchData = async (endpoint) => {
   try {
-    const res = fetch(url, { cache: "no-store" });
-    if (!res.ok) throw new Error(`Failed to fetch ${url}`);
-    return res.json();
+    const { data } = await api.get(endpoint);
+    return data; // Axios automatically parses JSON
   } catch (error) {
-    console.error("Fetch Error:", error);
+    console.error("Axios Error:", error.response?.data || error.message);
     return null;
   }
 };
 
-// export function generateMetadata({ searchParams }) {
-//   const currentUrl = searchParams.url || "";
-//   const result = fetchData(
-//     `${process.env.NEXT_PUBLIC_BACKEND_URL}/meta-data?url=${"home"}`
-//   );
-//   const metadata = result?.data[0];
+export function generateMetadata({ searchParams }) {
+  // const currentUrl = searchParams.url || "";
+  // const result = fetchData(
+  //   `${process.env.NEXT_PUBLIC_BACKEND_URL}/meta-data?url=${"home"}`
+  // );
+  const metadata = {};
 
-//   return {
-//     title: metadata?.title || "check",
-//     description: metadata?.description || "Default Description",
-//   };
-// }
+  return {
+    title: metadata?.title || "Karnival Kookies | Home",
+    description: metadata?.description || "This is the landing page",
+  };
+}
 
-export default function HomePage() {
-  // const [productData, categoryData] = await  Promise.all([
-  //   fetchData(
-  //     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1.0/products?page=1&perPage=8`
-  //   ),
-  //   fetchData(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1.0/categories`),
-  //   // fetchData(`${process.env.NEXT_PUBLIC_BACKEND_URL}/packages`),
-  // ]);
-  const [productData, setProductData] = useState([]);
-  const [categoryData, setCategoryData] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [products, categories] = await Promise.all([
-          fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1.0/products?page=1&perPage=8`
-          ).then((res) => res.json()),
-          fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1.0/categories`
-          ).then((res) => res.json()),
-        ]);
-
-        setProductData(products);
-        setCategoryData(categories);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-  }, []);
-
+export default async function HomePage() {
+  // FETCH PRODUCT, CATEGORY, PACKAGE
+  const [productData, categoryData, packageData] = await Promise.all([
+    fetchData(`/api/v1.0/products?page=1&limit=8`),
+    fetchData(`/api/v1.0/categories`),
+    fetchData(`/api/v1.0/packages`),
+  ]);
   const products = productData?.data || [];
   const categories = categoryData?.data || [];
-  // const packages = packageData?.data || [];
-  // const products = [];
-  // const categories = [];
-  const packages = [];
+  const packages = packageData?.data || [];
 
+  // CATEGORY TAB
   const tabs = categories.map((category) => ({
-    id: category.id,
-    name: category.name,
+    id: category?.id,
+    name: category?.name,
   }));
 
   const slides = [
@@ -150,7 +125,7 @@ export default function HomePage() {
 
         {/* <------------------------ PACKAGE LIST --------------------------> */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {packages.map((product) => (
+          {packages?.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </section>

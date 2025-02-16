@@ -1,30 +1,28 @@
 "use client";
 
-import ButtonSpinner from "@/Shared/ButtonSpinner";
-import CustomField from "@/Shared/Fields/CustomField";
-import CustomFileUploader from "@/Shared/Fields/CustomFileUploader";
-import CustomNumberField from "@/Shared/Fields/CustomNumberField";
-import CustomTextareaField from "@/Shared/Fields/CustomTextAreaField";
 import { useEffect, useState } from "react";
 import usePackageReducer from "./packageReducer";
-import { usePopupContext } from "@/Context/ProjectProvider";
 import {
   useCreatePackageMutation,
   useUpdatePackageMutation,
   useUploadPackageImagesMutation,
 } from "@/redux/apis/packageApis";
-import { errorHandler } from "@/Utils/errorHandler";
-import CustomToaster from "@/Shared/CustomToaster";
 import toast from "react-hot-toast";
-import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
 import RadioButton from "@/components/UI/inputFields/RadioButton";
+import CustomToaster from "@/components/UI/toaster/CustomToaster";
+import { errorHandler } from "@/helpers/errorHandler";
+import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
+import InputField from "@/components/UI/inputFields/InputField";
+import NumberField from "@/components/UI/inputFields/NumberField";
+import FileUploader from "@/components/UI/inputFields/FileUploader";
+import QuillEditor from "@/components/UI/QuillEditor";
+import { BiSolidCheckCircle } from "react-icons/bi";
 
-export default function PackageForm() {
+export default function PackageForm({ data, handleClosePopup }) {
   // FORM REDUCER
   const [errors, setErrors] = useState({});
   const { state, dispatch } = usePackageReducer();
   // POPUP FORM CONTEXT
-  const { popupOption } = usePopupContext();
   // CREATE
   const [createPackage, createResult] = useCreatePackageMutation();
   // UPDATE
@@ -43,35 +41,34 @@ export default function PackageForm() {
   const validateForm = () => {
     const newErrors = {};
 
-    // VALIDATE NAME
-    if (!state.name || state.name.trim() === "") {
-      newErrors.name = "Name is required";
-    }
-    // VALIDATE PRICE
-    if (!state.regular_price) {
-      newErrors.regular_price = "Regular Price is required";
-    }
-    if (state.regular_price < 0) {
-      newErrors.regular_price = "Regular Price cannot be negative";
-    }
-    if (state.discount_price < 0) {
-      newErrors.discount_price = "Discount Price cannot be negative";
-    }
-    // VALIDATE STOCK
-    if (!state.inStock) {
-      newErrors.inStock = "Stock is required";
-    }
-    if (state.inStock < 0) {
-      newErrors.inStock = "Stock cannot be negative";
-    }
+    // // VALIDATE NAME
+    // if (!state.name || state.name.trim() === "") {
+    //   newErrors.name = "Name is required";
+    // }
+    // // VALIDATE PRICE
+    // if (!state.regular_price) {
+    //   newErrors.regular_price = "Regular Price is required";
+    // }
+    // if (state.regular_price < 0) {
+    //   newErrors.regular_price = "Regular Price cannot be negative";
+    // }
+    // if (state.discount_price < 0) {
+    //   newErrors.discount_price = "Discount Price cannot be negative";
+    // }
+    // // VALIDATE STOCK
+    // if (!state.inStock) {
+    //   newErrors.inStock = "Stock is required";
+    // }
+    // if (state.inStock < 0) {
+    //   newErrors.inStock = "Stock cannot be negative";
+    // }
 
-    // VALIDATE IMAGES
-    if (state?.images?.length === 0) {
-      newErrors.image = "At least one image is required";
-    }
+    // // VALIDATE IMAGES
+    // if (state?.images?.length === 0) {
+    //   newErrors.image = "At least one image is required";
+    // }
 
     setErrors(newErrors);
-    // console.log({ newErrors });
     // ValidationErrorHandler(newErrors);
     if (Object.keys(newErrors).length > 0) {
       toast.custom((t) => (
@@ -101,20 +98,23 @@ export default function PackageForm() {
 
   // UPDATE FIELD
   useEffect(() => {
-    if (popupOption?.data) {
+    if (data) {
       [
         "id",
         "name",
         "description",
-        "regular_price",
-        "discount_price",
-        "is_active",
-        "inStock",
+        "price",
+        "is_discount_enable",
+        "discount_type",
+        "discount_value",
+        "status",
+        "unit",
+        "quantity",
         "images",
       ].forEach((field) => {
         dispatch({
           type: "UPDATE_FIELD",
-          payload: { field, value: popupOption?.data[field] },
+          payload: { field, value: data[field] },
         });
       });
     }
@@ -148,7 +148,7 @@ export default function PackageForm() {
 
       // IF GOT UPLOAD ERROR
       if (uploadResult.isError) {
-        const respErrors = errorHandlerV2({ err: uploadResult.error });
+        errorHandler({ err: uploadResult.error });
       }
       // IF IMAGE UPLOADED
       if (resp?.data?.success) {
@@ -175,7 +175,7 @@ export default function PackageForm() {
           ));
 
           // CLOSE POPUP
-          popupOption?.onClose();
+          handleClosePopup?.();
         }
       })
       .catch((error) => {
@@ -187,7 +187,6 @@ export default function PackageForm() {
   const updateFunction = async (updatedState) => {
     await updatePackage(updatedState)
       .then((resp) => {
-        console.log({ resp });
         if (resp?.data?.success) {
           toast.custom((t) => (
             <CustomToaster
@@ -198,7 +197,7 @@ export default function PackageForm() {
           ));
 
           // CLOSE POPUP
-          popupOption?.onClose();
+          handleClosePopup?.();
         }
       })
       .catch((error) => {
@@ -210,7 +209,7 @@ export default function PackageForm() {
   // FORM SUBMISSION
   const handleSubmit = async () => {
     if (validateForm()) {
-      if (popupOption?.data) {
+      if (data) {
         await updateFunction(state);
       } else {
         // CREATE PACKAGE WITH IMAGES
@@ -219,16 +218,16 @@ export default function PackageForm() {
     }
   };
 
-  console.log({ state });
+  console.log({ data });
 
   /* *********************************************************
   
   ***************************************************************/
 
   return (
-    <div className={` pb-12 h-full flex flex-col justify-between gap-2`}>
+    <div className={` p-3 grid grid-cols-1 gap-3`}>
       {/* NAME */}
-      <CustomField
+      <InputField
         value={state?.name}
         disable={false}
         fieldClassName={"w-full"}
@@ -239,110 +238,197 @@ export default function PackageForm() {
         onChange={handleFormChange}
         placeholder={"Name"}
         type={"text"}
-        wrapperClassName={"w-full"}
+        wrapperClassName={""}
         required={true}
-      />
-      {/* REGULAR PRICE */}
-      <CustomNumberField
-        value={state?.regular_price}
-        disable={false}
-        fieldClassName={"w-full"}
-        error={errors?.regular_price}
-        id={"regular_price"}
-        label={"Regular Price"}
-        name={"regular_price"}
-        onChange={handleFormChange}
-        placeholder={"Regular Price"}
-        wrapperClassName={"w-full"}
-        required={true}
-      />
-      {/* DISCOUNT PRICE */}
-      <CustomNumberField
-        value={state?.discount_price}
-        disable={false}
-        fieldClassName={"w-full"}
-        error={errors?.discount_price}
-        id={"discount_price"}
-        label={"Discount Price"}
-        name={"discount_price"}
-        onChange={handleFormChange}
-        placeholder={"Discount Price"}
-        wrapperClassName={"w-full"}
       />
 
-      {/* STOCK */}
-      <CustomNumberField
-        value={state?.inStock}
+      {/* PRICE */}
+      <NumberField
+        value={state?.price}
         disable={false}
         fieldClassName={"w-full"}
-        error={errors?.inStock}
-        id={"inStock"}
-        label={"Stock"}
-        name={"inStock"}
+        error={errors?.price}
+        id={"price"}
+        label={"Price"}
+        name={"price"}
         onChange={handleFormChange}
-        placeholder={"Stock"}
+        placeholder={"Price"}
         wrapperClassName={"w-full"}
         required={true}
       />
+
+      {/* ENABLE DISCOUNT */}
       <RadioButton
-        defaultChecked={state.is_active.toString()}
-        label={`Package Activate`}
-        required={true}
+        options={[
+          {
+            name: "is_discount_enable",
+            title: "Enable",
+            value: 1,
+            Icon: BiSolidCheckCircle,
+          },
+          {
+            name: "is_discount_enable",
+            title: "Disable",
+            value: 0,
+            Icon: BiSolidCheckCircle,
+          },
+        ]}
         onChange={(e) => {
+          const { name, value } = e.target;
           dispatch({
             type: "UPDATE_FIELD",
-            payload: { field: e.target.name, value: Number(e.target.value) },
+            payload: { field: name, value: Number(value) },
           });
         }}
-        options={[
-          { title: "Yes", name: "is_active", value: "1" },
-          { title: "No", name: "is_active", value: "0" },
-        ]}
-        wrapperClassName={`w-full`}
-        inputFieldClassName={"grid-cols-2"}
+        wrapperClassName={"w-full"}
+        inputFieldClassName={"grid-cols-2 gap-5"}
+        label={"Discount Enable"}
+        required={true}
+        defaultChecked={state?.is_discount_enable}
+        error={errors?.is_discount_enable}
       />
-      {/* DESCRIPTION */}
-      <CustomTextareaField
-        value={state?.description}
+
+      {state?.is_discount_enable ? (
+        <>
+          {/* DISCOUNT TYPE */}
+          <RadioButton
+            options={[
+              {
+                name: "discount_type",
+                title: "Fixed",
+                value: "fixed",
+                Icon: BiSolidCheckCircle,
+              },
+              {
+                name: "discount_type",
+                title: "Percentage",
+                value: "percent",
+                Icon: BiSolidCheckCircle,
+              },
+            ]}
+            onChange={handleFormChange}
+            wrapperClassName={"w-full"}
+            inputFieldClassName={"grid-cols-2 gap-5"}
+            label={"Discount Type"}
+            required={true}
+            defaultChecked={state?.discount_type}
+            error={errors?.discount_type}
+          />
+          {/* DISCOUNT VALUE */}
+          <NumberField
+            value={state?.discount_value}
+            disable={false}
+            fieldClassName={"w-full"}
+            error={errors?.discount_value}
+            id={"discount_value"}
+            label={"Discount Amount"}
+            name={"discount_value"}
+            onChange={handleFormChange}
+            placeholder={"Discount Amount"}
+            wrapperClassName={"w-full"}
+          />
+        </>
+      ) : null}
+
+      {/* UNIT */}
+      <RadioButton
+        options={[
+          {
+            name: "unit",
+            title: "kg",
+            value: "kg",
+            Icon: BiSolidCheckCircle,
+          },
+          {
+            name: "unit",
+            title: "litre",
+            value: "litre",
+            Icon: BiSolidCheckCircle,
+          },
+          {
+            name: "unit",
+            title: "pcs",
+            value: "pcs",
+            Icon: BiSolidCheckCircle,
+          },
+          {
+            name: "unit",
+            title: "bag",
+            value: "bag",
+            Icon: BiSolidCheckCircle,
+          },
+        ]}
+        onChange={handleFormChange}
+        wrapperClassName={""}
+        inputFieldClassName={"grid-cols-4 gap-5"}
+        label={"Product Unit"}
+        required={true}
+        defaultChecked={state?.unit}
+        error={errors?.unit}
+      />
+
+      {/* QUANTITY */}
+      <NumberField
+        value={state?.quantity}
         disable={false}
         fieldClassName={"w-full"}
+        error={errors?.quantity}
+        id={"quantity"}
+        label={"Quantity"}
+        name={"quantity"}
+        onChange={handleFormChange}
+        placeholder={"Quantity"}
+        wrapperClassName={"w-full"}
+        required={true}
+      />
+
+      {/* DESCRIPTION */}
+      <QuillEditor
+        value={state?.description}
+        disable={false}
+        quillClassName={"w-full"}
         error={errors?.description}
         id={"description"}
         label={"Description"}
         name={"description"}
-        onChange={handleFormChange}
+        onChange={(content) => {
+          dispatch({
+            type: "UPDATE_FIELD",
+            payload: { field: "description", value: content },
+          });
+        }}
         placeholder={"Description"}
-        type={"text"}
-        wrapperClassName={"w-full"}
+        wrapperClassName={""}
       />
 
-      {/* PACKAGE IMAGES */}
-      <CustomFileUploader
-        required
-        label={`Upload Package Images`}
-        details={`Allowed .png, .jpg, .jpeg, .pdf files under 5MB`}
-        accept={".png, .jpg, .jpeg, .pdf"}
+      {/* PRODUCT IMAGES */}
+      <FileUploader
+        multiple={true}
+        accept={".png, .jpg, .jpeg"}
+        id={`product_images`}
+        label={"Upload Products Images"}
+        required={true}
+        error={errors?.images}
+        wrapperClassName={``}
         files={state?.images}
         isFileUploading={uploadResult.isLoading}
-        onFileSelect={async (e) => handleFilesUpload(e)}
-        onDrop={async (files) => await handleFileUpload(files)}
+        onFileSelect={handleFilesUpload}
+        onDrop={handleFilesUpload}
         onRemove={(selectedImage) => {
-          // REMOVE FROM FORM STATE
           dispatch({
             type: "REMOVE_IMAGE",
             payload: { field: "images", value: selectedImage },
           });
         }}
       />
-
-      <div className="flex flex-col md:flex-row w-full justify-center md:justify-end items-center py-5 gap-2">
+      <div className=" flex flex-col md:flex-row w-full justify-center md:justify-end items-center py-5 gap-2">
         <button
           disabled={
             createResult.isLoading ||
             updateResult.isLoading ||
             uploadResult.isLoading
           }
-          onClick={popupOption?.onClose}
+          onClick={handleClosePopup}
           className="btn w-full md:btn-wide btn-outline btn-primary"
         >
           Cancel
@@ -360,7 +446,7 @@ export default function PackageForm() {
           updateResult.isLoading ||
           uploadResult.isLoading ? (
             <ButtonSpinner />
-          ) : popupOption?.data ? (
+          ) : data ? (
             "Update"
           ) : (
             "Create"

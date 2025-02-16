@@ -1,7 +1,6 @@
 "use client";
+import Button from "@/components/UI/buttons/Button";
 import { useGetPriceBoundsQuery } from "@/redux/apis/productApis";
-// import { getFilterData } from "@/apis/products";
-import Button from "@/Shared/Button";
 import { useState } from "react";
 
 export default function FilterComponent({ setFilters }) {
@@ -34,8 +33,14 @@ export default function FilterComponent({ setFilters }) {
                 }))
               }
               type="range"
-              min={0}
-              max={parseFloat(productPriceBounds.data?.data?.max_price)}
+              min={"0"}
+              max={
+                productPriceBounds.data?.data?.max_price
+                  ? parseInt(
+                      productPriceBounds.data?.data?.max_price
+                    ).toString()
+                  : ""
+              }
               value={componentFilters?.fromPrice}
               className="range range-xs range-primary"
             />
@@ -52,8 +57,20 @@ export default function FilterComponent({ setFilters }) {
                 }))
               }
               type="range"
-              min={parseFloat(productPriceBounds.data?.data?.min_price)}
-              max={parseFloat(productPriceBounds.data?.data?.max_price)}
+              min={
+                productPriceBounds.data?.data?.min_price
+                  ? parseInt(
+                      productPriceBounds.data?.data?.min_price
+                    ).toString()
+                  : ""
+              }
+              max={
+                productPriceBounds.data?.data?.max_price
+                  ? parseInt(
+                      productPriceBounds.data?.data?.max_price
+                    ).toString()
+                  : ""
+              }
               value={componentFilters?.toPrice}
               className="range range-xs range-primary"
             />

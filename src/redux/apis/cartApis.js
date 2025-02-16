@@ -1,7 +1,7 @@
 import { baseApi } from "../baseAPi";
 
 // BASE URL
-const URL = "/carts";
+const URL = "/v1.0/carts";
 
 export const apis = baseApi.injectEndpoints({
   endpoints: (builder) => ({

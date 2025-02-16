@@ -18,7 +18,7 @@ export const authApis = baseApi.injectEndpoints({
       }),
     }),
     // REGISTER
-    createUser: builder.mutation({
+    registerUser: builder.mutation({
       query: (payload) => ({
         url: `${URL}/register`,
         method: "POST",
@@ -59,7 +59,7 @@ export const authApis = baseApi.injectEndpoints({
 export const {
   useGetUserQuery,
   useLazyGetUserQuery,
-  useCreateUserMutation,
+  useRegisterUserMutation,
   useLoginUserMutation,
   useLogOutUserMutation,
   useVerifyUserEmailMutation,

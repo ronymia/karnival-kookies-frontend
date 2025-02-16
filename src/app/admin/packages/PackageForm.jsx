@@ -164,6 +164,7 @@ export default function PackageForm({ data, handleClosePopup }) {
   // CREATE FUNCTION
   const createFunction = async (updatedState) => {
     await createPackage(updatedState)
+      .unwrap()
       .then((resp) => {
         if (resp?.data?.success) {
           toast.custom((t) => (
@@ -183,9 +184,11 @@ export default function PackageForm({ data, handleClosePopup }) {
         setErrors(respErrors);
       });
   };
+
   // UPDATE FUNCTION
   const updateFunction = async (updatedState) => {
     await updatePackage(updatedState)
+      .unwrap()
       .then((resp) => {
         if (resp?.data?.success) {
           toast.custom((t) => (
@@ -217,8 +220,6 @@ export default function PackageForm({ data, handleClosePopup }) {
       }
     }
   };
-
-  console.log({ data });
 
   /* *********************************************************
   

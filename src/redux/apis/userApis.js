@@ -2,24 +2,33 @@ import { baseApi } from "../baseAPi";
 import { TagTypes } from "../tagTypes";
 
 // BASE URL
-const URL = "/users";
+const URL = "/v1.0/users";
 
 export const apis = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // GET ALL USERS
     getAllUsers: builder.query({
-      query: ({ page, perPage, limit }) => ({
-        url: `${URL}/all`,
+      query: (arg) => ({
+        url: `${URL}`,
         method: "GET",
-        params: { page, limit, perPage },
+        params: arg,
       }),
       providesTags: (result) => (result ? [TagTypes.user] : []),
+    }),
+    // CREATE USER
+    createUser: builder.mutation({
+      query: (payload) => ({
+        url: `${URL}`,
+        method: "POST",
+        data: payload,
+      }),
+      invalidatesTags: () => [TagTypes?.user],
     }),
     // UPDATE USER
     updateUser: builder.mutation({
       query: (payload) => ({
-        url: `${URL}/${payload?.email}`,
-        method: "PUT",
+        url: `${URL}/${payload?.id}`,
+        method: "PATCH",
         data: payload,
       }),
       invalidatesTags: () => [TagTypes?.user],
@@ -27,4 +36,8 @@ export const apis = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetAllUsersQuery, useUpdateUserMutation } = apis;
+export const {
+  useCreateUserMutation,
+  useGetAllUsersQuery,
+  useUpdateUserMutation,
+} = apis;

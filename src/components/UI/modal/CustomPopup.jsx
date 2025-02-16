@@ -45,7 +45,7 @@ export default function CustomPopup({
         )}
 
         {/* Content */}
-        <div className="h-[84vh] overflow-y-auto overflow-x-hidden">
+        <div className="h-full overflow-y-auto overflow-x-hidden">
           {Component}
         </div>
       </div>

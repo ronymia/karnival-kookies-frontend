@@ -1,5 +1,4 @@
 "use client";
-import { createUser } from "@/apis/auth";
 import VerificationCode from "@/components/layouts/Authentication/VerificationCode";
 import Heading from "@/components/UI/Heading/Heading";
 import DatePicker from "@/components/UI/inputFields/DatePicker";
@@ -9,6 +8,8 @@ import PasswordField from "@/components/UI/inputFields/PasswordField";
 import RadioButton from "@/components/UI/inputFields/RadioButton";
 import CustomLoading from "@/components/UI/loader/CustomLoading";
 import CustomToaster from "@/components/UI/toaster/CustomToaster";
+import { errorHandler } from "@/helpers/errorHandler";
+import { useRegisterUserMutation } from "@/redux/apis/authApis";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -17,6 +18,7 @@ import { BiSolidCheckCircle } from "react-icons/bi";
 export default function RegisterPage() {
   // STATE
   const [currentTab, setCurrentTab] = useState("register");
+  const [userRegister, registerResult] = useRegisterUserMutation();
   // STATE
   const router = useRouter();
   // STATE
@@ -144,13 +146,11 @@ export default function RegisterPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const [isCreatingId, setIsCreatingId] = useState(false);
   const createFunction = async () => {
-    setIsCreatingId(true);
-    createUser(formData)
+    userRegister(formData)
+      .unwrap()
       .then((res) => {
         if (res?.error) {
-          setIsCreatingId(false);
           return toast.custom((t) => (
             <CustomToaster t={t} type={"error"} text={res?.error} />
           ));
@@ -158,9 +158,7 @@ export default function RegisterPage() {
         setCodeError(res?.error);
 
         if (res?.success) {
-          console.log({ user: res });
           setCurrentTab("code");
-          setIsCreatingId(false);
         }
         if (!res?.success) {
           setFormData({
@@ -175,12 +173,11 @@ export default function RegisterPage() {
               text={"Something went wrong. Please register again"}
             />
           ));
-          setIsCreatingId(false);
         }
-        setIsCreatingId(false);
       })
-      .catch(() => {
-        setIsCreatingId(false);
+      .catch((err) => {
+        const errors = errorHandler({ err });
+        setErrors(errors);
       });
   };
 
@@ -200,7 +197,7 @@ export default function RegisterPage() {
   /* ****************************************
   
   ********************************************************/
-  if (isCreatingId) {
+  if (registerResult.isLoading) {
     return <CustomLoading />;
   } else {
     return (

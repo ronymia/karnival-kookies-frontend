@@ -2,17 +2,14 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useAuthContext } from "@/Context/ProjectProvider";
 import CustomNumberFieldForOtp from "@/Shared/Fields/CustomNumberFieldForOtp";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
 import { useVerifyUserEmailMutation } from "@/redux/apis/authApis";
 import CustomToaster from "@/components/UI/toaster/CustomToaster";
-import Head from "next/head";
 
 const VerificationCode = ({ data }) => {
   const router = useRouter();
-  const { setIsUserComing } = useAuthContext();
   const [verifyUserEmail, verifyUserEmailResult] = useVerifyUserEmailMutation();
 
   // FORM STATE

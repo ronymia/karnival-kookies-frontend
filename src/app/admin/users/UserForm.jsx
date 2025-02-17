@@ -66,6 +66,7 @@ export default function UserForm() {
   const [formData, setFormData] = useState({
     id: popupOption?.data?.id ?? null,
     name: popupOption?.data?.profile?.name ?? "",
+    email: popupOption?.data?.email ?? "",
     phone: popupOption?.data?.profile?.phone ?? "",
     address: popupOption?.data?.profile?.address ?? "",
     country: popupOption?.data?.profile?.country ?? "",
@@ -73,7 +74,6 @@ export default function UserForm() {
     postcode: popupOption?.data?.profile?.postcode ?? "",
     date_of_birth: popupOption?.data?.profile?.date_of_birth ?? "",
     gender: popupOption?.data?.profile?.gender ?? "",
-    email: popupOption?.data?.email ?? "",
     password: popupOption?.data?.password ?? "",
     role: popupOption?.data?.role ?? "",
   });
@@ -106,6 +106,46 @@ export default function UserForm() {
       )
     ) {
       newErrors.email = "Invalid email";
+    }
+
+    //   VALIDATE ROLE
+    if (!formData.role || formData.role.trim() === "") {
+      newErrors.role = "Role is required";
+    }
+
+    //   VALIDATE DATE OF BIRTH
+    if (!formData.date_of_birth || formData.date_of_birth.trim() === "") {
+      newErrors.date_of_birth = "Date of birth is required";
+    }
+
+    //   VALIDATE GENDER
+    if (!formData.gender || formData.gender.trim() === "") {
+      newErrors.gender = "Gender is required";
+    }
+
+    //   VALIDATE PHONE
+    if (!formData.phone || formData.phone.trim() === "") {
+      newErrors.phone = "Phone is required";
+    }
+
+    //   VALIDATE ADDRESS
+    if (!formData.address || formData.address.trim() === "") {
+      newErrors.address = "Address is required";
+    }
+
+    //   VALIDATE COUNTRY
+    if (!formData.country || formData.country.trim() === "") {
+      newErrors.country = "Country is required";
+    }
+
+    //   VALIDATE CITY
+    if (!formData.city || formData.city.trim() === "") {
+      newErrors.city = "City is required";
+    }
+
+    //   VALIDATE POSTCODE
+    if (!formData.postcode || formData.postcode.trim() === "") {
+      newErrors.postcode = "Postcode is required";
     }
 
     //   VALIDATE PASSWORD
@@ -156,7 +196,6 @@ export default function UserForm() {
     await updateUser(formData)
       .unwrap()
       .then((res) => {
-        console.log({ user: res });
         if (res?.success) {
           setFormData({
             name: "",
@@ -188,11 +227,10 @@ export default function UserForm() {
             email: "",
             password: "",
           });
-          popupOption?.onClose();
+          popupOption?.onClose?.();
         }
       })
-      .catch((err) => {
-        console.log({ first: err });
+      .catch(() => {
         toast.custom((t) => (
           <CustomToaster
             t={t}

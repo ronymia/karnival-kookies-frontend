@@ -76,7 +76,7 @@ export default function Navbar() {
       path: "/dashboard",
       // Icon: <ShoppingBag className="h-4 w-4" />,
       handler: handleCloseMenu,
-      permission: user,
+      permission: !!user,
       Children: [
         {
           id: 1,
@@ -101,7 +101,7 @@ export default function Navbar() {
       // Icon: <LayoutDashboard className="h-4 w-4" />,
       handler: handleOpenDropdown,
       path: "/admin",
-      permission: true,
+      permission: user?.role === "admin",
       Children: [
         // ADMIN DASHBOARD
         {

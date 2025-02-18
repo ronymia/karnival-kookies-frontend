@@ -5,12 +5,16 @@ import toast from "react-hot-toast";
 import CustomNumberFieldForOtp from "@/Shared/Fields/CustomNumberFieldForOtp";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
-import { useVerifyUserEmailMutation } from "@/redux/apis/authApis";
+import {
+  useGetAccessTokenMutation,
+  useVerifyEmailCodeMutation,
+} from "@/redux/apis/authApis";
 import CustomToaster from "@/components/UI/toaster/CustomToaster";
 
-const VerificationCode = ({ data }) => {
+function VerificationCode({ data }) {
   const router = useRouter();
-  const [verifyUserEmail, verifyUserEmailResult] = useVerifyUserEmailMutation();
+  const [verifyEmailCode, verifyEmailCodeResult] = useVerifyEmailCodeMutation();
+  const [getAccessToken, accessTokenResult] = useGetAccessTokenMutation();
 
   // FORM STATE
   const [formData, setFormData] = useState({
@@ -103,7 +107,7 @@ const VerificationCode = ({ data }) => {
   };
 
   const createFunction = async (formData) => {
-    await verifyUserEmail({
+    await verifyEmailCode({
       otp:
         formData?.digit_1 +
         formData?.digit_2 +
@@ -122,16 +126,28 @@ const VerificationCode = ({ data }) => {
             digit_4: "",
           });
 
-          // SUCCESS MESSAGE
-          toast.custom((t) => (
-            <CustomToaster t={t} type={"error"} text={res?.message} />
-          ));
-          // REDIRECT
-          router.push("/");
+          // GET ACCESS TOKEN
+          getAccessToken({ email: data?.email })
+            .unwrap()
+            .then((res) => {
+              if (res?.success) {
+                // REDIRECT
+                router.push("/");
+              }
+            })
+            .catch((err) => {
+              console.log({ err });
+            });
+        } else {
+          setErrors({
+            verifyError: res?.message,
+          });
         }
       })
       .catch((err) => {
-        console.log(err);
+        setErrors({
+          verifyError: err?.data?.message,
+        });
       });
   };
 
@@ -221,7 +237,8 @@ const VerificationCode = ({ data }) => {
               type={`submit`}
               className={`text-primary border border-primary px-5 py-3 rounded-full flex items-center gap-2 group-hover:border-base-300 transition-[border]`}
             >
-              {verifyUserEmailResult.isLoading ? (
+              {verifyEmailCodeResult.isLoading ||
+              accessTokenResult.isLoading ? (
                 <ButtonSpinner />
               ) : (
                 <>
@@ -239,6 +256,6 @@ const VerificationCode = ({ data }) => {
       </div>
     </>
   );
-};
+}
 
 export default VerificationCode;

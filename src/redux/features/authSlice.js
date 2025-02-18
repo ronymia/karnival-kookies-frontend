@@ -70,6 +70,28 @@ const authSlice = createSlice({
         state.isAdmin = verifiedUser?.role === "admin";
         // state.token = verifiedUser?.token;
         state.isAuthenticated = true; // Ensure this is set
+        window.localStorage.setItem(
+          "token",
+          `Bearer ${verifiedUser?.accessToken}`
+        );
+      }
+    );
+
+    // FROM GET USER WHEN GER NEW ACCESS TOKEN
+    builder.addMatcher(
+      authApis.endpoints.getAccessToken.matchFulfilled,
+      (state, action) => {
+        //
+        const verifiedUser = action.payload?.data;
+        //
+        state.user = verifiedUser;
+        state.isAdmin = verifiedUser?.role === "admin";
+        // state.token = verifiedUser?.token;
+        state.isAuthenticated = true; // Ensure this is set
+        window.localStorage.setItem(
+          "token",
+          `Bearer ${verifiedUser?.accessToken}`
+        );
       }
     );
 

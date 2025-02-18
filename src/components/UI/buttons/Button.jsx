@@ -10,11 +10,12 @@ const Button = ({
   wrapperClass = "inline-block",
   handler,
   isLoading = false,
+  type = "button",
 }) => {
   return (
     <div className={`${wrapperClass} group`}>
       <button
-        type="button"
+        type={type}
         onClick={handler}
         className={`${buttonClass} text-primary border border-primary px-5 py-3 rounded-full flex items-center gap-2 group-hover:border-base-300 transition-[border]`}
       >
@@ -38,7 +39,8 @@ const Button = ({
 /* <------------------------ PROP TYPES --------------------------> */
 
 Button.propTypes = {
-  text: PropTypes.string,
+  type: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
   icon: PropTypes.bool,
   buttonClass: PropTypes.string,
   wrapperClass: PropTypes.string,

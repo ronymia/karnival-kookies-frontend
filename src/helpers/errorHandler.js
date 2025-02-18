@@ -23,6 +23,11 @@ export const errorHandler = ({ err, errorId }) => {
         />
       ));
       break;
+    case 404:
+      toast.custom((t) => (
+        <CustomToaster t={t} type={"error"} text={err?.data?.message} />
+      ));
+      break;
     case 409:
       toast.custom((t) => (
         <CustomToaster t={t} type={"error"} text={err?.data?.message} />

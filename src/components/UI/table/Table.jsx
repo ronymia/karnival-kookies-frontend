@@ -1,6 +1,6 @@
 "use client";
+import useDeviceWidth from "@/Hooks/useDeviceWidth";
 import PropTypes from "prop-types";
-import useDeviceWith from "@/Hooks/useDeviceWith";
 
 export default function Table({
   rows = [],
@@ -8,7 +8,7 @@ export default function Table({
   isLoading = false,
   actions = [],
 }) {
-  const windowInnerWidth = useDeviceWith();
+  const windowInnerWidth = useDeviceWidth();
 
   return (
     <table className="w-full">

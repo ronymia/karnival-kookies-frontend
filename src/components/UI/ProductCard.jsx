@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "../../Shared/sharedAnimation.css";
 import { getFullImageLink } from "@/Utils/getFullImageLink";
 import { useRouter } from "next/navigation";
@@ -17,8 +17,11 @@ import CustomToaster from "./toaster/CustomToaster";
 import { errorHandler } from "@/helpers/errorHandler";
 import Button from "./buttons/Button";
 import Image from "next/image";
+import useDeviceWidth from "@/Hooks/useDeviceWidth";
 
 export default function ProductCard({ product }) {
+  // GET DIV WITH
+  const innerWidth = useDeviceWidth();
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
   // USER FROM REDUX STORE
@@ -26,33 +29,12 @@ export default function ProductCard({ product }) {
   const [quantity, setQuantity] = useState(1);
   const [addToCart, addedResult] = useAddToCartMutation();
 
-  // GET DIV WITH
-  const useDeviceWidth = () => {
-    const [width, setWidth] = useState(() =>
-      typeof window !== "undefined" ? window.innerWidth : 0
-    );
-
-    useEffect(() => {
-      // Only add event listener in the browser
-      if (typeof window !== "undefined") {
-        const handleResize = () => setWidth(window.innerWidth);
-
-        window.addEventListener("resize", handleResize);
-
-        return () => {
-          window.removeEventListener("resize", handleResize);
-        };
-      }
-    }, []);
-
-    return width;
-  };
-
+  // HANDLE ADD TO CARD
   const handleAddToCart = async () => {
     await addToCart({
       product_id: product?.id,
       quantity: quantity,
-      email: user?.email,
+      user_id: user?.id,
     })
       .unwrap()
       .then((res) => {
@@ -64,28 +46,6 @@ export default function ProductCard({ product }) {
               text={`Product added to the cart successfully`}
             />
           ));
-        } else {
-          // const info = {
-          //   exists: res?.exists,
-          //   quantity: res?.exists?.quantity + res?.quantity,
-          // };
-          // updateQuantity(info)
-          //   .then((res) => {
-          //     if (res?.success) {
-          //       toast.custom((t) => (
-          //         <CustomToaster
-          //           t={t}
-          //           type={"success"}
-          //           text={`Product already in the cart but we increased the quantity. You can decrease it from cart`}
-          //         />
-          //       ));
-          //       setIsAddingToCart(false);
-          //     }
-          //   })
-          //   .catch((err) => {
-          //     setIsAddingToCart(false);
-          //     errorHandler({ err, setLoading: setIsAddingToCart });
-          //   });
         }
       })
       .catch((err) => {
@@ -151,6 +111,7 @@ export default function ProductCard({ product }) {
       onMouseLeave={() => setIsHovered(false)}
       className="relative image-hover cursor-pointer "
     >
+      {/* <================ PRODUCT IMAGE ====================> */}
       <div
         onClick={() => router.push(`/products/${product?.id}`)}
         className="relative w-full h-[400px] overflow-hidden rotating-background"
@@ -166,30 +127,29 @@ export default function ProductCard({ product }) {
           priority
         />
       </div>
+
+      {/* <================ ADD BUTTON =================> */}
       <motion.div
         animate={
-          useDeviceWidth() > 768
-            ? isHovered
-              ? { opacity: 1 }
-              : { opacity: 0 }
-            : ""
+          innerWidth > 768 ? (isHovered ? { opacity: 1 } : { opacity: 0 }) : ""
         }
         className="my-5 flex flex-col justify-center items-center transition-all cart-button"
       >
         <div className={`z-10`}>
           <Button
+            type={`button`}
             text={"Add to cart"}
             handler={handleAddToCart}
             isLoading={addedResult.isLoading}
           />
         </div>
       </motion.div>
+
+      {/* <====================== PRODUCT DETAILS ====================> */}
       <motion.div
         onClick={() => router.push(`/products/${product?.id}`)}
         // initial={{ y: -100 }}
-        animate={
-          useDeviceWidth() > 768 ? (isHovered ? { y: 0 } : { y: -70 }) : ""
-        }
+        animate={innerWidth > 768 ? (isHovered ? { y: 0 } : { y: -70 }) : ""}
         transition={{ type: "spring", stiffness: 100 }}
         className="text-center"
       >
@@ -238,11 +198,7 @@ export default function ProductCard({ product }) {
       {/* FAVORITE PRODUCT */}
       <motion.div
         animate={
-          useDeviceWidth() > 768
-            ? isHovered
-              ? { opacity: 1 }
-              : { opacity: 0 }
-            : ""
+          innerWidth > 768 ? (isHovered ? { opacity: 1 } : { opacity: 0 }) : ""
         }
         onClick={(event) => event.stopPropagation()}
         className="flex flex-col gap-1 absolute top-1 right-1 z-10 hover:text-gray-700"

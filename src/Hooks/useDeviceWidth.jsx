@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function useDeviceWith() {
+export default function useDeviceWidth() {
   const [width, setWidth] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth : 0
   );

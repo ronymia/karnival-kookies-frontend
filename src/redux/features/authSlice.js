@@ -29,32 +29,16 @@ const authSlice = createSlice({
     builder.addMatcher(
       authApis.endpoints.loginUser.matchFulfilled,
       (state, action) => {
+        const loggedUser = action.payload?.data;
         //
-        state.user = action.payload?.data?.user;
-        state.isAdmin = action.payload?.data?.user?.role === "admin";
-        state.token = action.payload?.data?.accessToken;
+        state.user = loggedUser?.user;
+        state.isAdmin = loggedUser?.role === "admin";
+        state.token = loggedUser?.accessToken;
         state.isAuthenticated = true;
         state.isAuthChecked = true;
         window.localStorage.setItem(
           "token",
-          `Bearer ${action.payload?.data?.accessToken}`
-        );
-      }
-    );
-
-    // FROM LOGIN
-    builder.addMatcher(
-      authApis.endpoints.verifyUserEmail.matchFulfilled,
-      (state, action) => {
-        //
-        state.user = action.payload?.data?.user;
-        state.isAdmin = action.payload?.data?.user?.role === "admin";
-        state.token = action.payload?.data?.accessToken;
-        state.isAuthenticated = true;
-        state.isAuthChecked = true;
-        window.localStorage.setItem(
-          "token",
-          `Bearer ${action.payload?.data?.accessToken}`
+          `Bearer ${loggedUser?.accessToken}`
         );
       }
     );
@@ -70,10 +54,6 @@ const authSlice = createSlice({
         state.isAdmin = verifiedUser?.role === "admin";
         // state.token = verifiedUser?.token;
         state.isAuthenticated = true; // Ensure this is set
-        window.localStorage.setItem(
-          "token",
-          `Bearer ${verifiedUser?.accessToken}`
-        );
       }
     );
 

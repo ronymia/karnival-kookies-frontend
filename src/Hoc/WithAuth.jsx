@@ -1,12 +1,12 @@
 import { useSelector } from "react-redux";
-import { useRouter } from "next/router";
 import CustomLoading from "@/components/UI/loader/CustomLoading";
-import { useAuthContext } from "@/Context/ProjectProvider";
+import { useAuth } from "@/Context/AuthProvider";
+import { useRouter } from "next/navigation";
 
 export default function withAuth(Component) {
   const WrappedComponent = (props) => {
-    const { token } = useSelector((state) => state.auth);
-    const { isLoading } = useAuthContext();
+    const { user } = useSelector((state) => state.auth);
+    const { isLoading } = useAuth();
     const router = useRouter();
 
     // Handle loading state
@@ -15,7 +15,7 @@ export default function withAuth(Component) {
     }
 
     // If not authenticated, redirect to login
-    if (!token) {
+    if (!user) {
       router.push("/login");
       return null;
     }

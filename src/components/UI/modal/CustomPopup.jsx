@@ -17,12 +17,11 @@ export default function CustomPopup({
         backdropFilter: "blur(2px)",
       }}
       closeOnDocumentClick={popupOption?.closeOnDocumentClick}
-      lockScroll={true}
-      // lockScroll={popupOption?.lockScroll || true}
+      lockScroll={popupOption?.lockScroll ?? true}
       className="relative overflow-hidden w-1/2 rounded-xl pop"
     >
       <div
-        className={`relative  bg-secondary text-base-100 shadow-xl rounded-xl border-primary-content border-2 overflow-hidden w-[95vw] sm:w-[70vw] md:w-[70vw] lg:w-[50vw] ${popupClasses} max-h-[90vh] `}
+        className={`relative bg-secondary text-base-100 shadow-xl rounded-xl border-primary-content border-2 w-[95vw] sm:w-[70vw] md:w-[70vw] lg:w-[50vw] ${popupClasses} max-h-[90vh] flex flex-col`}
       >
         {/* Close Button */}
         <button
@@ -39,15 +38,13 @@ export default function CustomPopup({
 
         {/* Title */}
         {popupOption?.title && (
-          <div className="sticky top-0 w-full px-8 py-5 text-body font-semibold text-2xl  z-[999] bg-primary text-base-300">
+          <div className="sticky top-0 w-full px-8 py-5 text-body font-semibold text-2xl z-[999] bg-primary text-base-300">
             {popupOption?.title}
           </div>
         )}
 
-        {/* Content */}
-        <div className="h-full overflow-y-auto overflow-x-hidden">
-          {Component}
-        </div>
+        {/* Content with Scrolling */}
+        <div className="flex-1 overflow-y-auto p-3">{Component}</div>
       </div>
     </Popup>
   );

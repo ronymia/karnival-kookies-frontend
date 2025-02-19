@@ -1,8 +1,7 @@
-import CustomField from "@/Shared/Fields/CustomField";
-import CustomNumberField from "@/Shared/Fields/CustomNumberField";
-import CustomTextareaField from "@/Shared/Fields/CustomTextAreaField";
-import Heading from "@/Shared/Heading";
-import React from "react";
+import Heading from "@/components/UI/Heading/Heading";
+import InputField from "@/components/UI/inputFields/InputField";
+import NumberField from "@/components/UI/inputFields/NumberField";
+import TextareaField from "@/components/UI/inputFields/TextareaField";
 
 const CheckoutStep1 = ({
   errors,
@@ -34,7 +33,7 @@ const CheckoutStep1 = ({
       <Heading isSubHeading={false} heading={"Shipping Information"} />
       <div className={`grid grid-cols-1 md:grid-cols-2 gap-5`}>
         {/* NAME */}
-        <CustomField
+        <InputField
           value={state?.shipping_info?.name}
           disable={false}
           fieldClassName={"w-full"}
@@ -49,7 +48,7 @@ const CheckoutStep1 = ({
           required={true}
         />
         {/* EMAIL */}
-        <CustomField
+        <InputField
           value={state?.shipping_info?.email}
           disable={false}
           fieldClassName={"w-full"}
@@ -65,7 +64,7 @@ const CheckoutStep1 = ({
         />
 
         {/* PHONE */}
-        <CustomNumberField
+        <NumberField
           value={state?.shipping_info?.phone}
           disable={false}
           fieldClassName={"w-full"}
@@ -80,7 +79,7 @@ const CheckoutStep1 = ({
         />
 
         {/* STREET ADDRESS */}
-        <CustomField
+        <InputField
           value={state?.shipping_info?.streetAddress}
           disable={false}
           fieldClassName={"w-full"}
@@ -95,7 +94,7 @@ const CheckoutStep1 = ({
           required={true}
         />
         {/* APARTMENT */}
-        <CustomField
+        <InputField
           value={state?.shipping_info?.apartment}
           disable={false}
           fieldClassName={"w-full"}
@@ -109,7 +108,7 @@ const CheckoutStep1 = ({
           wrapperClassName={"w-full"}
         />
         {/* STATE */}
-        <CustomField
+        <InputField
           value={state?.shipping_info?.state}
           disable={false}
           fieldClassName={"w-full"}
@@ -124,7 +123,7 @@ const CheckoutStep1 = ({
           required={true}
         />
         {/* CITY */}
-        <CustomField
+        <InputField
           value={state?.shipping_info?.city}
           disable={false}
           fieldClassName={"w-full"}
@@ -139,7 +138,7 @@ const CheckoutStep1 = ({
           required={true}
         />
         {/* COUNTRY */}
-        <CustomField
+        <InputField
           value={state?.shipping_info?.country}
           disable={false}
           fieldClassName={"w-full"}
@@ -154,7 +153,7 @@ const CheckoutStep1 = ({
           required={true}
         />
         {/* ZIP */}
-        <CustomNumberField
+        <NumberField
           value={state?.shipping_info?.postalCode}
           disable={false}
           fieldClassName={"w-full"}
@@ -169,7 +168,7 @@ const CheckoutStep1 = ({
         />
       </div>
       {/* DELIVERY INSTRUCTIONS */}
-      <CustomTextareaField
+      <TextareaField
         value={state?.shipping_info?.deliveryInstruction}
         disable={false}
         fieldClassName={"w-full"}

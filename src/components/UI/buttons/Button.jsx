@@ -10,7 +10,7 @@ const Button = ({
   wrapperClass = "inline-block",
   handler,
   isLoading = false,
-  type = "button",
+  type = `button`,
 }) => {
   return (
     <div className={`${wrapperClass} group`}>

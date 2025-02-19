@@ -1,65 +1,37 @@
 "use client";
-import { getAllCartItems } from "@/apis/carts";
-import Button from "@/Shared/Button";
-import CustomLoading from "@/Shared/CustomLoading";
-import CustomToaster from "@/Shared/CustomToaster";
-import FixedBgComponent from "@/Shared/FixedBgComponent";
-import TableComponentHeading from "@/Shared/TableComponentHeading";
-import NavigateComponent from "@/Utils/navigate";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 import CartItemsCard from "./CartItemsCard";
-import PrivateRoute from "@/Routes/PrivateRoute";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  addIds,
-  removeIds,
-  addItems,
-  removeItems,
-} from "@/redux/features/cartSlice";
+import { useSelector } from "react-redux";
 import { useGetCartByEmailQuery } from "@/redux/apis/cartApis";
-import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
+import { errorHandler } from "@/helpers/errorHandler";
+import CustomToaster from "@/components/UI/toaster/CustomToaster";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
+import FixedBgComponent from "@/components/layouts/FixedBgComponent";
+import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
+import NavigateComponent from "@/components/UI/navigate/navigate";
+import Button from "@/components/UI/buttons/Button";
+import withAuth from "@/Hoc/WithAuth";
 
-export default function Page() {
-  const appDispatch = useDispatch();
-  const { selectedItems, checkedId, totalQuantity, totalPrice } = useSelector(
-    (state) => state.cart
-  );
+function CartPage() {
+  const { user } = useSelector((state) => state.auth);
+  const { totalQuantity, totalPrice } = useSelector((state) => state.cart);
 
   const router = useRouter();
   // USER FROM REDUX STORE
-  const { user } = useSelector((state) => state.auth);
 
-  const [isUpdating, setIsUpdating] = useState();
   const getCartByEmail = useGetCartByEmailQuery(
-    { email: user?.email },
-    { skip: !user?.email }
+    { user_id: user?.id },
+    { skip: !user?.id }
   );
-
-  // REFETCH
-  useEffect(() => {
-    getCartByEmail.refetch();
-  }, [isUpdating]);
 
   // IF ERROR
   useEffect(() => {
     if (getCartByEmail.isError) {
-      errorHandlerV2({ err: getCartByEmail.error });
+      errorHandler({ err: getCartByEmail.error });
     }
   }, []);
-
-  //   HANDLE CHECKED
-  const handleChecked = (e, item) => {
-    const { checked } = e.target;
-    if (checked) {
-      appDispatch(addItems(item));
-      appDispatch(addIds(item?.id));
-    } else {
-      appDispatch(removeItems(item));
-      appDispatch(removeIds(item?.id));
-    }
-  };
 
   // HANDLE CHECKOUT
   const handleCheckout = () => {
@@ -80,8 +52,9 @@ export default function Page() {
     return <CustomLoading />;
   }
   return (
-    <PrivateRoute>
+    <>
       <div className={`flex flex-col gap-20 mb-60`}>
+        {/* <======================= HEADER ================================> */}
         <FixedBgComponent
           url="/chocolate_bg.jpg"
           wrapperClass={`pt-60 pb-40`}
@@ -99,23 +72,23 @@ export default function Page() {
             />
           }
         />
-        {/* CARD ITEM */}
+
+        {/* <============================= CARD ITEM =================================> */}
         {getCartByEmail.data?.data?.length > 0 ? (
-          <div
+          <section
             className={`grid grid-cols-1 md:grid-cols-3 gap-20 md:gap-6 w-full px-5 md:px-10`}
           >
-            <div className={`flex flex-col gap-5 mx-auto md:col-span-2 w-full`}>
+            {/* <============================= CARD ITEM =================================> */}
+            <section
+              className={`flex flex-col gap-5 mx-auto md:col-span-2 w-full`}
+            >
               {getCartByEmail.data?.data?.map((item) => (
-                <CartItemsCard
-                  key={item?.id}
-                  item={item}
-                  setIsUpdating={setIsUpdating}
-                  handleChecked={handleChecked}
-                  checked={checkedId}
-                />
+                <CartItemsCard key={item?.id} item={item} />
               ))}
-            </div>
-            <div className={`flex flex-col gap-3`}>
+            </section>
+
+            {/* <============================= CHECKOUT =================================> */}
+            <section className={`flex flex-col gap-3`}>
               <h1 className={`text-[20px] font-black`}>
                 Selected for checkout
               </h1>
@@ -126,11 +99,15 @@ export default function Page() {
                 Total: ${totalPrice?.toFixed(2)}
               </h1>
 
-              <Button text={"Proceed Checkout"} handler={handleCheckout} />
-            </div>
-          </div>
+              <Button
+                type={`button`}
+                text={"Proceed Checkout"}
+                handler={handleCheckout}
+              />
+            </section>
+          </section>
         ) : (
-          <div className={`flex flex-col justify-center items-center`}>
+          <section className={`flex flex-col justify-center items-center`}>
             {/* <img className={`w-[500px] min-w-[280px]`} src={emptyCart} alt="" /> */}
             <div className={`flex flex-col gap-2`}>
               <p
@@ -144,14 +121,17 @@ export default function Page() {
               </p>
               <div className={`flex justify-center items-center`}>
                 <Button
+                  type={`button`}
                   text={"Go To Shop"}
                   handler={() => router.push("/products")}
                 />
               </div>
             </div>
-          </div>
+          </section>
         )}
       </div>
-    </PrivateRoute>
+    </>
   );
 }
+
+export default withAuth(CartPage);

@@ -4,9 +4,6 @@ const initialState = {
   totalQuantity: null,
   totalPrice: null,
   selectedItems: [],
-  checkedId: [],
-  payment_method: "",
-  order_items: [],
 };
 
 const cartSlice = createSlice({
@@ -15,15 +12,10 @@ const cartSlice = createSlice({
   reducers: {
     resetCart: () => initialState,
     addItems: (state, action) => {
-      console.log({ payload: action.payload });
-
-      // Ensure payload is an array
-      const itemsToAdd = Array.isArray(action.payload)
-        ? action.payload
-        : [action.payload];
+      const itemToAdd = action.payload;
 
       // Add new items to selectedItems
-      state.selectedItems = [...state.selectedItems, ...itemsToAdd];
+      state.selectedItems = [...state.selectedItems, itemToAdd];
 
       // Update quantity
       state.totalQuantity = state.selectedItems.reduce(
@@ -33,19 +25,22 @@ const cartSlice = createSlice({
 
       // Update total price
       state.totalPrice = state.selectedItems.reduce((total, item) => {
-        const price = item?.product?.discount_price
-          ? parseFloat(item?.product?.discount_price)
-          : parseFloat(item?.product?.regular_price);
+        // GET PRICE
+        const price = item?.product?.is_discount_enable
+          ? parseFloat(item?.product?.net_price)
+          : parseFloat(item?.product?.price);
+
+        // CALCULATE TOTAL PRICE OF QUANTITY
         return total + price * Number(item?.quantity || 0);
       }, 0);
     },
 
     removeItems: (state, action) => {
-      console.log({ payload: action.payload });
+      const itemToRemove = action.payload;
 
       // Filter out the item to remove
       state.selectedItems = state.selectedItems.filter(
-        (item) => item?.id !== action.payload?.id
+        (item) => item?.id !== itemToRemove?.id
       );
 
       // Update total quantity
@@ -56,27 +51,18 @@ const cartSlice = createSlice({
 
       // Update total price
       state.totalPrice = state.selectedItems.reduce((total, item) => {
-        const price = item?.product?.discount_price
-          ? parseFloat(item?.product?.discount_price)
-          : parseFloat(item?.product?.regular_price);
+        // GET PRICE
+        const price = item?.product?.is_discount_enable
+          ? parseFloat(item?.product?.net_price)
+          : parseFloat(item?.product?.price);
+
+        // CALCULATE TOTAL PRICE OF QUANTITY
         return total + price * Number(item?.quantity || 0);
       }, 0);
-    },
-
-    addIds: (state, action) => {
-      console.log({ payload: action.payload });
-
-      state.checkedId = [...state.checkedId, action.payload];
-    },
-    removeIds: (state, action) => {
-      console.log({ payload: action.payload });
-
-      state.checkedId = state.checkedId.filter((id) => id !== action?.payload);
     },
   },
 });
 
-export const { addIds, removeIds, addItems, removeItems, resetCart } =
-  cartSlice.actions;
+export const { addItems, removeItems, resetCart } = cartSlice.actions;
 
 export default cartSlice.reducer;

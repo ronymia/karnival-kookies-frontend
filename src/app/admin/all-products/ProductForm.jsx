@@ -20,6 +20,7 @@ import FileUploader from "@/components/UI/inputFields/FileUploader";
 import { errorHandler } from "@/helpers/errorHandler";
 import CustomToaster from "@/components/UI/toaster/CustomToaster";
 import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
+import FormActions from "@/components/layouts/forms/FormActions";
 
 export default function ProductForm() {
   // FORM REDUCER
@@ -268,7 +269,7 @@ export default function ProductForm() {
     <form
       noValidate
       onSubmit={handleOnSubmit}
-      className={`p-3 h-full grid grid-cols-1 md:grid-cols-2 gap-3`}
+      className={`grid grid-cols-1 md:grid-cols-2 gap-3`}
     >
       <>
         {/* NAME */}
@@ -496,7 +497,7 @@ export default function ProductForm() {
       </>
 
       {/* <==================== ACTION BUTTONS ====================> */}
-      <div className="md:col-span-2 flex flex-col md:flex-row w-full justify-center md:justify-end items-center gap-2 pb-10">
+      {/* <div className=" md:col-span-2 flex flex-col md:flex-row w-full justify-center md:justify-end items-center gap-2">
         <button
           disabled={
             createResult.isLoading ||
@@ -527,7 +528,19 @@ export default function ProductForm() {
             "Create"
           )}
         </button>
-      </div>
+      </div> */}
+      {/* Reusable FormActions Component */}
+
+      <FormActions
+        isLoading={
+          createResult.isLoading ||
+          updateResult.isLoading ||
+          uploadResult.isLoading
+        }
+        className={"md:col-span-2"}
+        onCancel={popupOption?.onClose}
+        submitText={popupOption?.data ? "Update" : "Create"}
+      />
     </form>
   );
 }

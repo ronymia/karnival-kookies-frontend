@@ -30,6 +30,7 @@ export default function ProjectProvider({ children }) {
     },
     overlayStyle: { background: "red" },
     closeOnDocumentClick: false,
+    lockScroll: false,
   });
   const value = {
     // POPUP OPTIONS

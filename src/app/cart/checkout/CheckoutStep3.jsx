@@ -1,4 +1,4 @@
-import Heading from "@/Shared/Heading";
+import Heading from "@/components/UI/Heading/Heading";
 import ViewField from "@/Shared/ViewField";
 import React from "react";
 import { useSelector } from "react-redux";

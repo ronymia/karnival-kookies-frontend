@@ -1,16 +1,16 @@
 "use client";
-import Button from "@/Shared/Button";
-import { Elements, PaymentElement } from "@stripe/react-stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
 import PaymentForm from "./PaymentForm";
 import { useRouter } from "next/navigation";
-import { errorHandlerV2 } from "@/helpers/errorHandlerV2";
 import {
   useCreatePaymentIntentMutation,
   useLazyPaymentConfigQuery,
 } from "@/redux/apis/paymentApis";
 import { useSelector } from "react-redux";
+import { errorHandler } from "@/helpers/errorHandler";
+import Button from "@/components/UI/buttons/Button";
 
 export default function PaymentStep4({ state }) {
   const { totalPrice: checkoutTotal } = useSelector((state) => state.cart);
@@ -34,8 +34,8 @@ export default function PaymentStep4({ state }) {
             const publishableKey = await res?.data?.publishableKey;
             setStripePromise(loadStripe(publishableKey));
           });
-      } catch (error) {
-        errorHandlerV2({ err });
+      } catch (err) {
+        errorHandler({ err });
       }
     };
     getPaymentConfig();
@@ -53,7 +53,7 @@ export default function PaymentStep4({ state }) {
             setClientSecret(clientSecret);
           });
       } catch (err) {
-        errorHandlerV2({ err });
+        errorHandler({ err });
       }
     };
     paymentIntent();

@@ -1,5 +1,5 @@
+import CustomLoading from "@/components/UI/loader/CustomLoading";
 import { useAuthContext } from "@/Context/ProjectProvider";
-import CustomLoading from "@/Shared/CustomLoading";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 

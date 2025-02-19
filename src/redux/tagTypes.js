@@ -5,6 +5,7 @@ export const TagTypes = {
   categories: "categories",
   orders: "orders",
   metaData: "metaData",
+  cart: "cart",
 };
 
 export const tagTypesList = [

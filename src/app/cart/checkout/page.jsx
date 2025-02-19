@@ -1,14 +1,13 @@
 "use client";
-import CustomMultiStepper from "@/Shared/steppers/CustomMultiStepper";
 import { validationErrorHandler } from "@/Utils/validationErrorHandler";
 import { useEffect, useState } from "react";
 import CheckoutStep1 from "./CheckoutStep1";
 import CheckoutStep2 from "./CheckoutStep2";
 import CheckoutStep3 from "./CheckoutStep3";
 import PaymentStep4 from "./PaymentStep4";
-import PrivateRoute from "@/Routes/PrivateRoute";
 import useCheckoutReducer from "./checkoutReducer";
 import { useSelector } from "react-redux";
+import CustomMultiStepper from "@/Shared/steppers/CustomMultiStepper";
 
 const Page = () => {
   const { user } = useSelector((state) => state.auth);
@@ -117,7 +116,7 @@ const Page = () => {
   };
 
   return (
-    <PrivateRoute>
+    <>
       <div
         className={`max-w-screen-xl mx-auto px-5 md:px-10 flex flex-col justify-center items-center gap-10 pt-32 mb-60 w-full `}
       >
@@ -184,7 +183,7 @@ const Page = () => {
           )}
         </div>
       </div>
-    </PrivateRoute>
+    </>
   );
 };
 

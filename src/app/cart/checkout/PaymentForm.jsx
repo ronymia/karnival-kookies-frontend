@@ -1,15 +1,12 @@
-import { deleteCartItems, postCheckout } from "@/apis/carts";
+import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
 import { useOrderCheckInMutation } from "@/redux/apis/orderApis";
-import Button from "@/Shared/Button";
-import ButtonSpinner from "@/Shared/ButtonSpinner";
-import CustomToaster from "@/Shared/CustomToaster";
 import {
   PaymentElement,
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { useSelector } from "react-redux";

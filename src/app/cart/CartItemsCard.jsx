@@ -23,8 +23,8 @@ export default function CartItemsCard({ item: cartItem }) {
   const [removeFromCart] = useRemoveFromCartMutation();
 
   // HANDLE DELETE CART
-  const handleDeleteCart = (id) => {
-    removeFromCart(id)
+  const handleDeleteCart = async (id) => {
+    await removeFromCart(id)
       .unwrap()
       .then((res) => {
         if (res?.success) {

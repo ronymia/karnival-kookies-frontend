@@ -11,8 +11,9 @@ import {
 import { useSelector } from "react-redux";
 import { errorHandler } from "@/helpers/errorHandler";
 import Button from "@/components/UI/buttons/Button";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
 
-export default function PaymentStep4({ state }) {
+export default function PaymentStep4({ formData, handlePrevStep }) {
   const { totalPrice: checkoutTotal } = useSelector((state) => state.cart);
   const router = useRouter();
 
@@ -20,10 +21,9 @@ export default function PaymentStep4({ state }) {
   const [clientSecret, setClientSecret] = useState("");
   const [createPaymentIntent, paymentIntentResult] =
     useCreatePaymentIntentMutation();
-  const [paymentConfig] = useLazyPaymentConfigQuery();
-  // console.log({ clientSecret, stripePromise });
+  const [paymentConfig, paymentConfigResult] = useLazyPaymentConfigQuery();
 
-  //
+  // GET PAYMENT CONFIG
   useEffect(() => {
     const getPaymentConfig = async () => {
       try {
@@ -38,14 +38,14 @@ export default function PaymentStep4({ state }) {
         errorHandler({ err });
       }
     };
-    getPaymentConfig();
+    getPaymentConfig?.();
   }, []);
 
   //
   useEffect(() => {
     const paymentIntent = async () => {
       try {
-        await createPaymentIntent({ price: checkoutTotal })
+        await createPaymentIntent({ price: Number(checkoutTotal?.toFixed(2)) })
           .unwrap()
           .then(async (res) => {
             console.log({ paymentIntent: res });
@@ -59,6 +59,16 @@ export default function PaymentStep4({ state }) {
     paymentIntent();
   }, []);
 
+  // LOADING STATE
+  if (paymentIntentResult?.isLoading || paymentConfigResult?.isLoading) {
+    return <CustomLoading />;
+  }
+
+  // IF GOT ERROR
+  if (paymentConfigResult?.isError) {
+    return <div>{paymentConfigResult?.error?.data?.message}</div>;
+  }
+
   return (
     <div
       className={`max-w-screen-xl mx-auto px-5 md:px-10 flex flex-col justify-center items-center gap-10 pt-32 mb-60 w-full `}
@@ -66,7 +76,7 @@ export default function PaymentStep4({ state }) {
       {clientSecret && stripePromise ? (
         <div className={`bg-base-300 text-base-300 p-10 rounded-lg`}>
           <Elements stripe={stripePromise} options={{ clientSecret }}>
-            <PaymentForm state={state} />
+            <PaymentForm formData={formData} handlePrevStep={handlePrevStep} />
           </Elements>
         </div>
       ) : (
@@ -74,6 +84,13 @@ export default function PaymentStep4({ state }) {
           className={`text-base-300 p-5 rounded-lg flex flex-col justify-center items-center text-lg md:text-3xl space-y-5`}
         >
           <p>Please Select Some Products!</p>
+          <button
+            disabled={false}
+            onClick={handlePrevStep}
+            className="btn w-full md:btn-wide btn-primary"
+          >
+            Previous
+          </button>
           <Button text={"Go To Cart"} handler={() => router.push("/cart")} />
         </div>
       )}

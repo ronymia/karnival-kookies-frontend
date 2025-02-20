@@ -2,15 +2,15 @@ import Heading from "@/components/UI/Heading/Heading";
 import InputField from "@/components/UI/inputFields/InputField";
 import NumberField from "@/components/UI/inputFields/NumberField";
 import TextareaField from "@/components/UI/inputFields/TextareaField";
+import { formatRole } from "@/Utils/formatRole";
 
-const CheckoutStep1 = ({
+function CheckoutStep1({
   errors,
   setErrors,
-  state,
+  formData,
   dispatch,
-  validateForm,
   handleNextStep,
-}) => {
+}) {
   // CHANGE FORM DATA
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -34,22 +34,22 @@ const CheckoutStep1 = ({
       <div className={`grid grid-cols-1 md:grid-cols-2 gap-5`}>
         {/* NAME */}
         <InputField
-          value={state?.shipping_info?.name}
+          value={formData?.shipping_info?.recipient_name}
           disable={false}
           fieldClassName={"w-full"}
-          error={errors?.name}
-          id={"name"}
-          label={"Name"}
-          name={"name"}
+          error={errors?.["recipient_name"]}
+          id={"recipient_name"}
+          label={formatRole("recipient_name")}
+          name={"recipient_name"}
           onChange={handleFormChange}
-          placeholder={"Name"}
+          placeholder={formatRole("recipient_name")}
           type={"text"}
           wrapperClassName={"w-full"}
           required={true}
         />
         {/* EMAIL */}
         <InputField
-          value={state?.shipping_info?.email}
+          value={formData?.shipping_info?.email}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.email}
@@ -65,7 +65,7 @@ const CheckoutStep1 = ({
 
         {/* PHONE */}
         <NumberField
-          value={state?.shipping_info?.phone}
+          value={formData?.shipping_info?.phone}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.phone}
@@ -78,24 +78,24 @@ const CheckoutStep1 = ({
           required={true}
         />
 
-        {/* STREET ADDRESS */}
+        {/* ADDRESS */}
         <InputField
-          value={state?.shipping_info?.streetAddress}
+          value={formData?.shipping_info?.address}
           disable={false}
           fieldClassName={"w-full"}
-          error={errors?.streetAddress}
-          id={"streetAddress"}
-          label={"Street"}
-          name={"streetAddress"}
+          error={errors?.address}
+          id={"address"}
+          label={"Address"}
+          name={"address"}
           onChange={handleFormChange}
-          placeholder={"Street"}
+          placeholder={"Address"}
           type={"text"}
           wrapperClassName={"w-full"}
           required={true}
         />
         {/* APARTMENT */}
         <InputField
-          value={state?.shipping_info?.apartment}
+          value={formData?.shipping_info?.apartment}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.apartment}
@@ -107,9 +107,9 @@ const CheckoutStep1 = ({
           type={"text"}
           wrapperClassName={"w-full"}
         />
-        {/* STATE */}
+        {/* formData */}
         <InputField
-          value={state?.shipping_info?.state}
+          value={formData?.shipping_info?.state}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.state}
@@ -124,7 +124,7 @@ const CheckoutStep1 = ({
         />
         {/* CITY */}
         <InputField
-          value={state?.shipping_info?.city}
+          value={formData?.shipping_info?.city}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.city}
@@ -139,7 +139,7 @@ const CheckoutStep1 = ({
         />
         {/* COUNTRY */}
         <InputField
-          value={state?.shipping_info?.country}
+          value={formData?.shipping_info?.country}
           disable={false}
           fieldClassName={"w-full"}
           error={errors?.country}
@@ -154,13 +154,13 @@ const CheckoutStep1 = ({
         />
         {/* ZIP */}
         <NumberField
-          value={state?.shipping_info?.postalCode}
+          value={formData?.shipping_info?.postal_code}
           disable={false}
           fieldClassName={"w-full"}
-          error={errors?.postalCode}
-          id={"postalCode"}
+          error={errors?.["postal_code"]}
+          id={"postal_code"}
           label={"Zip/Postal code"}
-          name={"postalCode"}
+          name={"postal_code"}
           onChange={handleFormChange}
           placeholder={"Zip/Postal code"}
           type={"text"}
@@ -169,22 +169,24 @@ const CheckoutStep1 = ({
       </div>
       {/* DELIVERY INSTRUCTIONS */}
       <TextareaField
-        value={state?.shipping_info?.deliveryInstruction}
+        value={formData?.shipping_info?.delivery_instruction}
         disable={false}
         fieldClassName={"w-full"}
-        error={errors?.deliveryInstruction}
-        id={"deliveryInstruction"}
-        label={"Additional Instructions"}
-        name={"deliveryInstruction"}
+        error={errors?.delivery_instruction}
+        id={"delivery_instruction"}
+        label={"Delivery Instructions"}
+        name={"delivery_instruction"}
         onChange={handleFormChange}
-        placeholder={"Additional Instructions"}
+        placeholder={"Delivery Instructions"}
         type={"text"}
         wrapperClassName={"w-full"}
       />
+
       <div className="flex flex-col md:flex-row w-full justify-center md:justify-end items-center py-5 gap-2">
         <button
+          type="button"
           disabled={false}
-          onClick={() => handleNextStep(validateForm)}
+          onClick={() => handleNextStep?.()}
           className="btn w-full md:btn-wide btn-primary"
         >
           Next
@@ -192,6 +194,6 @@ const CheckoutStep1 = ({
       </div>
     </div>
   );
-};
+}
 
 export default CheckoutStep1;

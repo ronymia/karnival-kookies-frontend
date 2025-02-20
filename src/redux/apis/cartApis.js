@@ -43,6 +43,15 @@ export const apis = baseApi.injectEndpoints({
       }),
       providesTags: (result) => (result ? [TagTypes.cart] : []),
     }),
+    // GET CART BY EMAIL
+    cartCheckout: builder.mutation({
+      query: (payload) => ({
+        url: `${URL}/checkout`,
+        method: "POST",
+        data: payload,
+      }),
+      invalidatesTags: (result) => (result ? [TagTypes.cart] : []),
+    }),
   }),
 });
 
@@ -51,4 +60,5 @@ export const {
   useRemoveFromCartMutation,
   useGetCartByEmailQuery,
   useUpdateQuantityOfCartProductMutation,
+  useCartCheckoutMutation,
 } = apis;

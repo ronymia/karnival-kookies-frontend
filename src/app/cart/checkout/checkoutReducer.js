@@ -8,24 +8,24 @@ const initialState = {
     { product_id: 3, quantity: 1, price: 30.0 },
   ],
   shipping_info: {
-    name: "",
+    recipient_name: "",
     email: "",
     phone: "",
-    streetAddress: "",
+    address: "",
     apartment: "",
     city: "",
     state: "",
     country: "",
-    postalCode: "",
-    deliveryInstruction: "",
+    postal_code: "",
+    delivery_instruction: "",
   },
-  payment_info: {
-    cardNumber: "",
-    cardExpiry: "",
-    paymentGateway: "Stripe",
+  payment: {
+    order_id: "",
+    transaction_id: "",
+    amount: "",
+    method: "",
+    status: "",
   },
-  payment_method: "",
-  notes: "",
 };
 
 const formReducer = (state, action) => {

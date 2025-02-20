@@ -1,5 +1,7 @@
 import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
-import { useOrderCheckInMutation } from "@/redux/apis/orderApis";
+import CustomToaster from "@/components/UI/toaster/CustomToaster";
+import { errorHandler } from "@/helpers/errorHandler";
+import { useCartCheckoutMutation } from "@/redux/apis/cartApis";
 import {
   PaymentElement,
   useElements,
@@ -11,18 +13,17 @@ import toast from "react-hot-toast";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { useSelector } from "react-redux";
 
-const PaymentForm = ({ state }) => {
+const PaymentForm = ({ formData, handlePrevStep }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [message, setMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [orderCheckIn, checkInResult] = useOrderCheckInMutation();
   // USER FROM REDUX STORE
   const { user } = useSelector((state) => state.auth);
-  const { totalPrice: total_amount, selectedItems } = useSelector(
-    (state) => state.cart
-  );
+  const { selectedItems } = useSelector((state) => state.cart);
   const router = useRouter();
+
+  const [cartCheckout, cartCheckoutResult] = useCartCheckoutMutation();
 
   const handlePayment = async (e) => {
     e.preventDefault();
@@ -43,45 +44,55 @@ const PaymentForm = ({ state }) => {
     // GO FOR PAYMENT
     if (error) {
       setMessage({ error: error?.message });
+      setIsProcessing(false);
     } else if (paymentIntent && paymentIntent.status === "succeeded") {
       setMessage({ success: "Payment Successful" });
+      setIsProcessing(false);
 
-      const checkout = {
-        userName: user?.name,
-        userEmail: user?.email,
-        checkoutInfo: { ...state?.shipping_info },
-        paymentInfo: selectedItems?.map((item) => ({
-          productId: item?.productId,
-          quantity: item?.quantity,
-        })),
-        paymentMethod: "stripe",
-        totalPayableAmount: total_amount,
-        status: "pending",
-        isPaid: true,
+      // PAYMENT INFO
+      const paymentInfo = {
+        order_id: "",
+        transaction_id: paymentIntent?.id || "",
+        amount: paymentIntent?.amount || 0,
+        method: "stripe",
+        status: "paid",
       };
-      const resp = await orderCheckIn({
-        ...state,
-        payment_method: "stripe",
+
+      // CREATE ORDER
+      const cartCheckoutData = {
         user_id: user?.id,
-        order_items: selectedItems,
-        total_amount: total_amount,
-        payment_info: {
-          payment_method: "card",
-          payment_status: "paid",
-        },
-      }).unwrap();
-      console.log({ resp });
-      // IF SUCCESS
-      if (resp?.success) {
-        toast.custom((t) => (
-          <CustomToaster
-            t={t}
-            type={"success"}
-            text={`Order Placed Successfully`}
-          />
-        ));
-        router.push("/dashboard/order-history");
-      }
+        order_items: selectedItems?.map((cartProduct) => ({
+          product_id: cartProduct?.product_id,
+          quantity: cartProduct?.quantity,
+          price: cartProduct?.product?.is_discount_enable
+            ? cartProduct?.product?.net_price * cartProduct?.quantity
+            : cartProduct?.product?.price * cartProduct?.quantity,
+        })),
+        shipping_info: { ...formData?.shipping_info },
+        payment: paymentInfo,
+      };
+
+      // CHECK OUT CART
+      await cartCheckout(cartCheckoutData)
+        .unwrap()
+        .then((resp) => {
+          console.log({ resp });
+          // IF SUCCESS
+          if (resp?.success) {
+            toast.custom((t) => (
+              <CustomToaster
+                t={t}
+                type={"success"}
+                text={`Order Placed Successfully`}
+              />
+            ));
+            router.push("/dashboard/order-history");
+          }
+        })
+        .catch((err) => {
+          console.log({ err });
+          errorHandler({ err });
+        });
     } else {
       setMessage({ error: "Unexpected error" });
     }
@@ -98,7 +109,16 @@ const PaymentForm = ({ state }) => {
 
       {/* SUCCESS */}
       {message?.success && (
-        <p className="text-green-500 font-bold">{message?.success}</p>
+        <>
+          <p className="text-green-500 font-bold">{message?.success}</p>
+          <button
+            disabled={false}
+            onClick={handlePrevStep}
+            className="btn w-full md:btn-wide btn-primary"
+          >
+            Previous
+          </button>
+        </>
       )}
       {/* ERROR MESSAGE */}
       {message?.error && (
@@ -108,6 +128,7 @@ const PaymentForm = ({ state }) => {
       {/* PAYMENT BUTTON */}
       <div className={`flex justify-center `}>
         <button
+          type="submit"
           disabled={isProcessing}
           id="submit"
           className={`${

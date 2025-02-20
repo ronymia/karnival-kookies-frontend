@@ -10,40 +10,46 @@ const CheckoutStep2 = ({ handleNextStep, handlePrevStep }) => {
   return (
     <div className={`space-y-5`}>
       <Heading isSubHeading={false} heading={"Payment Information"} />
+      {/* <----------------- SUMMARY --------------------------> */}
       <div className={`p-5 bg-primary text-base-300 font-bold`}>Summary</div>
       <div className={`px-5 flex flex-col gap-3`}>
-        {selectedItems.map((item, i) => (
+        {selectedItems.map((cartProduct, i) => (
           <div
             key={i}
             className={`flex justify-between items-center text-[14px] sm:text-xl`}
           >
-            <p className={` font-semibold`}>{item?.product?.name}</p>{" "}
+            <p className={` font-semibold`}>{cartProduct?.product?.name}</p>{" "}
             <p className={` text-primary`}>
               <span>
-                {item?.product?.discount_price
-                  ? item?.product?.discount_price
-                  : item?.product?.regular_price}{" "}
-                * {item?.quantity}
+                {cartProduct?.product?.is_discount_enable
+                  ? cartProduct?.product?.net_price
+                  : cartProduct?.product?.price}{" "}
+                * {cartProduct?.quantity}
               </span>{" "}
               ={" "}
               <span>
                 $
-                {item?.product?.discount_price
-                  ? item?.product?.discount_price * item?.quantity
-                  : item?.product?.regular_price * item?.quantity}
+                {cartProduct?.product?.is_discount_enable
+                  ? cartProduct?.product?.net_price * cartProduct?.quantity
+                  : cartProduct?.product?.price * cartProduct?.quantity}
               </span>
             </p>
           </div>
         ))}
       </div>
+      {/*  */}
       <div className={`border-b-2 border-primary`}></div>
+      {/* <========================= SUB TOTAL ==========================> */}
       <div
         className={`flex justify-between items-center px-5 text-[14px] sm:text-xl`}
       >
         <p className={` font-semibold`}>Subtotal</p>{" "}
         <p className={` text-primary`}>${totalPrice?.toFixed(2)}</p>
       </div>
+
+      {/*  */}
       <div className={`border-b-2 border-primary`}></div>
+      {/* <========================= TOTAL ==========================> */}
       <div
         className={`flex justify-between items-center px-5 text-[14px] sm:text-xl`}
       >
@@ -52,9 +58,6 @@ const CheckoutStep2 = ({ handleNextStep, handlePrevStep }) => {
       </div>
 
       <div className={`text-xl font-semibold space-y-3`}>
-        <p>
-          Payment Method: <span className={`text-primary`}>Stripe</span>
-        </p>
         {/* <p>
           Have any coupon?{" "}
           <span className={`link link-hover hover:text-primary`}>Use it</span>
@@ -74,11 +77,13 @@ const CheckoutStep2 = ({ handleNextStep, handlePrevStep }) => {
           required={true}
         /> */}
       </div>
+
+      {/* <=================== BUTTONS =====================> */}
       <div className="flex flex-col md:flex-row w-full justify-center md:justify-end items-center py-5 gap-2">
         <button
           disabled={false}
           onClick={handlePrevStep}
-          className="btn w-full md:btn-wide btn-primary"
+          className="btn btn-outline w-full md:btn-wide btn-primary"
         >
           Previous
         </button>

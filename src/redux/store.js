@@ -7,29 +7,39 @@ import { baseApi } from "./baseAPi";
 import authReducer from "./features/authSlice";
 import cartReducer from "./features/cartSlice";
 
-const persistConfig = {
-  key: "root",
+// Separate persist configs for auth & cart
+const authPersistConfig = {
+  key: "auth",
   storage,
-  whitelist: ["user"],
+  whitelist: ["user", "token", "isAuthenticated", "permissions"], // Persist only user-related data, adjust as needed
 };
 
-const persistedAuthReducer = persistReducer(persistConfig, authReducer);
+const cartPersistConfig = {
+  key: "cart",
+  storage,
+  whitelist: ["selectedItems", "totalQuantity", "totalPrice"], // Persist only necessary cart data
+};
+
+// Persisted reducers
+const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
+const persistedCartReducer = persistReducer(cartPersistConfig, cartReducer);
 
 const store = configureStore({
   reducer: {
     auth: persistedAuthReducer,
-    cart: cartReducer,
-    [baseApi.reducerPath]: baseApi.reducer,
+    cart: persistedCartReducer,
+    [baseApi.reducerPath]: baseApi.reducer, // No need to persist this
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }).concat(
-      baseApi.middleware
-    ),
+    getDefaultMiddleware({
+      serializableCheck: false, // Needed for redux-persist
+    }).concat(baseApi.middleware),
 });
 
+// Persistor for persisting state
 export const persistor = persistStore(store);
 
-// OPTIONAL
+// Enable automatic refetching for queries
 setupListeners(store.dispatch);
 
 export default store;

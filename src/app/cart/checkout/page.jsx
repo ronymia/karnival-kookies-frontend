@@ -1,35 +1,21 @@
 "use client";
 import { validationErrorHandler } from "@/Utils/validationErrorHandler";
 import { useEffect, useState } from "react";
-import CheckoutStep1 from "./CheckoutStep1";
 import CheckoutStep2 from "./CheckoutStep2";
 import CheckoutStep3 from "./CheckoutStep3";
 import PaymentStep4 from "./PaymentStep4";
 import useCheckoutReducer from "./checkoutReducer";
 import { useSelector } from "react-redux";
 import CustomMultiStepper from "@/Shared/steppers/CustomMultiStepper";
+import CheckoutStep1 from "./CheckoutStep1";
 
-const Page = () => {
+function CheckOutPage() {
   const { user } = useSelector((state) => state.auth);
   const [step, setStep] = useState(1);
 
-  const { state, dispatch } = useCheckoutReducer();
+  const { state: formData, dispatch } = useCheckoutReducer();
 
-  const [formData, setFormData] = useState({
-    step1: {
-      name: "",
-      email: "",
-      phone: "",
-      streetAddress: "",
-      apartment: "",
-      city: "",
-      state: "",
-      country: "",
-      postalCode: "",
-      deliveryInstruction: "",
-    },
-  });
-  console.log({ formData });
+  // console.log({ formData });
 
   // SET USER
   useEffect(() => {
@@ -44,9 +30,95 @@ const Page = () => {
     });
   }, []);
 
-  const handleNextStep = async (validateForm) => {
+  const validateForm1 = () => {
+    const newErrors = {};
+
+    // VALIDATE NAME
+    if (
+      !formData.shipping_info.recipient_name ||
+      formData.shipping_info.recipient_name.trim() === ""
+    ) {
+      newErrors.recipient_name = "Recipient Name is required";
+    }
+
+    // VALIDATE EMAIL
+    if (
+      !formData?.shipping_info?.email ||
+      formData?.shipping_info?.email.trim() === ""
+    ) {
+      newErrors.email = "Email is required";
+    } else if (
+      !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i.test(
+        formData?.shipping_info?.email?.trim()
+      )
+    ) {
+      newErrors.email = "Invalid email";
+    }
+
+    // VALIDATE PHONE
+    if (!formData.shipping_info.phone) {
+      newErrors.phone = "Phone is required";
+    }
+
+    // VALIDATE STREET
+    if (
+      !formData.shipping_info.address ||
+      formData.shipping_info.address.trim() === ""
+    ) {
+      newErrors.address = "Address is required";
+    }
+
+    // VALIDATE APARTMENT
+    if (
+      !formData.shipping_info.apartment ||
+      formData.shipping_info.apartment.trim() === ""
+    ) {
+      newErrors.apartment = "Apartment is required";
+    }
+
+    // VALIDATE CITY
+    if (
+      !formData.shipping_info.city ||
+      formData.shipping_info.city.trim() === ""
+    ) {
+      newErrors.city = "City is required";
+    }
+
+    // VALIDATE state
+    if (
+      !formData.shipping_info.state ||
+      formData.shipping_info.state.trim() === ""
+    ) {
+      newErrors.state = "State is required";
+    }
+
+    // VALIDATE COUNTRY
+    if (
+      !formData.shipping_info.country ||
+      formData.shipping_info.country.trim() === ""
+    ) {
+      newErrors.country = "Country is required";
+    }
+
+    // VALIDATE postal_code
+    if (
+      !formData.shipping_info.postal_code ||
+      formData.shipping_info.postal_code.trim() === ""
+    ) {
+      newErrors.postal_code = "Postal Code is required";
+    }
+
+    setErrors1(newErrors);
+    // console.log({ newErrors });
+    validationErrorHandler(newErrors);
+
+    // Return true if there are no errors
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleNextStep = async () => {
     if (step === 1) {
-      if (validateForm()) {
+      if (validateForm1()) {
         setStep((prev) => prev + 1);
       }
     } else if (step === 2 || step === 3) {
@@ -60,60 +132,6 @@ const Page = () => {
 
   // VALIDATION
   const [errors1, setErrors1] = useState({});
-  const validateForm1 = () => {
-    const newErrors = {};
-
-    // VALIDATE NAME
-    if (!state.shipping_info.name || state.shipping_info.name.trim() === "") {
-      newErrors.name = "Name is required";
-    }
-    // VALIDATE STREET
-    if (
-      !state.shipping_info.streetAddress ||
-      state.shipping_info.streetAddress.trim() === ""
-    ) {
-      newErrors.streetAddress = "Street is required";
-    }
-    // VALIDATE CITY
-    if (!state.shipping_info.city || state.shipping_info.city.trim() === "") {
-      newErrors.city = "City is required";
-    }
-    // VALIDATE STATE
-    if (!state.shipping_info.state || state.shipping_info.state.trim() === "") {
-      newErrors.state = "State is required";
-    }
-    // VALIDATE COUNTRY
-    if (
-      !state.shipping_info.country ||
-      state.shipping_info.country.trim() === ""
-    ) {
-      newErrors.country = "Country is required";
-    }
-    // VALIDATE PHONE
-    if (!state.shipping_info.phone) {
-      newErrors.phone = "Phone is required";
-    }
-    // VALIDATE EMAIL
-    if (
-      !state?.shipping_info?.email ||
-      state?.shipping_info?.email.trim() === ""
-    ) {
-      newErrors.email = "Email is required";
-    } else if (
-      !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i.test(
-        state?.shipping_info?.email?.trim()
-      )
-    ) {
-      newErrors.email = "Invalid email";
-    }
-
-    setErrors1(newErrors);
-    console.log({ newErrors });
-    validationErrorHandler(newErrors);
-
-    // Return true if there are no errors
-    return Object.keys(newErrors).length === 0;
-  };
 
   return (
     <>
@@ -152,9 +170,8 @@ const Page = () => {
             <CheckoutStep1
               errors={errors1}
               setErrors={setErrors1}
-              validateForm={validateForm1}
               handleNextStep={handleNextStep}
-              state={state}
+              formData={formData}
               dispatch={dispatch}
             />
           )}
@@ -162,7 +179,7 @@ const Page = () => {
             <CheckoutStep2
               handleNextStep={handleNextStep}
               handlePrevStep={handlePrevStep}
-              state={state}
+              formData={formData}
               dispatch={dispatch}
             />
           )}
@@ -170,14 +187,14 @@ const Page = () => {
             <CheckoutStep3
               handleNextStep={handleNextStep}
               handlePrevStep={handlePrevStep}
-              state={state}
+              formData={formData}
             />
           )}
           {step === 4 && (
             <PaymentStep4
               handleNextStep={handleNextStep}
               handlePrevStep={handlePrevStep}
-              state={state}
+              formData={formData}
               dispatch={dispatch}
             />
           )}
@@ -185,6 +202,6 @@ const Page = () => {
       </div>
     </>
   );
-};
+}
 
-export default Page;
+export default CheckOutPage;

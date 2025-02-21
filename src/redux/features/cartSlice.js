@@ -14,20 +14,8 @@ const cartSlice = createSlice({
     addItems: (state, action) => {
       const itemToAdd = action.payload;
 
-      // Check if item already exists
-      const existingItem = state.selectedItems.find(
-        (item) => item.id === itemToAdd.id
-      );
-
-      if (existingItem) {
-        // If item exists, update its quantity
-        existingItem.quantity += itemToAdd.quantity;
-        existingItem.total_amount = existingItem.quantity * existingItem.price;
-      } else {
-        itemToAdd.total_amount = itemToAdd.quantity * itemToAdd.price;
-        // Add new item
-        state.selectedItems.push({ ...itemToAdd });
-      }
+      // Add new item
+      state.selectedItems.push({ ...itemToAdd });
 
       // Update total quantity
       state.totalQuantity = state.selectedItems.reduce(

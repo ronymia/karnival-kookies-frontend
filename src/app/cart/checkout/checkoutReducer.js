@@ -2,11 +2,7 @@ const { useReducer } = require("react");
 
 const initialState = {
   user_id: null,
-  order_items: [
-    { product_id: 1, quantity: 2, price: 10.0 },
-    { product_id: 2, quantity: 1, price: 20.0 },
-    { product_id: 3, quantity: 1, price: 30.0 },
-  ],
+  order_items: [],
   shipping_info: {
     recipient_name: "",
     email: "",
@@ -17,11 +13,14 @@ const initialState = {
     state: "",
     country: "",
     postal_code: "",
+    carrier: "Pathao carrier",
     delivery_instruction: "",
   },
   payment: {
     order_id: "",
     transaction_id: "",
+    stripe_payment_intent_id: "",
+    stripe_payment_method_id: "",
     amount: "",
     method: "",
     status: "",

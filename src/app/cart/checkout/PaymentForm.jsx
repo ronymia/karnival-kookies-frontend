@@ -1,7 +1,9 @@
 import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
 import CustomToaster from "@/components/UI/toaster/CustomToaster";
 import { errorHandler } from "@/helpers/errorHandler";
 import { useCartCheckoutMutation } from "@/redux/apis/cartApis";
+import { resetCart } from "@/redux/features/cartSlice";
 import {
   PaymentElement,
   useElements,
@@ -11,18 +13,18 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { IoIosArrowRoundForward } from "react-icons/io";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-const PaymentForm = ({ formData, handlePrevStep }) => {
+function PaymentForm({ formData, handlePrevStep }) {
   const stripe = useStripe();
   const elements = useElements();
+  const router = useRouter();
   const [message, setMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   // USER FROM REDUX STORE
   const { user } = useSelector((state) => state.auth);
   const { selectedItems } = useSelector((state) => state.cart);
-  const router = useRouter();
-
+  const appDispatch = useDispatch();
   const [cartCheckout, cartCheckoutResult] = useCartCheckoutMutation();
 
   const handlePayment = async (e) => {
@@ -76,7 +78,6 @@ const PaymentForm = ({ formData, handlePrevStep }) => {
       await cartCheckout(cartCheckoutData)
         .unwrap()
         .then((resp) => {
-          console.log({ resp });
           // IF SUCCESS
           if (resp?.success) {
             toast.custom((t) => (
@@ -86,11 +87,14 @@ const PaymentForm = ({ formData, handlePrevStep }) => {
                 text={`Order Placed Successfully`}
               />
             ));
+
+            // CLEAR CART
+            appDispatch(resetCart?.());
+            // REDIRECT
             router.push("/dashboard/order-history");
           }
         })
         .catch((err) => {
-          console.log({ err });
           errorHandler({ err });
         });
     } else {
@@ -102,6 +106,9 @@ const PaymentForm = ({ formData, handlePrevStep }) => {
   /* ===================================================
   
   ==============================================================*/
+  if (cartCheckoutResult?.isLoading) {
+    return <CustomLoading />;
+  }
   return (
     <form className={`space-y-5`} id="payment-form" onSubmit={handlePayment}>
       {/* PAYMENT FORM */}
@@ -149,6 +156,6 @@ const PaymentForm = ({ formData, handlePrevStep }) => {
       </div>
     </form>
   );
-};
+}
 
 export default PaymentForm;

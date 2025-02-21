@@ -67,23 +67,27 @@ export default function Page() {
   const [cols, setCols] = useState([
     {
       header: "#",
-      "data-label": "#",
       accessorKey: "count",
       minWidth: 5,
       show: true,
       isMainField: true,
     },
     {
+      header: "Tracking Number",
+      accessorKey: "tracking_number",
+      minWidth: 20,
+      show: true,
+      isMainField: true,
+    },
+    {
       header: "Order ID",
-      "data-label": "Order ID",
-      accessorKey: "order_id",
+      accessorKey: "order_number",
       minWidth: 20,
       show: true,
       isMainField: true,
     },
     {
       header: "Email",
-      "data-label": "Email",
       accessorKey: "email",
       minWidth: 20,
       show: true,
@@ -91,7 +95,6 @@ export default function Page() {
     },
     {
       header: "Products",
-      "data-label": "Products",
       accessorKey: "products",
       minWidth: 20,
       show: true,
@@ -100,21 +103,18 @@ export default function Page() {
 
     {
       header: "Amount",
-      "data-label": "Amount",
       accessorKey: "totalAmount",
       minWidth: 20,
       show: true,
     },
     {
       header: "Payment Method",
-      "data-label": "Payment Method",
       accessorKey: "payment_method",
       minWidth: 20,
       show: true,
     },
     {
       header: "Status",
-      "data-label": "Status",
       accessorKey: "status_table",
       minWidth: 10,
       show: true,
@@ -231,10 +231,10 @@ export default function Page() {
               payment_method: formatRole(d?.payment_method),
               email: d?.shipping_info?.email,
               products: d?.order_items
-                .map((item) => item?.product_id)
+                ?.map((item) => item?.product_id)
                 ?.join(","),
               totalAmount: d?.order_items
-                .reduce(
+                ?.reduce(
                   (total, item) => total ?? 0 + parseFloat(item?.price) ?? 0,
                   0
                 )

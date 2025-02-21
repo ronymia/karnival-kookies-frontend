@@ -81,7 +81,7 @@ export default function Navbar() {
         {
           id: 1,
           name: "Dashboard",
-          path: "/dashboard/my-account",
+          path: "/dashboard",
           // Icon: <Tag className="h-4 w-4" />,
           handler: handleCloseMenu,
         },

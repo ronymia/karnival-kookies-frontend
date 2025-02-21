@@ -1,35 +1,19 @@
 "use client";
-import { getAllAdminDashboardItems } from "@/apis/dashboardApis";
 import { usePopupContext } from "@/Context/ProjectProvider";
 import DashboardCard from "@/Shared/DashboardCard";
-import { errorHandler } from "@/Utils/errorHandler";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
 import DiscountComponent from "./DiscountComponent";
 import { useSelector } from "react-redux";
 import CustomLoading from "@/components/UI/loader/CustomLoading";
 import Button from "@/components/UI/buttons/Button";
+import { useGetDashboardDataQuery } from "@/redux/apis/dashboardApi";
 
-const Page = () => {
+function Page() {
   // USER FROM REDUX STORE
   const { user } = useSelector((state) => state.auth);
   const { popupOption, setPopupOption } = usePopupContext();
   const router = useRouter();
-  const [data, setData] = useState({});
-  const [isDashboardLoading, setIsDashboardLoading] = useState(false);
-  useEffect(() => {
-    setIsDashboardLoading(true);
-    getAllAdminDashboardItems()
-      .then((res) => {
-        setData(res?.data);
-        setIsDashboardLoading(false);
-      })
-      .catch((err) => {
-        setIsDashboardLoading(false);
-        console.log({ err });
-        errorHandler({ err, setLoading: setIsDashboardLoading });
-      });
-  }, []);
+  const { data, isLoading } = useGetDashboardDataQuery();
   console.log({ data });
 
   const handleAddProduct = () => {
@@ -42,7 +26,7 @@ const Page = () => {
     });
   };
 
-  if (isDashboardLoading) {
+  if (isLoading) {
     return <CustomLoading />;
   }
   return (
@@ -92,8 +76,8 @@ const Page = () => {
               <div className={`text-[14px] font-bold grid grid-cols-2 gap-1`}>
                 <p>Total: {data?.totalOrders}</p>
                 {/* <p>Checked In: {data?.today_bookings?.check_in}</p>
-            <p>Pending: {data?.today_bookings?.pending}</p>
-            <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
+                <p>Pending: {data?.today_bookings?.pending}</p>
+                <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
               </div>
             }
             containerClass={"bg-gradient-to-r from-green-700 to-green-950"}
@@ -104,8 +88,8 @@ const Page = () => {
               <div className={`text-[14px] font-bold grid grid-cols-2 gap-1`}>
                 <p>Total: {data?.last7DaysOrders}</p>
                 {/* <p>Checked In: {data?.today_bookings?.check_in}</p>
-            <p>Pending: {data?.today_bookings?.pending}</p>
-            <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
+                <p>Pending: {data?.today_bookings?.pending}</p>
+                <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
               </div>
             }
             containerClass={"bg-gradient-to-r from-green-700 to-green-950"}
@@ -116,8 +100,8 @@ const Page = () => {
               <div className={`text-[14px] font-bold grid grid-cols-2 gap-1`}>
                 <p>Total: {data?.last30DaysOrders}</p>
                 {/* <p>Checked In: {data?.today_bookings?.check_in}</p>
-            <p>Pending: {data?.today_bookings?.pending}</p>
-            <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
+                <p>Pending: {data?.today_bookings?.pending}</p>
+                <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
               </div>
             }
             containerClass={"bg-gradient-to-r from-green-700 to-green-950"}
@@ -149,8 +133,8 @@ const Page = () => {
               <div className={`text-[14px] font-bold grid grid-cols-2 gap-1`}>
                 <p>Total: {data?.totalProducts}</p>
                 {/* <p>Checked In: {data?.today_bookings?.check_in}</p>
-            <p>Pending: {data?.today_bookings?.pending}</p>
-            <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
+                <p>Pending: {data?.today_bookings?.pending}</p>
+                <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
               </div>
             }
             containerClass={"bg-gradient-to-r from-emerald-700 to-emerald-950"}
@@ -161,8 +145,8 @@ const Page = () => {
               <div className={`text-[14px] font-bold grid grid-cols-2 gap-1`}>
                 <p>Total: {data?.totalUsers}</p>
                 {/* <p>Checked In: {data?.today_bookings?.check_in}</p>
-            <p>Pending: {data?.today_bookings?.pending}</p>
-            <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
+                <p>Pending: {data?.today_bookings?.pending}</p>
+                <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
               </div>
             }
             containerClass={"bg-gradient-to-r from-emerald-700 to-emerald-950"}
@@ -173,8 +157,8 @@ const Page = () => {
               <div className={`text-[14px] font-bold grid grid-cols-2 gap-1`}>
                 <p>Total: {data?.totalCartItems}</p>
                 {/* <p>Checked In: {data?.today_bookings?.check_in}</p>
-            <p>Pending: {data?.today_bookings?.pending}</p>
-            <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
+                <p>Pending: {data?.today_bookings?.pending}</p>
+                <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
               </div>
             }
             containerClass={"bg-gradient-to-r from-emerald-700 to-emerald-950"}
@@ -184,6 +168,6 @@ const Page = () => {
       </div>
     </>
   );
-};
+}
 
 export default Page;

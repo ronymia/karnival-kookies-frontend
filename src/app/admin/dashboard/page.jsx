@@ -12,7 +12,10 @@ function Page() {
   const { user } = useSelector((state) => state.auth);
   const { popupOption, setPopupOption } = usePopupContext();
   const router = useRouter();
-  const { data, isLoading } = useGetDashboardDataQuery();
+  const {
+    data: { data },
+    isLoading,
+  } = useGetDashboardDataQuery();
 
   const handleAddProduct = () => {
     setPopupOption({

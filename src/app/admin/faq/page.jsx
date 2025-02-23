@@ -1,12 +1,12 @@
 "use client";
-import { deleteFaq, getAllFaqs } from "@/apis/faqs";
 import Button from "@/components/UI/buttons/Button";
 import Heading from "@/components/UI/Heading/Heading";
-import CustomLoading from "@/components/UI/loader/CustomLoading";
 import Table from "@/components/UI/table/Table";
 import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
 import { usePopupContext } from "@/Context/ProjectProvider";
 import { deleteData } from "@/helpers/DeleteData";
+import { errorHandler } from "@/helpers/errorHandler";
+import { useDeleteFaqMutation, useGetFaqsQuery } from "@/redux/apis/faqApi";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
@@ -16,47 +16,32 @@ export default function Page() {
   const router = useRouter();
   const { popupOption, setPopupOption } = usePopupContext();
 
-  // ALL SELECTED IDs
-  const [isFaqLoading, setIsFaqLoading] = useState(false);
-  const [data, setData] = useState([]);
-  const [isUpdating, setIsUpdating] = useState();
-
   // FILTERS
+  // eslint-disable-next-line no-unused-vars
   const [filters, setFilters] = useState({
-    perPage: 20,
     page: 1,
+    limit: 20,
+  });
+
+  const [deleteFaq, deleteResult] = useDeleteFaqMutation();
+
+  const { data, isLoading, isError, error } = useGetFaqsQuery({
+    page: filters.page,
+    limit: filters.limit,
   });
 
   useEffect(() => {
-    setIsFaqLoading(true);
-    getAllFaqs(filters)
-      .then((res) => {
-        if (res?.data) {
-          console.log({ res });
-          setData(res);
-          setIsFaqLoading(false);
-        }
-      })
-      .catch((err) => {
-        setIsFaqLoading(false);
-        console.log({ err });
-      });
-  }, [isUpdating]);
-
-  // HANDLE PER PAGE
-  const setPerPage = (count) => {
-    setFilters({ ...filters, perPage: count, page: 1 });
-  };
+    if (isError) {
+      errorHandler({ err: error });
+    }
+  }, [isError, error]);
 
   // HANDLE DELETE PRODUCT
-  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
-  const handleDeleteProduct = (data) => {
+  const handleDelete = (data) => {
     deleteData({
       handler: deleteFaq,
       data,
       deleteMsg: "FAQ deleted successfully",
-      setIsUpdating,
-      setIsDeleteLoading,
     });
   };
 
@@ -65,9 +50,8 @@ export default function Page() {
     setPopupOption({
       ...popupOption,
       open: true,
-      type: "faq",
+      type: "faqForm",
       title: "Add New FAQ",
-      setIsUpdating: setIsUpdating,
     });
   };
   // HANDLE EDIT
@@ -75,62 +59,53 @@ export default function Page() {
     setPopupOption({
       ...popupOption,
       open: true,
-      type: "faq",
+      type: "faqForm",
       title: "Edit FAQ",
       data: data,
-      setIsUpdating: setIsUpdating,
     });
   };
 
   // ALL ACTION BUTTONS
-  const [actions, setActions] = useState([
+  const actions = [
     {
       name: "edit",
       handler: handleEdit,
       Icon: RiEdit2Fill,
-      colorClass: "text-secondary",
-      backgroundColorClass: "bg-secondary-content",
       disabledOn: [],
     },
     {
       name: "delete",
-      handler: handleDeleteProduct,
+      handler: handleDelete,
       Icon: MdDelete,
-      colorClass: "text-red-600",
-      backgroundColorClass: "bg-red-200",
-      isLoading: isDeleteLoading,
       disabledOn: [],
     },
-  ]);
+  ];
 
   // ALL DISPLAYED COLUMNS IN TABLE
-  const [cols, setCols] = useState([
+  const columns = [
     {
-      name: "#",
-      attribute_name: "count",
+      header: "#",
+      accessorKey: "count",
       minWidth: 5,
       show: true,
       isMainField: true,
     },
     {
-      name: "Question",
-      attribute_name: "question",
+      header: "Question",
+      accessorKey: "question",
       minWidth: 45,
       show: true,
       isMainField: true,
     },
 
     {
-      name: "Answer",
-      attribute_name: "answer",
+      header: "Answer",
+      accessorKey: "answer",
       minWidth: 50,
       show: true,
     },
-  ]);
+  ];
 
-  if (isFaqLoading) {
-    return <CustomLoading />;
-  }
   return (
     <>
       <div
@@ -138,7 +113,7 @@ export default function Page() {
       >
         <TableComponentHeading
           routes={
-            <div className={`text-[14px]`}>
+            <div className={`text-sm`}>
               <span
                 onClick={() => router.push("/")}
                 className={`text-primary cursor-pointer`}
@@ -151,27 +126,27 @@ export default function Page() {
           heading={"FAQS"}
         />
         {/* HEADING AREA */}
-        <div className={`flex justify-between items-center`}>
+        <header className={`flex justify-between items-center`}>
           <div>
             <Heading isSubHeading={false} isWave={false} heading={"All FAQ"} />
             <p className={``}>
-              Total {data?.total} {data?.total > 1 ? "FAQS" : "FAQ"} Found
+              Total {data?.meta?.total} {data?.meta?.total > 1 ? "FAQS" : "FAQ"}{" "}
+              Found
             </p>
           </div>
           <Button text={"Add"} handler={handleCreate} />
-        </div>
-        {/* TABLE AREA */}
-        <div className={`space-y-10`}>
-          <Table
-            isLoading={isFaqLoading}
-            rows={data?.data?.map((d, i) => ({
-              ...d,
-              count: (filters?.page - 1) * filters?.perPage + i + 1,
-            }))}
-            actions={actions}
-            columns={cols}
-          />
-        </div>
+        </header>
+
+        {/* <======================= TABLE AREA =======================> */}
+        <Table
+          isLoading={isLoading || deleteResult.isLoading}
+          rows={data?.data?.map((d, i) => ({
+            ...d,
+            count: (filters?.page - 1) * filters?.limit + i + 1,
+          }))}
+          actions={actions}
+          columns={columns}
+        />
       </div>
     </>
   );

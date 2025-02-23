@@ -3,7 +3,7 @@ import ProductForm from "@/app/admin/all-products/ProductForm";
 import ViewProduct from "@/app/admin/all-products/ViewProduct";
 import CategoryForm from "@/app/admin/categories/CategoryForm";
 import CouponForm from "@/app/admin/coupon-codes/CouponForm";
-import CreateAndUpdateFaq from "@/app/admin/faq/CreateAndUpdateFaq";
+import FaqForm from "@/app/admin/faq/FaqForm";
 import MetaDataForm from "@/app/admin/meta-data/MetaDataForm";
 import ViewOrder from "@/app/admin/orders/ViewOrder";
 import PackageForm from "@/app/admin/packages/PackageForm";
@@ -58,10 +58,10 @@ export default function ProjectProvider({ children }) {
             {popupOption?.type === "categoryForm" && <CategoryForm />}
 
             {/* FAQ */}
-            {popupOption?.type === "faq" && <CreateAndUpdateFaq />}
+            {popupOption?.type === "faqForm" && <FaqForm />}
             {popupOption?.type === "viewOrder" && <ViewOrder />}
 
-            {/* DISCOUNT */}
+            {/* COUPON CODE */}
             {popupOption?.type === "couponCode" && <CouponForm />}
 
             {/* REVIEW */}

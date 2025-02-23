@@ -20,7 +20,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "pastry-shop-backend-production.up.railway.app",
+        hostname: "karnival-kookies-backend.onrender.com",
         pathname: "/**", // Adjust the path as needed for your backend
       },
       {

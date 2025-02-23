@@ -5,7 +5,9 @@ import axios from "axios";
 // ----------------------------------------------------------------
 export const getAllFaqs = async () => {
   try {
-    const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/faqs`);
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1.0/faqs`
+    );
     return res?.data;
   } catch (error) {
     throw error.response;

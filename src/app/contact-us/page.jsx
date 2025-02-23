@@ -32,6 +32,7 @@ export default async function FaqPage() {
       contents: ["29 Nicolas str, New York, 987597-50"],
     },
   ];
+
   return (
     <div className={`space-y-20 pb-40`}>
       <FixedBgComponent

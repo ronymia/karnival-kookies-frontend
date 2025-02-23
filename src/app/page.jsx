@@ -8,7 +8,7 @@ import axios from "axios";
 import CategorySection from "@/components/CategorySection";
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL, // Set Base URL
+  baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api`,
   headers: {
     "Content-Type": "application/json",
   },
@@ -26,13 +26,9 @@ const fetchData = async (endpoint) => {
   }
 };
 
-export function generateMetadata({ searchParams }) {
-  const currentUrl = searchParams.url || "";
-  const result = fetchData(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api//v1.0/meta-data?meta_key=home_page`
-  );
-  const metadata = result?.data || {};
-  console.log({ metadata });
+export async function generateMetadata() {
+  const result = await api.get(`/v1.0/meta-data?meta_key=home_page`);
+  const metadata = result.data?.data[0] || {};
 
   return {
     title: metadata?.title || "Karnival Kookies | Home",
@@ -43,9 +39,9 @@ export function generateMetadata({ searchParams }) {
 export default async function HomePage() {
   // FETCH PRODUCT, CATEGORY, PACKAGE
   const [productData, categoryData, packageData] = await Promise.all([
-    fetchData(`/api/v1.0/products?page=1&limit=8`),
-    fetchData(`/api/v1.0/categories`),
-    fetchData(`/api/v1.0/packages`),
+    fetchData(`/v1.0/products?page=1&limit=8`),
+    fetchData(`/v1.0/categories`),
+    fetchData(`/v1.0/packages`),
   ]);
   const products = productData?.data || [];
   const categories = categoryData?.data || [];

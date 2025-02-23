@@ -6,7 +6,6 @@ import CustomPopup from "@/components/UI/modal/CustomPopup";
 import Pagination from "@/components/UI/table/Pagination";
 import Table from "@/components/UI/table/Table";
 import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
-import { deleteDataV2 } from "@/helpers/DeleteDataV2";
 import {
   useDeletePackageMutation,
   useGetAllPackagesQuery,
@@ -21,6 +20,7 @@ import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 import PackageForm from "./PackageForm";
 import withPermission from "@/Hoc/WithPermission";
+import { deleteData } from "@/helpers/DeleteData";
 
 function PackagePage() {
   const router = useRouter();
@@ -54,7 +54,7 @@ function PackagePage() {
   // HANDLE DELETE PRODUCT
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
   const handleDeleteProduct = (data) => {
-    deleteDataV2({
+    deleteData({
       handler: deletePackage,
       data,
       deleteMsg: "Package deleted successfully",

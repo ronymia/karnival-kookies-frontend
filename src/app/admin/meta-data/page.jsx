@@ -6,7 +6,7 @@ import Pagination from "@/components/UI/table/Pagination";
 import Table from "@/components/UI/table/Table";
 import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
 import { usePopupContext } from "@/Context/ProjectProvider";
-import { deleteDataV2 } from "@/helpers/DeleteDataV2";
+import { deleteData } from "@/helpers/DeleteData";
 import {
   useDeleteMetaDataMutation,
   useGetAllMetaDataQuery,
@@ -33,14 +33,9 @@ export default function MetaDataPage() {
   //   DELETE PACKAGE
   const [deleteMetaData, deleteResult] = useDeleteMetaDataMutation();
 
-  // HANDLE PER PAGE
-  const setPerPage = (count) => {
-    setFilters({ ...filters, perPage: count, page: 1 });
-  };
-
   // HANDLE DELETE PRODUCT
   const handleDeleteMetaData = (data) => {
-    deleteDataV2({
+    deleteData({
       handler: deleteMetaData,
       data,
       deleteMsg: "Package deleted successfully",

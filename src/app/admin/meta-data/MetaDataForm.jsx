@@ -2,8 +2,6 @@
 import { usePopupContext } from "@/Context/ProjectProvider";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import CustomField from "@/Shared/Fields/CustomField";
-import CustomTextareaField from "@/Shared/Fields/CustomTextAreaField";
 import { validationErrorHandler } from "@/Utils/validationErrorHandler";
 import {
   useCreateMetaDataMutation,
@@ -12,7 +10,38 @@ import {
 import CustomToaster from "@/components/UI/toaster/CustomToaster";
 import { errorHandler } from "@/helpers/errorHandler";
 import CustomLoading from "@/components/UI/loader/CustomLoading";
-import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
+import FormActions from "@/components/layouts/forms/FormActions";
+import InputField from "@/components/UI/inputFields/InputField";
+import TextareaField from "@/components/UI/inputFields/TextareaField";
+import Select from "@/components/UI/inputFields/Select";
+
+const META_KEY = [
+  {
+    id: "login",
+    value: "login",
+    label: "Login Page",
+  },
+  {
+    id: "register",
+    value: "register",
+    label: "Register Page",
+  },
+  {
+    id: "home_page",
+    value: "home_page",
+    label: "Home Page",
+  },
+  {
+    id: "product_page",
+    value: "product_page",
+    label: "Product Page",
+  },
+  {
+    id: "single_product",
+    value: "single_product",
+    label: "Single Product",
+  },
+];
 
 export default function MetaDataForm() {
   const { popupOption } = usePopupContext();
@@ -23,7 +52,7 @@ export default function MetaDataForm() {
   //
   const [formData, setFormData] = useState({
     id: popupOption?.data ? popupOption?.data?.id : null,
-    url: popupOption?.data ? popupOption?.data?.url : "",
+    meta_key: popupOption?.data ? popupOption?.data?.meta_key : "",
     title: popupOption?.data ? popupOption?.data?.title : "",
     description: popupOption?.data ? popupOption?.data?.description : "",
   });
@@ -33,9 +62,9 @@ export default function MetaDataForm() {
   const validateForm = () => {
     const newErrors = {};
 
-    // VALIDATE URL
-    if (!formData.url || formData.url.trim() === "") {
-      newErrors.url = "URL is required";
+    // VALIDATE META KEY
+    if (!formData.meta_key || formData.meta_key.trim() === "") {
+      newErrors.meta_key = "Meta Key is required";
     }
     // VALIDATE TITLE
     if (!formData.title || formData.title.trim() === "") {
@@ -135,25 +164,33 @@ export default function MetaDataForm() {
     return <CustomLoading />;
   }
   return (
-    <div className={` pb-12 h-full flex flex-col justify-between`}>
+    <form
+      noValidate
+      onSubmit={handleSubmit}
+      className={` pb-12 h-full flex flex-col justify-between`}
+    >
       <div>
-        {/* URL */}
-        <CustomField
-          value={formData?.url}
-          disable={false}
-          fieldClassName={"w-full"}
-          error={errors?.url}
-          id={"url"}
-          label={"URL"}
-          name={"url"}
-          onChange={handleFormChange}
-          placeholder={"URL"}
-          type={"text"}
-          wrapperClassName={"w-full"}
+        {/* META KEY */}
+        <Select
+          id={`meta_key`}
+          name={`meta_key`}
+          label={`Meta Key`}
+          placeholder={`Select Meta Key`}
           required={true}
+          disable={false}
+          error={errors?.["meta_key"]}
+          value={META_KEY.filter((item) => item?.id === formData?.meta_key)}
+          options={META_KEY}
+          handleOnSelect={(e) => {
+            setFormData((prev) => ({
+              ...prev,
+              meta_key: e?.id,
+            }));
+          }}
         />
+
         {/* TITLE */}
-        <CustomField
+        <InputField
           value={formData?.title}
           disable={false}
           fieldClassName={"w-full"}
@@ -169,7 +206,7 @@ export default function MetaDataForm() {
         />
 
         {/* DESCRIPTION */}
-        <CustomTextareaField
+        <TextareaField
           value={formData?.description}
           disable={false}
           fieldClassName={"w-full"}
@@ -183,28 +220,14 @@ export default function MetaDataForm() {
           wrapperClassName={"w-full"}
         />
       </div>
-      <div className="flex flex-col md:flex-row w-full justify-center md:justify-end items-center py-5 gap-2">
-        <button
-          disabled={createResult.isLoading || updateResult.isLoading}
-          onClick={popupOption?.onClose}
-          className="btn w-full md:btn-wide btn-outline btn-primary"
-        >
-          Cancel
-        </button>
-        <button
-          disabled={createResult.isLoading || updateResult.isLoading}
-          onClick={handleSubmit}
-          className="btn w-full md:btn-wide btn-primary"
-        >
-          {createResult.isLoading || updateResult.isLoading ? (
-            <ButtonSpinner />
-          ) : popupOption?.data ? (
-            "Update"
-          ) : (
-            "Create"
-          )}
-        </button>
-      </div>
-    </div>
+
+      {/* FORM ACTIONS */}
+      <FormActions
+        isLoading={createResult.isLoading || updateResult.isLoading}
+        onCancel={popupOption?.onClose}
+        onSubmit={handleSubmit}
+        submitText="Submit"
+      />
+    </form>
   );
 }

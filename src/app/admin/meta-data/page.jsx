@@ -1,8 +1,6 @@
 "use client";
 import Button from "@/components/UI/buttons/Button";
 import Heading from "@/components/UI/Heading/Heading";
-import CustomLoading from "@/components/UI/loader/CustomLoading";
-import Pagination from "@/components/UI/table/Pagination";
 import Table from "@/components/UI/table/Table";
 import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
 import { usePopupContext } from "@/Context/ProjectProvider";
@@ -12,6 +10,7 @@ import {
   useGetAllMetaDataQuery,
 } from "@/redux/apis/metaDataApis";
 import SplitDescription from "@/Shared/SplitDescription";
+import { formatRole } from "@/Utils/formatRole";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MdDelete } from "react-icons/md";
@@ -22,6 +21,7 @@ export default function MetaDataPage() {
   const { popupOption, setPopupOption } = usePopupContext();
 
   // FILTERS
+  // eslint-disable-next-line no-unused-vars
   const [filters, setFilters] = useState({
     page: 1,
     perPage: 20,
@@ -34,7 +34,7 @@ export default function MetaDataPage() {
   const [deleteMetaData, deleteResult] = useDeleteMetaDataMutation();
 
   // HANDLE DELETE PRODUCT
-  const handleDeleteMetaData = (data) => {
+  const handleDelete = (data) => {
     deleteData({
       handler: deleteMetaData,
       data,
@@ -49,7 +49,6 @@ export default function MetaDataPage() {
       open: true,
       type: "metaDataForm",
       title: "Add New Meta Data",
-      //   setIsUpdating: setIsUpdating,
     });
   };
   // HANDLE EDIT
@@ -60,65 +59,56 @@ export default function MetaDataPage() {
       type: "metaDataForm",
       title: "Edit Meta Data",
       data: data,
-      //   setIsUpdating: setIsUpdating,
     });
   };
 
   // ALL ACTION BUTTONS
-  const [actions, setActions] = useState([
+  const actions = [
     {
       name: "edit",
       handler: handleEdit,
       Icon: RiEdit2Fill,
-      colorClass: "text-secondary",
-      backgroundColorClass: "bg-secondary-content",
       disabledOn: [],
     },
     {
       name: "delete",
-      handler: handleDeleteMetaData,
+      handler: handleDelete,
       Icon: MdDelete,
-      colorClass: "text-red-600",
-      backgroundColorClass: "bg-red-200",
-      isLoading: deleteResult.isLoading,
       disabledOn: [],
     },
-  ]);
+  ];
 
   // ALL DISPLAYED COLUMNS IN TABLE
-  const [cols, setCols] = useState([
+  const columns = [
     {
-      name: "#",
-      attribute_name: "count",
+      header: "#",
+      accessorKey: "count",
       minWidth: 5,
       show: true,
       isMainField: true,
     },
     {
-      name: "URL",
-      attribute_name: "url",
+      header: "Meta Key",
+      accessorKey: "metaKey",
+      minWidth: 30,
+      show: true,
+      isMainField: true,
+    },
+    {
+      header: "Title",
+      accessorKey: "title",
       minWidth: 20,
       show: true,
       isMainField: true,
     },
     {
-      name: "Name",
-      attribute_name: "title",
-      minWidth: 20,
-      show: true,
-      isMainField: true,
-    },
-    {
-      name: "Description",
-      attribute_name: "description_table",
+      header: "Description",
+      accessorKey: "description_table",
       minWidth: 30,
       show: true,
     },
-  ]);
+  ];
 
-  if (isLoading) {
-    return <CustomLoading />;
-  }
   return (
     <>
       <div
@@ -139,7 +129,7 @@ export default function MetaDataPage() {
           heading={"Meta Data"}
         />
         {/* HEADING AREA */}
-        <div className={`flex justify-between items-center`}>
+        <header className={`flex justify-between items-center`}>
           <div>
             <Heading
               isSubHeading={false}
@@ -151,31 +141,25 @@ export default function MetaDataPage() {
               {data?.meta?.total > 1 ? "Meta Data" : "Meta Data"} Found
             </p>
           </div>
+          {/* ADD BUTTON */}
           <Button text={"Add"} handler={handleCreate} />
-        </div>
-        {/* TABLE AREA */}
-        <div className={`space-y-10`}>
-          <Table
-            isLoading={isLoading}
-            rows={data?.data?.map((d, i) => ({
-              ...d,
-              count: (filters?.page - 1) * filters?.limit + i + 1,
-              url: d?.url,
-              title: d?.title,
-              description_table: (
-                <SplitDescription text={d?.description} length={30} />
-              ),
-            }))}
-            actions={actions}
-            columns={cols}
-          />
-          {/* PAGINATION */}
-          <Pagination
-            setFilters={setFilters}
-            filters={filters}
-            total={data?.meta?.total}
-          />
-        </div>
+        </header>
+
+        {/* <==================== TABLE AREA ======================> */}
+        <Table
+          isLoading={isLoading || deleteResult.isLoading}
+          rows={data?.data?.map((d, i) => ({
+            ...d,
+            count: (filters?.page - 1) * filters?.limit + i + 1,
+            metaKey: formatRole(d?.meta_key),
+            title: d?.title,
+            description_table: (
+              <SplitDescription text={d?.description} length={30} />
+            ),
+          }))}
+          actions={actions}
+          columns={columns}
+        />
       </div>
     </>
   );

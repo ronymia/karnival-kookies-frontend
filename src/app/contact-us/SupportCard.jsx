@@ -1,6 +1,4 @@
-import React from "react";
-
-const SupportCard = ({ support, index, length }) => {
+function SupportCard({ support, index, length }) {
   return (
     <div
       className={`flex flex-col justify-center items-center gap-5 group ${
@@ -20,6 +18,6 @@ const SupportCard = ({ support, index, length }) => {
       </div>
     </div>
   );
-};
+}
 
 export default SupportCard;

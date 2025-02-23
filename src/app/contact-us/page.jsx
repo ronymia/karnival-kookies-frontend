@@ -17,19 +17,19 @@ export default async function FaqPage() {
       id: 1,
       name: "Email",
       icon: TfiEmail,
-      contents: ["yDQ4W@example.com", "yDQ4W@example.com"],
+      contents: ["mdronymia040@gmail.com", "rony.mia7800@gmail.com"],
     },
     {
       id: 2,
       name: "Phone",
       icon: MdOutlinePhoneInTalk,
-      contents: ["0(800) 890-90-609", "0(800) 890-90-620"],
+      contents: ["+8801321185989", "+8801518323192"],
     },
     {
       id: 3,
       name: "Location",
       icon: CiLocationOn,
-      contents: ["29 Nicolas str, New York, 987597-50"],
+      contents: ["West Khabashpur, Khabashpur, Faridpur, Bangladesh"],
     },
   ];
 

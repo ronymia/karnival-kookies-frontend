@@ -1,15 +1,16 @@
+/* eslint-disable promise/catch-or-return */
 "use client";
-import { useState } from "react";
+import emailjs from "@emailjs/browser";
+import { useRef, useState } from "react";
 import toast from "react-hot-toast";
-import CustomField from "@/Shared/Fields/CustomField";
-import CustomTextareaField from "@/Shared/Fields/CustomTextAreaField";
-import { postMessage } from "@/apis/messages";
 import CustomToaster from "@/components/UI/toaster/CustomToaster";
-import { errorHandler } from "@/helpers/errorHandler";
 import CustomLoading from "@/components/UI/loader/CustomLoading";
 import Button from "@/components/UI/buttons/Button";
+import InputField from "@/components/UI/inputFields/InputField";
+import TextareaField from "@/components/UI/inputFields/TextareaField";
 
-const ContactForm = () => {
+export default function ContactForm() {
+  const formRef = useRef();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -33,8 +34,6 @@ const ContactForm = () => {
     }
 
     setErrors(newErrors);
-    console.log({ newErrors });
-    // ValidationErrorHandler(newErrors);
     if (Object.keys(newErrors).length > 0) {
       toast.custom((t) => (
         <CustomToaster
@@ -60,26 +59,35 @@ const ContactForm = () => {
     // Return true if there are no errors
     return Object.keys(newErrors).length === 0;
   };
-  // CHANGE FORM DATA
-  const handleFormChange = (e) => {
-    const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
 
   const [isMessageSending, setIsMessageSending] = useState(false);
   // SUBMIT DATA
-  const handleSubmit = async () => {
-    // Validate form
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
     if (validateForm()) {
       setIsMessageSending(true);
-      postMessage(formData)
-        .then((res) => {
-          console.log({ res });
-          if (res?.success) {
+      emailjs
+        .sendForm(
+          process.env.NEXT_PUBLIC_SERVICE_ID,
+          process.env.NEXT_PUBLIC_TEMPLATE_ID,
+          formRef.current,
+          {
+            publicKey: process.env.NEXT_PUBLIC_PUBLIC_KEY,
+          }
+        )
+        .then(
+          () => {
+            setIsMessageSending(false);
+            // CREATE FORM DATA
+            setFormData({
+              name: "",
+              email: "",
+              message: "",
+            });
+
+            // SUCCESS MESSAGE
             toast.custom((t) => (
               <CustomToaster
                 t={t}
@@ -87,18 +95,18 @@ const ContactForm = () => {
                 text={`Message sent successfully`}
               />
             ));
-
-            setFormData({
-              name: "",
-              email: "",
-              message: "",
-            });
+          },
+          (error) => {
             setIsMessageSending(false);
+            toast.custom((t) => (
+              <CustomToaster
+                t={t}
+                type={"error"}
+                text={error?.text || "Something went wrong"}
+              />
+            ));
           }
-        })
-        .catch((err) => {
-          errorHandler({ err, setLoading: setIsMessageSending });
-        });
+        );
     }
   };
 
@@ -106,63 +114,67 @@ const ContactForm = () => {
     return <CustomLoading />;
   }
   return (
-    <div className={` pb-12 h-full flex flex-col justify-between`}>
-      <div className={`grid grid-cols-1 md:grid-cols-2 md:gap-5`}>
-        {/* NAME */}
-        <CustomField
-          value={formData?.name}
-          disable={false}
-          fieldClassName={"w-full"}
-          error={errors?.name}
-          id={"name"}
-          label={"Name"}
-          name={"name"}
-          onChange={handleFormChange}
-          placeholder={"Name"}
-          type={"text"}
-          wrapperClassName={"w-full"}
-          required={true}
-        />
-        {/* EMAIL */}
-        <CustomField
-          value={formData?.email}
-          disable={false}
-          fieldClassName={"w-full"}
-          error={errors?.email}
-          id={"email"}
-          label={"Email"}
-          name={"email"}
-          onChange={handleFormChange}
-          placeholder={"Email"}
-          type={"email"}
-          wrapperClassName={"w-full"}
-          required={true}
-        />
-      </div>
+    <form
+      ref={formRef}
+      noValidate
+      onSubmit={sendEmail}
+      className={` pb-12 h-full grid grid-cols-1 md:grid-cols-2 md:gap-5`}
+    >
+      {/* NAME */}
+      <InputField
+        value={formData?.name}
+        disable={false}
+        fieldClassName={"w-full"}
+        error={errors?.name}
+        id={"name"}
+        label={"Name"}
+        name={"user_username"}
+        onChange={(e) => {
+          setFormData({ ...formData, name: e.target.value });
+        }}
+        placeholder={"Name"}
+        type={"text"}
+        wrapperClassName={"w-full"}
+        required={true}
+      />
+      {/* EMAIL */}
+      <InputField
+        value={formData?.email}
+        disable={false}
+        fieldClassName={"w-full"}
+        error={errors?.email}
+        id={"email"}
+        label={"Email"}
+        name={"user_email"}
+        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+        placeholder={"Email"}
+        type={"email"}
+        wrapperClassName={"w-full"}
+        required={true}
+      />
       {/* MESSAGE */}
-      <CustomTextareaField
+      <TextareaField
         value={formData?.message}
         disable={false}
         fieldClassName={"w-full"}
         error={errors?.message}
         id={"message"}
         label={"Message"}
-        name={"message"}
-        onChange={handleFormChange}
+        name={"user_message"}
+        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
         placeholder={"Message"}
         type={"text"}
-        wrapperClassName={"w-full"}
+        wrapperClassName={"w-full md:col-span-2"}
         required
       />
-      <div className="flex flex-col md:flex-row w-full justify-center md:justify-end items-center py-5 gap-2">
+      <div className="md:col-span-2 flex flex-col md:flex-row w-full justify-center md:justify-end items-center py-5 gap-2">
         <Button
+          type="submit"
           text={"Submit"}
-          handler={handleSubmit}
+          // handler={handleSubmit}
           isLoading={isMessageSending}
         />
       </div>
-    </div>
+    </form>
   );
-};
-
-export default ContactForm;
+}

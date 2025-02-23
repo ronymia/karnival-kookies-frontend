@@ -154,8 +154,8 @@ export default function Navbar() {
         // MESSAGES
         {
           id: 3,
-          name: "Messages",
-          path: "/admin/messages",
+          name: "Coupon Codes",
+          path: "/admin/coupon-codes",
           // Icon: <Tag className="h-4 w-4" />,
           handler: handleCloseMenu,
         },

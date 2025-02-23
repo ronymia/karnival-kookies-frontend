@@ -2,8 +2,10 @@
 
 import ProductForm from "@/app/admin/all-products/ProductForm";
 import CategoryForm from "@/app/admin/categories/CategoryForm";
+import CouponForm from "@/app/admin/coupon-codes/CouponForm";
 import PackageForm from "@/app/admin/packages/PackageForm";
 import PackageView from "@/app/admin/packages/PackageView";
+import Button from "@/components/UI/buttons/Button";
 import { useState } from "react";
 import { FiX } from "react-icons/fi";
 import Popup from "reactjs-popup";
@@ -18,6 +20,7 @@ export default function FormModal({
   open,
   title,
   onClose,
+  handleCreate,
 }) {
   const [popupOption, setPopupOption] = useState({
     open: open || false,
@@ -30,10 +33,9 @@ export default function FormModal({
   });
   console.log("second");
 
-  const Form = () => {
+  const FormComponent = () => {
     switch (type) {
       case "create":
-      case "update":
         switch (form) {
           case "categoryForm":
             return <CategoryForm />;
@@ -41,6 +43,8 @@ export default function FormModal({
             return <PackageForm />;
           case "productForm":
             return <ProductForm />;
+          case "couponForm":
+            return <CouponForm />;
           default:
             return "Invalid Form Type";
         }
@@ -70,6 +74,9 @@ export default function FormModal({
   ***************************************************/
   return (
     <>
+      {type === "create" && <Button text={"Add"} handler={handleCreate} />}
+
+      {/* MODAL */}
       <Popup
         open={popupOption?.open}
         onClose={popupOption?.onClose}
@@ -78,11 +85,11 @@ export default function FormModal({
           backdropFilter: "blur(2px)",
         }}
         closeOnDocumentClick={popupOption?.closeOnDocumentClick}
-        lockScroll={false}
+        lockScroll={true}
         className="relative overflow-hidden w-1/2 rounded-xl pop"
       >
         <div
-          className={`relative  bg-secondary text-base-100 shadow-xl rounded-xl border-primary-content border-2 overflow-hidden w-[95vw] sm:w-[70vw] md:w-[70vw] lg:w-[50vw] ${popupClasses} max-h-[90vh] `}
+          className={`relative bg-secondary text-base-100 shadow-xl rounded-xl border-primary-content border-2 w-[95vw] sm:w-[70vw] md:w-[70vw] lg:w-[50vw] ${popupClasses} max-h-[90vh] flex flex-col`}
         >
           {/* Close Button */}
           <button
@@ -99,15 +106,13 @@ export default function FormModal({
 
           {/* Title */}
           {popupOption?.title && (
-            <div className="sticky top-0 w-full px-8 py-5 text-body font-semibold text-2xl  z-[999] bg-primary text-base-300">
+            <div className="sticky top-0 w-full px-8 py-5 text-body font-semibold text-2xl z-[999] bg-primary text-base-300">
               {popupOption?.title}
             </div>
           )}
 
-          {/* Content */}
-          <div className="h-[84vh] overflow-y-auto overflow-x-hidden">
-            {<Form />}
-          </div>
+          {/* Content with Scrolling */}
+          <div className="flex-1 overflow-y-auto p-3">{FormComponent()}</div>
         </div>
       </Popup>
     </>

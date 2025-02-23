@@ -3,28 +3,28 @@ import { usePopupContext } from "@/Context/ProjectProvider";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import CustomField from "@/Shared/Fields/CustomField";
-import { errorHandler } from "@/Utils/errorHandler";
 import CustomMultiSelect from "@/Shared/Fields/CustomMultiSelect";
 import CustomNumberField from "@/Shared/Fields/CustomNumberField";
 import { postDiscount, updateDiscount } from "@/apis/discounts";
 import CustomToaster from "@/components/UI/toaster/CustomToaster";
 import CustomLoading from "@/components/UI/loader/CustomLoading";
+import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
+import { errorHandler } from "@/helpers/errorHandler";
 
-const CreateAndUpdateDiscountCode = () => {
+export default function CouponForm() {
   const { popupOption } = usePopupContext();
   // console.log({ popupOption });
   const [formData, setFormData] = useState({
     id: popupOption?.data ? popupOption?.data?.id : null,
     code: popupOption?.data ? popupOption?.data?.code : "",
-    discountType: popupOption?.data ? popupOption?.data?.discountType : "",
-    discountAmount: popupOption?.data
-      ? popupOption?.data?.discountAmount
+    discount_type: popupOption?.data ? popupOption?.data?.discount_type : "",
+    discount_value: popupOption?.data
+      ? popupOption?.data?.discount_value
       : null,
-    minimumSpend: popupOption?.data ? popupOption?.data?.minimumSpend : null,
+    minimum_spend: popupOption?.data ? popupOption?.data?.minimum_spend : null,
   });
 
   // console.log({ formData });
-
   // VALIDATION
   const [errors, setErrors] = useState({});
   const validateForm = () => {
@@ -34,19 +34,19 @@ const CreateAndUpdateDiscountCode = () => {
     // if (!formData.code || formData.code.trim() === "") {
     //   newErrors.code = "Code is required";
     // }
-    if (!formData.discountType || formData.discountType.trim() === "") {
-      newErrors.discountType = "Type is required";
+    if (!formData.discount_type || formData.discount_type.trim() === "") {
+      newErrors.discount_type = "Type is required";
     }
-    if (formData.discountType === "percentage") {
-      if (formData.discountAmount > 100) {
-        newErrors.discountAmount = "Amount cannot be greater than 100%";
+    if (formData.discount_type === "percentage") {
+      if (formData.discount_value > 100) {
+        newErrors.discount_value = "Amount cannot be greater than 100%";
       }
     }
-    if (!formData.discountAmount) {
-      newErrors.discountAmount = "Amount is required";
+    if (!formData.discount_value) {
+      newErrors.discount_value = "Amount is required";
     }
-    if (!formData.minimumSpend) {
-      newErrors.minimumSpend = "Minimum Spend is required";
+    if (!formData.minimum_spend) {
+      newErrors.minimum_spend = "Minimum Spend is required";
     }
 
     setErrors(newErrors);
@@ -105,9 +105,9 @@ const CreateAndUpdateDiscountCode = () => {
           setFormData({
             id: "",
             code: "",
-            discountType: "",
-            discountAmount: "",
-            minimumSpend: "",
+            discount_type: "",
+            discount_value: "",
+            minimum_spend: "",
           });
           popupOption?.onClose();
           popupOption.setIsUpdating(Math.random());
@@ -124,7 +124,7 @@ const CreateAndUpdateDiscountCode = () => {
 
           setErrors(obj);
         }
-        errorHandler({ err, setLoading: setIsDiscountCreating });
+        errorHandler({ err });
       });
   };
 
@@ -153,7 +153,6 @@ const CreateAndUpdateDiscountCode = () => {
         //   err?.data?.errorSources?.forEach((item) => {
         //     obj[item?.path] = item?.message;
         //   });
-
         //   setErrors(obj);
         // }
         const resErrors = errorHandler({
@@ -171,14 +170,14 @@ const CreateAndUpdateDiscountCode = () => {
       if (popupOption?.data) {
         updateFunction({
           ...formData,
-          discountAmount: parseFloat(formData?.discountAmount),
-          minimumSpend: parseFloat(formData?.minimumSpend),
+          discount_value: parseFloat(formData?.discount_value),
+          minimum_spend: parseFloat(formData?.minimum_spend),
         });
       } else {
         createFunction({
           ...formData,
-          discountAmount: parseFloat(formData?.discountAmount),
-          minimumSpend: parseFloat(formData?.minimumSpend),
+          discount_value: parseFloat(formData?.discount_value),
+          minimum_spend: parseFloat(formData?.minimum_spend),
         });
       }
     }
@@ -221,10 +220,10 @@ const CreateAndUpdateDiscountCode = () => {
               id: 2,
               name: "percentage",
             },
-          ]?.filter((m) => m?.name === formData?.discountType)}
+          ]?.filter((m) => m?.name === formData?.discount_type)}
           setSelectedValues={(e) => {
             console.log({ e });
-            setFormData({ ...formData, discountType: e[0]?.name });
+            setFormData({ ...formData, discount_type: e[0]?.name });
           }}
           options={[
             {
@@ -237,32 +236,32 @@ const CreateAndUpdateDiscountCode = () => {
             },
           ]}
           singleSelect
-          error={errors?.discountType}
+          error={errors?.discount_type}
           required
         />
 
         {/* AMOUNT */}
         <CustomNumberField
-          value={formData?.discountAmount}
+          value={formData?.discount_value}
           disable={false}
           fieldClassName={"w-full"}
-          error={errors?.discountAmount}
-          id={"discountAmount"}
+          error={errors?.discount_value}
+          id={"discount_value"}
           label={"Discount Amount"}
-          name={"discountAmount"}
+          name={"discount_value"}
           onChange={handleFormChange}
           placeholder={"Discount Amount"}
           wrapperClassName={"w-full"}
           required={true}
         />
         <CustomNumberField
-          value={formData?.minimumSpend}
+          value={formData?.minimum_spend}
           disable={false}
           fieldClassName={"w-full"}
-          error={errors?.minimumSpend}
-          id={"minimumSpend"}
+          error={errors?.minimum_spend}
+          id={"minimum_spend"}
           label={"Minimum Spend"}
-          name={"minimumSpend"}
+          name={"minimum_spend"}
           onChange={handleFormChange}
           placeholder={"Minimum Spend"}
           wrapperClassName={"w-full"}
@@ -293,6 +292,4 @@ const CreateAndUpdateDiscountCode = () => {
       </div>
     </div>
   );
-};
-
-export default CreateAndUpdateDiscountCode;
+}

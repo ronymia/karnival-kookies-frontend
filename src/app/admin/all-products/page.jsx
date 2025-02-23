@@ -5,7 +5,7 @@ import CustomLoading from "@/components/UI/loader/CustomLoading";
 import Pagination from "@/components/UI/table/Pagination";
 import Table from "@/components/UI/table/Table";
 import { usePopupContext } from "@/Context/ProjectProvider";
-import { deleteDataV2 } from "@/helpers/DeleteDataV2";
+import { deleteData } from "@/helpers/DeleteData";
 import withPermission from "@/Hoc/WithPermission";
 import {
   useDeleteProductsMutation,
@@ -42,8 +42,8 @@ function ProductPage() {
   }, [filters]);
 
   // HANDLE DELETE PRODUCT
-  const handleDeleteProduct = (data) => {
-    deleteDataV2({
+  const handleDelete = (data) => {
+    deleteData({
       handler: deleteProduct,
       data,
       deleteMsg: "Product deleted successfully",
@@ -106,24 +106,18 @@ function ProductPage() {
       name: "view",
       handler: handleView,
       Icon: AiFillEye,
-      colorClass: "text-red-600",
-      backgroundColorClass: "bg-red-200",
       disabledOn: [],
     },
     {
       name: "edit",
       handler: handleEdit,
       Icon: RiEdit2Fill,
-      colorClass: "text-secondary",
-      backgroundColorClass: "bg-secondary-content",
       disabledOn: [],
     },
     {
       name: "delete",
-      handler: handleDeleteProduct,
+      handler: handleDelete,
       Icon: MdDelete,
-      colorClass: "text-red-600",
-      backgroundColorClass: "bg-red-200",
       disabledOn: [],
     },
   ];
@@ -132,7 +126,6 @@ function ProductPage() {
   const columns = [
     {
       header: "#",
-      "data-label": "#",
       accessorKey: "count",
       minWidth: 5,
       show: true,
@@ -140,7 +133,6 @@ function ProductPage() {
     },
     {
       header: "Name",
-      "data-label": "Name",
       accessorKey: "name",
       minWidth: 20,
       show: true,
@@ -148,7 +140,6 @@ function ProductPage() {
     },
     {
       header: "Image",
-      "data-label": "Image",
       accessorKey: "image_table",
       minWidth: 15,
       show: true,
@@ -156,7 +147,6 @@ function ProductPage() {
     },
     {
       header: "Price",
-      "data-label": "Price",
       accessorKey: "mainPrice",
       minWidth: 10,
       show: true,
@@ -164,7 +154,6 @@ function ProductPage() {
     },
     {
       header: "Discount Amount",
-      "data-label": "Discount Amount",
       accessorKey: "discountAmount",
       minWidth: 10,
       show: true,
@@ -172,21 +161,18 @@ function ProductPage() {
     },
     {
       header: "Net Price",
-      "data-label": "Net Price",
       accessorKey: "netPrice",
       minWidth: 30,
       show: true,
     },
     {
       header: "Category",
-      "data-label": "Category",
       accessorKey: "category",
       minWidth: 10,
       show: true,
     },
     {
       header: "Description",
-      "data-label": "Description",
       accessorKey: "description_table",
       minWidth: 10,
       show: true,

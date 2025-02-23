@@ -1,0 +1,53 @@
+import { baseApi } from "../baseAPi";
+import { TagTypes } from "../tagTypes";
+
+// BASE URL
+const URL = "/v1.0/coupons";
+
+export const apis = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    // GET ALL COUPON CODES
+    getCouponCodes: builder.query({
+      query: (arg) => ({
+        url: `${URL}`,
+        method: "GET",
+        params: arg,
+      }),
+      providesTags: (result) => (result ? [TagTypes.couponCode] : []),
+    }),
+    // CREATE COUPON CODE
+    createCouponCode: builder.mutation({
+      query: (payload) => ({
+        url: `${URL}`,
+        method: "POST",
+        data: payload,
+      }),
+      invalidatesTags: (result) => (result ? [TagTypes.couponCode] : []),
+    }),
+    // UPDATE COUPON CODE
+    updateCouponCode: builder.mutation({
+      query: (payload) => ({
+        url: `${URL}/${payload?.id}`,
+        method: "PATCH",
+        data: payload,
+      }),
+      invalidatesTags: (result) => (result ? [TagTypes.couponCode] : []),
+    }),
+
+    // DELETE COUPON CODE
+    deleteCouponCode: builder.mutation({
+      query: (payload) => ({
+        url: `${URL}/${Array.isArray(payload) ? payload.join(",") : payload}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (result) => (result ? [TagTypes.couponCode] : []),
+    }),
+  }),
+});
+
+export const {
+  useGetCouponCodesQuery,
+  useCreateCouponCodeMutation,
+  useUpdateCouponCodeMutation,
+  useDeleteCouponCodeMutation,
+} = apis;

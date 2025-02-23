@@ -2,7 +2,6 @@
 import { usePopupContext } from "@/Context/ProjectProvider";
 import DashboardCard from "@/Shared/DashboardCard";
 import { useRouter } from "next/navigation";
-import DiscountComponent from "./DiscountComponent";
 import { useSelector } from "react-redux";
 import CustomLoading from "@/components/UI/loader/CustomLoading";
 import Button from "@/components/UI/buttons/Button";
@@ -14,15 +13,13 @@ function Page() {
   const { popupOption, setPopupOption } = usePopupContext();
   const router = useRouter();
   const { data, isLoading } = useGetDashboardDataQuery();
-  console.log({ data });
 
   const handleAddProduct = () => {
     setPopupOption({
       ...popupOption,
       open: true,
-      type: "product",
+      type: "productForm",
       title: "Add New Product",
-      //   setIsUpdating: setIsUpdating,
     });
   };
 
@@ -164,7 +161,6 @@ function Page() {
             containerClass={"bg-gradient-to-r from-emerald-700 to-emerald-950"}
           />
         </div>
-        <DiscountComponent />
       </div>
     </>
   );

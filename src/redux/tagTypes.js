@@ -6,6 +6,7 @@ export const TagTypes = {
   orders: "orders",
   metaData: "metaData",
   cart: "cart",
+  couponCode: "coupon-codes",
 };
 
 export const tagTypesList = [
@@ -15,4 +16,6 @@ export const tagTypesList = [
   TagTypes.categories,
   TagTypes.metaData,
   TagTypes.orders,
+  TagTypes.cart,
+  TagTypes.couponCode,
 ];

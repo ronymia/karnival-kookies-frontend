@@ -6,7 +6,7 @@ const URL = "/v1.0/products";
 
 export const apis = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // GET ALL PACKAGES
+    // GET ALL PRODUCT
     getAllClientProducts: builder.query({
       query: ({
         page,
@@ -34,7 +34,7 @@ export const apis = baseApi.injectEndpoints({
       }),
       providesTags: (result) => (result ? [TagTypes.products] : []),
     }),
-    // GET ALL PACKAGES
+    // GET ALL PRODUCT
     getAllProducts: builder.query({
       query: (arg = {}) => ({
         url: `${URL}`,
@@ -44,6 +44,8 @@ export const apis = baseApi.injectEndpoints({
       providesTags: (result) => (result ? [TagTypes.products] : []),
       keepUnusedDataFor: 0,
     }),
+
+    // GET PRICE BOUNDS OF PRODUCTS
     getPriceBounds: builder.query({
       query: (arg = {}) => ({
         url: `${URL}/get-price-bounds`,
@@ -52,7 +54,8 @@ export const apis = baseApi.injectEndpoints({
       }),
       keepUnusedDataFor: 0,
     }),
-    // GET PACKAGE BY ID
+
+    // GET PRODUCT BY ID
     getProductsById: builder.query({
       query: ({ id }) => ({
         url: `${URL}/${id}`,
@@ -61,7 +64,7 @@ export const apis = baseApi.injectEndpoints({
       // providesTags: (result) => (result ? [TagTypes.products] : []),
       keepUnusedDataFor: 0,
     }),
-    // CREATE PACKAGE
+    // CREATE PRODUCT
     createProducts: builder.mutation({
       query: (payload) => ({
         url: `${URL}`,
@@ -70,7 +73,7 @@ export const apis = baseApi.injectEndpoints({
       }),
       invalidatesTags: () => [TagTypes.products],
     }),
-    // UPDATE PACKAGE
+    // UPDATE PRODUCT
     updateProducts: builder.mutation({
       query: (payload) => ({
         url: `${URL}`,
@@ -79,7 +82,7 @@ export const apis = baseApi.injectEndpoints({
       }),
       invalidatesTags: () => [TagTypes.products],
     }),
-    // DELETE PACKAGE
+    // DELETE PRODUCT
     deleteProducts: builder.mutation({
       query: (payload) => ({
         url: `${URL}/${Array.isArray(payload) ? payload.join(",") : payload}`,
@@ -87,11 +90,11 @@ export const apis = baseApi.injectEndpoints({
       }),
       invalidatesTags: () => [TagTypes.products],
     }),
-    // UPLOAD PACKAGE IMAGES
+    // UPLOAD PRODUCT IMAGES
     uploadProductsImages: builder.mutation({
       query: (payload) => {
         const formData = new FormData();
-        payload.forEach((file, i) => {
+        payload.forEach((file) => {
           formData.append(`files`, file);
         });
 

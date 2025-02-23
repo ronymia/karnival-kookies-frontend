@@ -6,7 +6,7 @@ import CustomLoading from "@/components/UI/loader/CustomLoading";
 import Table from "@/components/UI/table/Table";
 import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
 import { usePopupContext } from "@/Context/ProjectProvider";
-import { deleteData } from "@/Utils/deleteData";
+import { deleteData } from "@/helpers/DeleteData";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";

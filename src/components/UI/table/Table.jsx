@@ -40,9 +40,9 @@ export default function Table({
       {/* <===================================== Table Body ===================================> */}
       <tbody className="block w-full md:table-row-group">
         {!isLoading ? (
-          rows?.map((row) => (
+          rows?.map((row, rowIndex) => (
             <tr
-              key={row?.name}
+              key={rowIndex}
               className="block md:table-row border md:border-0 md:border-b border-primary-content bg-secondary md:hover:bg-primary-content md:hover:text-secondary text-sm font-bold mb-4 md:mb-0 p-4 md:p-0 rounded-lg"
             >
               {/* <===================================== Action for Mobile ====================================> */}

@@ -1,0 +1,31 @@
+name: Build & Deploy to Netlify
+
+on:
+  push:
+    branches:
+      - main # Change if deploying from a different branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18 # Use the appropriate version
+
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run Next.js Build
+        run: yarn build # Builds your Next.js app
+
+      - name: Trigger Netlify Build Hook
+        run: |
+          curl -X POST "$NETLIFY_BUILD_HOOK"
+        env:
+          NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}

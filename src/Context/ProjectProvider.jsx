@@ -2,7 +2,7 @@
 import ProductForm from "@/app/admin/all-products/ProductForm";
 import ViewProduct from "@/app/admin/all-products/ViewProduct";
 import CategoryForm from "@/app/admin/categories/CategoryForm";
-import CreateAndUpdateDiscountCode from "@/app/admin/dashboard/CreateAndUpdateDiscountCode";
+import CouponForm from "@/app/admin/coupon-codes/CouponForm";
 import CreateAndUpdateFaq from "@/app/admin/faq/CreateAndUpdateFaq";
 import MetaDataForm from "@/app/admin/meta-data/MetaDataForm";
 import ViewOrder from "@/app/admin/orders/ViewOrder";
@@ -62,9 +62,7 @@ export default function ProjectProvider({ children }) {
             {popupOption?.type === "viewOrder" && <ViewOrder />}
 
             {/* DISCOUNT */}
-            {popupOption?.type === "discountCode" && (
-              <CreateAndUpdateDiscountCode />
-            )}
+            {popupOption?.type === "couponCode" && <CouponForm />}
 
             {/* REVIEW */}
             {popupOption?.type === "review" && <CreateAndUpdateReview />}

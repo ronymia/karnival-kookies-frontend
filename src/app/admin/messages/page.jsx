@@ -7,7 +7,7 @@ import Heading from "@/Shared/Heading";
 import { Pagination } from "@/Shared/Paginations/Pagination";
 import Table from "@/Shared/Table";
 import TableComponentHeading from "@/Shared/TableComponentHeading";
-import { deleteData } from "@/Utils/deleteData";
+import { deleteData } from "@/helpers/DeleteData";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";

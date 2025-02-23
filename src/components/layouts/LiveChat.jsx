@@ -21,7 +21,7 @@ const LiveChat = () => {
       {/* Chat Button */}
       <button
         onClick={toggleChat}
-        className="fixed bottom-6 right-6 bg-purple-700 text-white p-4 rounded-full shadow-lg hover:bg-purple-800 transition duration-300 flex items-center justify-center"
+        className="fixed bottom-6 right-6 bg-primary text-base-300 p-4 rounded-full shadow-lg hover:bg-primary transition duration-300 flex items-center justify-center z-50"
         aria-label="Live Chat"
       >
         <AiOutlineMessage size={28} />
@@ -29,9 +29,9 @@ const LiveChat = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 w-80 bg-white shadow-lg rounded-lg border border-gray-200">
+        <div className="fixed bottom-24 right-6 w-80 bg-base-300 shadow-lg rounded-lg border border-gray-200 z-50">
           {/* Header */}
-          <div className="flex items-center justify-between bg-purple-700 text-white p-4 rounded-t-lg">
+          <div className="flex items-center justify-between bg-primary text-base-300 p-4 rounded-t-lg">
             <h4 className="font-bold">Live Chat</h4>
             <button onClick={toggleChat} aria-label="Close Chat">
               <AiOutlineClose size={20} />
@@ -55,7 +55,7 @@ const LiveChat = () => {
                   <span
                     className={`inline-block p-2 rounded-lg ${
                       msg.sender === "user"
-                        ? "bg-purple-100 text-purple-700"
+                        ? "bg-purple-100 text-primary"
                         : "bg-gray-100 text-gray-700"
                     }`}
                   >
@@ -73,11 +73,11 @@ const LiveChat = () => {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Type a message..."
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-700"
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
             <button
               onClick={handleSendMessage}
-              className="bg-purple-700 text-white px-4 py-2 rounded-r-lg hover:bg-purple-800 transition duration-300"
+              className="bg-primary text-white px-4 py-2 rounded-r-lg hover:bg-primary transition duration-300"
             >
               Send
             </button>

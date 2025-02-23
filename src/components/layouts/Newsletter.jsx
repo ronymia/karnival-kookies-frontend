@@ -65,12 +65,13 @@ const NewsletterSection = () => {
           name={`email`}
           disabled={subscribeResult.loading}
           placeholder="E-mail"
-          className="w-full max-w-md px-4 py-2 rounded-l-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:border-purple-700"
+          className="w-full max-w-md px-4 py-2 rounded-l-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary 
+          focus:border-primary transition duration-300"
         />
         <button
           type="submit"
           disabled={subscribeResult.loading}
-          className="bg-[#581c87] text-white px-6 py-2 rounded-r-full font-semibold hover:bg-purple-800 transition duration-300"
+          className="bg-primary text-white px-6 py-2 rounded-r-full font-semibold hover:bg-primary transition duration-300"
         >
           Subscribe
         </button>

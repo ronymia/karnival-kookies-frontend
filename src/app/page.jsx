@@ -27,11 +27,12 @@ const fetchData = async (endpoint) => {
 };
 
 export function generateMetadata({ searchParams }) {
-  // const currentUrl = searchParams.url || "";
-  // const result = fetchData(
-  //   `${process.env.NEXT_PUBLIC_BACKEND_URL}/meta-data?url=${"home"}`
-  // );
-  const metadata = {};
+  const currentUrl = searchParams.url || "";
+  const result = fetchData(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api//v1.0/meta-data?meta_key=home_page`
+  );
+  const metadata = result?.data || {};
+  console.log({ metadata });
 
   return {
     title: metadata?.title || "Karnival Kookies | Home",

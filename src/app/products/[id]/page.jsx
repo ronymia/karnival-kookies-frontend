@@ -11,6 +11,7 @@ import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
 import NavigateComponent from "@/components/UI/navigate/navigate";
 import ProductCard from "@/components/UI/ProductCard";
 import ButtonWrapper from "./ButtonWrapper";
+import { htmlToPlainText } from "@/Utils/htmlToPlainText";
 
 export default function SingleProductPage({ params }) {
   const [product, setProduct] = useState(null);
@@ -57,7 +58,7 @@ export default function SingleProductPage({ params }) {
 
   return (
     <section>
-      {/* PAGE HEADER */}
+      {/* <========================= PAGE HEADER ==================================> */}
       <FixedBgComponent
         url="/chocolate_bg.jpg"
         wrapperClass={`pt-60 pb-40`}
@@ -76,7 +77,7 @@ export default function SingleProductPage({ params }) {
                 <span className={`text-primary cursor-pointer`}>
                   <NavigateComponent text="Chocolate" route="/" />
                 </span>{" "}
-                {"//"} <span>All Products</span>
+                {/* {"//"} <span>All Products</span> */}
               </div>
             }
             heading={product?.name}
@@ -103,26 +104,36 @@ export default function SingleProductPage({ params }) {
 
           {/* PRODUCT DETAILS */}
           <div className={`space-y-5 mt-10`}>
-            <p className={`text-primary text-[30px]`}>
-              {product?.discount_price ? (
-                <span className={`flex gap-3 items-center`}>
-                  <del className={`text-base-200`}>
-                    ${product?.regular_price}
-                  </del>
-                  <span className={`text-red-500`}>
-                    ${product?.discount_price}
-                  </span>
-                </span>
-              ) : (
-                <span className={`text-primary`}>
-                  ${product?.regular_price}
-                </span>
-              )}
+            {/* PRODUCT NAME */}
+            <p className="text-[20px] font-bold hover:text-primary transition-all">
+              {product?.name}
             </p>
-            <p>{product?.description?.slice(0, 300)}...</p>
+            {/* PRODUCT PRICE */}
+            <div className="flex justify-start items-center gap-2">
+              <p
+                className={` ${
+                  product?.is_discount_enable === 1
+                    ? "text-base-200 line-through text-lg"
+                    : "text-primary text-2xl"
+                }`}
+              >
+                ${product?.price}
+              </p>
+              {product?.is_discount_enable === 1 && (
+                <p className={`text-2xl text-red-500`}>
+                  ${parseFloat(Number(product?.net_price)).toFixed(2)}
+                </p>
+              )}
+            </div>
+            {/* PRODUCT DESCRIPTION */}
+            <p>{htmlToPlainText(product?.description)}</p>
+
+            {/* ADD TO CART */}
             <div className={`space-x-5`}>
               <ButtonWrapper text={"Add to cart"} id={product?.id} />
             </div>
+
+            {/* CATEGORY NAME */}
             <p className={`text-[20px]`}>
               <span className={`text-primary font-bold`}>Category: </span>
               <span>{product?.category?.name}</span>
@@ -139,7 +150,7 @@ export default function SingleProductPage({ params }) {
           >
             Description
           </h2>
-          <p>{product?.description}</p>
+          <p>{htmlToPlainText(product?.description)}</p>
         </div>
 
         {/* REVIEW */}

@@ -3,6 +3,8 @@
 import { getFullImageLink } from "@/Utils/getFullImageLink";
 import { useState } from "react";
 import MagnifyImage from "./UI/ImageMagnify";
+import Image from "next/image";
+import { MdCancel } from "react-icons/md";
 
 /**
  * Component for rendering a slider of images.
@@ -67,22 +69,24 @@ export default function ImageSlider({ images }) {
 
           {/* Close Button */}
           <button
-            className="absolute top-4 right-4 text-white text-2xl font-bold p-2"
+            className="absolute top-[10%] right-4 text-white text-2xl font-bold p-2 z-[10000000000]"
             onClick={() => setImageIndex(null)}
           >
-            ✕
+            <MdCancel size={28} className={`text-red-500`} />
           </button>
         </div>
       )}
 
       {/* Main Slider */}
       <div className="w-full max-w-2xl">
-        <MagnifyImage
+        {/* <MagnifyImage
           largeSrc={getFullImageLink(images[0])}
           smallSrc={getFullImageLink(images[0])}
           // height={"100%"}
-        />
-        <img
+        /> */}
+        <Image
+          height={300}
+          width={300}
           src={getFullImageLink(images[0])}
           alt="Main Slide"
           className="w-full h-auto rounded-lg cursor-pointer shadow-lg"

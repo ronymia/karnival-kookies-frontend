@@ -1,13 +1,11 @@
 import ViewField from "@/components/UI/inputFields/ViewField";
 import { usePopupContext } from "@/Context/ProjectProvider";
-import { getDate, getTime } from "@/Utils/getDate";
 import moment from "moment";
 
 function ViewUser() {
   const { popupOption } = usePopupContext();
   const data = popupOption?.data;
 
-  console.log({ data });
   return (
     <div
       data-auto={`container-viewUser`}

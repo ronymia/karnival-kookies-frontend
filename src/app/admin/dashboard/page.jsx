@@ -12,10 +12,7 @@ function Page() {
   const { user } = useSelector((state) => state.auth);
   const { popupOption, setPopupOption } = usePopupContext();
   const router = useRouter();
-  const {
-    data: { data },
-    isLoading,
-  } = useGetDashboardDataQuery();
+  const { data, isLoading } = useGetDashboardDataQuery();
 
   const handleAddProduct = () => {
     setPopupOption({
@@ -74,10 +71,7 @@ function Page() {
             header={"Total Orders"}
             content={
               <div className={`text-[14px] font-bold grid grid-cols-2 gap-1`}>
-                <p>Total: {data?.totalOrders}</p>
-                {/* <p>Checked In: {data?.today_bookings?.check_in}</p>
-                <p>Pending: {data?.today_bookings?.pending}</p>
-                <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
+                <p>Total: {data?.data?.totalOrders}</p>
               </div>
             }
             containerClass={"bg-gradient-to-r from-green-700 to-green-950"}
@@ -86,10 +80,7 @@ function Page() {
             header={"Last 7 days Orders"}
             content={
               <div className={`text-[14px] font-bold grid grid-cols-2 gap-1`}>
-                <p>Total: {data?.last7DaysOrders}</p>
-                {/* <p>Checked In: {data?.today_bookings?.check_in}</p>
-                <p>Pending: {data?.today_bookings?.pending}</p>
-                <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
+                <p>Total: {data?.data?.last7DaysOrders}</p>
               </div>
             }
             containerClass={"bg-gradient-to-r from-green-700 to-green-950"}
@@ -98,10 +89,7 @@ function Page() {
             header={"Last 30 days Orders"}
             content={
               <div className={`text-[14px] font-bold grid grid-cols-2 gap-1`}>
-                <p>Total: {data?.last30DaysOrders}</p>
-                {/* <p>Checked In: {data?.today_bookings?.check_in}</p>
-                <p>Pending: {data?.today_bookings?.pending}</p>
-                <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
+                <p>Total: {data?.data?.last30DaysOrders}</p>
               </div>
             }
             containerClass={"bg-gradient-to-r from-green-700 to-green-950"}
@@ -109,21 +97,25 @@ function Page() {
           <DashboardCard
             header={"Total Revenue"}
             content={
-              <p className={`text-3xl font-bold`}>$ {data?.totalSales}</p>
+              <p className={`text-3xl font-bold`}>$ {data?.data?.totalSales}</p>
             }
             containerClass={"bg-gradient-to-r from-teal-700 to-teal-950"}
           />
           <DashboardCard
             header={"Last 7 days Revenue"}
             content={
-              <p className={`text-3xl font-bold`}>$ {data?.last7DaysSales}</p>
+              <p className={`text-3xl font-bold`}>
+                $ {data?.data?.last7DaysSales}
+              </p>
             }
             containerClass={"bg-gradient-to-r from-teal-700 to-teal-950"}
           />
           <DashboardCard
             header={"Last 30 days Revenue"}
             content={
-              <p className={`text-3xl font-bold`}>$ {data?.last7DaysSales}</p>
+              <p className={`text-3xl font-bold`}>
+                $ {data?.data?.last7DaysSales}
+              </p>
             }
             containerClass={"bg-gradient-to-r from-teal-700 to-teal-950"}
           />
@@ -131,10 +123,7 @@ function Page() {
             header={"Total Products"}
             content={
               <div className={`text-[14px] font-bold grid grid-cols-2 gap-1`}>
-                <p>Total: {data?.totalProducts}</p>
-                {/* <p>Checked In: {data?.today_bookings?.check_in}</p>
-                <p>Pending: {data?.today_bookings?.pending}</p>
-                <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
+                <p>Total: {data?.data?.totalProducts}</p>
               </div>
             }
             containerClass={"bg-gradient-to-r from-emerald-700 to-emerald-950"}
@@ -143,10 +132,7 @@ function Page() {
             header={"Total Users"}
             content={
               <div className={`text-[14px] font-bold grid grid-cols-2 gap-1`}>
-                <p>Total: {data?.totalUsers}</p>
-                {/* <p>Checked In: {data?.today_bookings?.check_in}</p>
-                <p>Pending: {data?.today_bookings?.pending}</p>
-                <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
+                <p>Total: {data?.data?.totalUsers}</p>
               </div>
             }
             containerClass={"bg-gradient-to-r from-emerald-700 to-emerald-950"}
@@ -155,10 +141,7 @@ function Page() {
             header={"Total Cart Items"}
             content={
               <div className={`text-[14px] font-bold grid grid-cols-2 gap-1`}>
-                <p>Total: {data?.totalCartItems}</p>
-                {/* <p>Checked In: {data?.today_bookings?.check_in}</p>
-                <p>Pending: {data?.today_bookings?.pending}</p>
-                <p>Completed: {data?.today_bookings?.converted_to_job}</p> */}
+                <p>Total: {data?.data?.totalCartItems}</p>
               </div>
             }
             containerClass={"bg-gradient-to-r from-emerald-700 to-emerald-950"}

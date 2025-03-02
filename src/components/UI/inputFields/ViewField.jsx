@@ -12,7 +12,7 @@ export default function ViewField({ Icon, label, value }) {
       )}
       <div className={`flex flex-col ${Icon ? "w-[calc(100%-2.5rem)]" : ""} `}>
         <span className={`font-normal text-primary text-sm`}>{label}</span>
-        <span className={`font-bold text-base-300`}>{value}</span>
+        <span className={`font-bold text-base-300`}>{value ?? "N/A"}</span>
       </div>
     </div>
   );

@@ -21,6 +21,7 @@ import { RiEdit2Fill } from "react-icons/ri";
 import PackageForm from "./PackageForm";
 import withPermission from "@/Hoc/WithPermission";
 import { deleteData } from "@/helpers/DeleteData";
+import PackageView from "./PackageView";
 
 function PackagePage() {
   const router = useRouter();
@@ -42,27 +43,31 @@ function PackagePage() {
   // FILTERS
   const [filters, setFilters] = useState({
     page: 1,
-    perPage: 20,
     limit: 20,
   });
 
   //   GET ALL PACKAGES
-  const { data, isLoading } = useGetAllPackagesQuery({});
+  const { data, isLoading } = useGetAllPackagesQuery({
+    page: filters?.page,
+    limit: filters?.limit,
+  });
   //   DELETE PACKAGE
   const [deletePackage, deleteResult] = useDeletePackageMutation();
 
   // HANDLE DELETE PRODUCT
-  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
-  const handleDeleteProduct = (data) => {
+  const handleDelete = (data) => {
     deleteData({
       handler: deletePackage,
-      data,
-      deleteMsg: "Package deleted successfully",
+      data: {
+        id: data?.id,
+        title: "Package",
+      },
     });
   };
 
   // HANDLE VIEW
   const handleView = (data) => {
+    console.log({ data });
     setPopupOption({
       ...popupOption,
       open: true,
@@ -84,7 +89,6 @@ function PackagePage() {
   };
   // HANDLE EDIT
   const handleEdit = (data) => {
-    console.log({ dataaaaaa: data });
     setPopupOption({
       ...popupOption,
       open: true,
@@ -114,25 +118,18 @@ function PackagePage() {
       name: "view",
       handler: handleView,
       Icon: AiFillEye,
-      colorClass: "text-red-600",
-      backgroundColorClass: "bg-red-200",
       disabledOn: [],
     },
     {
       name: "edit",
       handler: handleEdit,
       Icon: RiEdit2Fill,
-      colorClass: "text-secondary",
-      backgroundColorClass: "bg-secondary-content",
       disabledOn: [],
     },
     {
       name: "delete",
-      handler: handleDeleteProduct,
+      handler: handleDelete,
       Icon: MdDelete,
-      colorClass: "text-red-600",
-      backgroundColorClass: "bg-red-200",
-      isLoading: isDeleteLoading,
       disabledOn: [],
     },
   ];
@@ -141,7 +138,6 @@ function PackagePage() {
   const columns = [
     {
       header: "#",
-      "data-label": "#",
       accessorKey: "count",
       minWidth: 5,
       show: true,
@@ -149,7 +145,6 @@ function PackagePage() {
     },
     {
       header: "Name",
-      "data-label": "Name",
       accessorKey: "name",
       minWidth: 20,
       show: true,
@@ -157,7 +152,6 @@ function PackagePage() {
     },
     {
       header: "Image",
-      "data-label": "Image",
       accessorKey: "image_table",
       minWidth: 15,
       show: true,
@@ -165,7 +159,6 @@ function PackagePage() {
     },
     {
       header: "Price",
-      "data-label": "Price",
       accessorKey: "mainPrice",
       minWidth: 10,
       show: true,
@@ -173,7 +166,6 @@ function PackagePage() {
     },
     {
       header: "Discount Amount",
-      "data-label": "Discount Amount",
       accessorKey: "discountAmount",
       minWidth: 10,
       show: true,
@@ -181,23 +173,18 @@ function PackagePage() {
     },
     {
       header: "Net Price",
-      "data-label": "Net Price",
       accessorKey: "netPrice",
       minWidth: 30,
       show: true,
     },
     {
       header: "Description",
-      "data-label": "Description",
       accessorKey: "description_table",
       minWidth: 30,
       show: true,
     },
   ];
 
-  if (isLoading) {
-    return <CustomLoading />;
-  }
   return (
     <>
       <CustomPopup
@@ -237,7 +224,7 @@ function PackagePage() {
             )}
             {/* view */}
             {popupOption?.type === "view" && (
-              <PackageForm
+              <PackageView
                 data={popupOption?.data}
                 handleClosePopup={() => {
                   setPopupOption((prev) => ({
@@ -289,7 +276,7 @@ function PackagePage() {
         {/* TABLE AREA */}
         <div className={`space-y-10`}>
           <Table
-            isLoading={isLoading}
+            isLoading={isLoading || deleteResult?.isLoading}
             rows={data?.data?.map((d, i) => ({
               ...d,
               count: (filters?.page - 1) * filters?.perPage + i + 1,

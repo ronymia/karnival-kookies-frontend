@@ -1,6 +1,5 @@
 import Heading from "@/components/UI/Heading/Heading";
-import ViewField from "@/Shared/ViewField";
-import React from "react";
+import ViewField from "@/components/UI/inputFields/ViewField";
 import { useSelector } from "react-redux";
 
 const CheckoutStep3 = ({ formData, handleNextStep, handlePrevStep }) => {
@@ -13,38 +12,60 @@ const CheckoutStep3 = ({ formData, handleNextStep, handlePrevStep }) => {
     <div className={`space-y-5`}>
       <Heading isSubHeading={false} heading={"Order Information"} />
       <div className={`grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5`}>
+        {/* RECIPIENT NAME */}
         <ViewField
-          title={"Recipient Name"}
+          label={"Recipient Name"}
           value={formData?.shipping_info?.recipient_name}
         />
-        <ViewField title={"Email"} value={formData?.shipping_info?.email} />
-        <ViewField title={"Phone"} value={formData?.shipping_info?.phone} />
-        <ViewField title={"Address"} value={formData?.shipping_info?.address} />
+
+        {/* EMAIL */}
+        <ViewField label={"Email"} value={formData?.shipping_info?.email} />
+
+        {/* PHONE */}
+        <ViewField label={"Phone"} value={formData?.shipping_info?.phone} />
+
+        {/* ADDRESS */}
+        <ViewField label={"Address"} value={formData?.shipping_info?.address} />
+
+        {/* APARTMENT */}
         <ViewField
-          title={"Apartment"}
+          label={"Apartment"}
           value={formData?.shipping_info?.apartment}
         />
-        <ViewField title={"City"} value={formData?.shipping_info?.city} />
-        <ViewField title={"formData"} value={formData?.shipping_info?.state} />
-        <ViewField title={"Country"} value={formData?.shipping_info?.country} />
+
+        {/* CITY */}
+        <ViewField label={"City"} value={formData?.shipping_info?.city} />
+
+        {/* STATE */}
+        <ViewField label={"formData"} value={formData?.shipping_info?.state} />
+
+        {/* COUNTRY */}
+        <ViewField label={"Country"} value={formData?.shipping_info?.country} />
+
+        {/* ZIP */}
         {formData?.shipping_info?.postal_code && (
           <ViewField
-            title={"Zip/Postal Code"}
+            label={"Zip/Postal Code"}
             value={formData?.shipping_info?.postal_code}
           />
         )}
+
+        {/* PAYMENT AMOUNT */}
         <ViewField
-          title={"Payment Amount"}
+          label={"Payment Amount"}
           value={`$${checkoutAmount?.toFixed(2)}`}
         />
       </div>
 
+      {/* DELIVERY INSTRUCTION */}
       {formData?.shipping_info?.delivery_instruction && (
         <ViewField
-          title={"Delivery Instruction"}
+          label={"Delivery Instruction"}
           value={formData?.shipping_info?.delivery_instruction}
         />
       )}
+
+      {/* BUTTON */}
       <div className="flex flex-col md:flex-row w-full justify-center md:justify-end items-center py-5 gap-2">
         <button
           disabled={false}

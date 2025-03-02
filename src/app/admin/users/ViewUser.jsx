@@ -1,44 +1,67 @@
+import ViewField from "@/components/UI/inputFields/ViewField";
 import { usePopupContext } from "@/Context/ProjectProvider";
-import SplitDescription from "@/Shared/SplitDescription";
-import ViewField from "@/Shared/ViewField";
-import { formatRole } from "@/Utils/formatRole";
 import { getDate, getTime } from "@/Utils/getDate";
+import moment from "moment";
 
-const ViewUser = () => {
+function ViewUser() {
   const { popupOption } = usePopupContext();
-  console.log({ popupOption });
+  const data = popupOption?.data;
+
+  console.log({ data });
   return (
     <div
       data-auto={`container-viewUser`}
       className={`px-2 py-5 flex flex-col justify-between gap-10 h-[70vh]`}
     >
       <div className=" grid grid-cols-2 gap-5">
-        <ViewField title={"Name"} value={popupOption?.data?.name} />
+        {/* NAME */}
+        <ViewField label={"Name"} value={data?.name} />
 
-        <ViewField title={"Phone"} value={popupOption?.data?.phone} />
-        <ViewField title={"Role"} value={popupOption?.data?.role} />
+        {/* EMAIL */}
+        <ViewField label={"Email"} value={data?.email} />
+
+        {/* PHONE */}
+        <ViewField label={"Phone"} value={data?.phone} />
+
+        {/* ROLE */}
+        <ViewField label={"Role"} value={data?.user_role} />
+
+        {/* IS VERIFIED */}
         <ViewField
-          title={"Is Verified"}
-          value={popupOption?.data?.isVerified ? "Yes" : "No"}
+          label={"Is Verified"}
+          value={data?.verified ? "Yes" : "No"}
         />
-        <div className={`col-span-2`}>
-          <ViewField title={"Email"} value={popupOption?.data?.email} />
-        </div>
+
+        {/* STATUS */}
+        <ViewField label={"Status"} value={data?.status} />
+
+        {/* ADDRESS */}
         <ViewField
-          title={"Created Date"}
-          value={getDate(popupOption?.data?.createdAt)}
+          label={"Address"}
+          value={`${data?.profile?.address} ${data?.profile?.city} ${data?.profile?.country}`}
         />
+
+        {/* BIRTH DATE */}
         <ViewField
-          title={"Created Time"}
-          value={getTime(popupOption?.data?.createdAt)}
+          label={"Date of Birth"}
+          value={`${data?.profile?.date_of_birth}`}
         />
+        {/* POSTCODE */}
+        <ViewField label={"Postcode"} value={`${data?.profile?.postcode}`} />
+
+        {/* GENDER */}
+        <ViewField label={"Gender"} value={`${data?.profile?.gender}`} />
+
+        {/* CREATE DATE */}
         <ViewField
-          title={"Updated Date"}
-          value={getDate(popupOption?.data?.updatedAt)}
+          label={"Created At"}
+          value={moment(data?.created_at).format("lll")}
         />
+
+        {/* UPDATE DATE */}
         <ViewField
-          title={"Updated Time"}
-          value={getTime(popupOption?.data?.updatedAt)}
+          label={"Updated At"}
+          value={moment(data?.updated_at).format("lll")}
         />
       </div>
       <div className="flex flex-col md:flex-row w-full justify-center md:justify-end items-center mt-5 gap-2">
@@ -51,6 +74,6 @@ const ViewUser = () => {
       </div>
     </div>
   );
-};
+}
 
 export default ViewUser;

@@ -1,8 +1,7 @@
+import ViewField from "@/components/UI/inputFields/ViewField";
 import { usePopupContext } from "@/Context/ProjectProvider";
-import ViewField from "@/Shared/ViewField";
 import { formatRole } from "@/Utils/formatRole";
 import { getDate, getTime } from "@/Utils/getDate";
-import React from "react";
 
 const AdditionalInfoComponent = () => {
   const { popupOption } = usePopupContext();
@@ -11,35 +10,35 @@ const AdditionalInfoComponent = () => {
   return (
     <div className=" grid grid-cols-2 gap-5">
       <div className={`col-span-2`}>
-        <ViewField title={"Order Id"} value={checkoutInfo?.orderId} />
+        <ViewField label={"Order Id"} value={checkoutInfo?.orderId} />
       </div>
       <ViewField
-        title={"paymentMethod"}
+        label={"paymentMethod"}
         value={formatRole(checkoutInfo?.paymentMethod)}
       />
-      <ViewField title={"Status"} value={formatRole(checkoutInfo?.status)} />
+      <ViewField label={"Status"} value={formatRole(checkoutInfo?.status)} />
 
       <div className={`col-span-2`}>
-        <ViewField title={"User Email"} value={checkoutInfo?.userEmail} />
+        <ViewField label={"User Email"} value={checkoutInfo?.userEmail} />
       </div>
       <ViewField
-        title={"Total Amount"}
+        label={"Total Amount"}
         value={checkoutInfo?.totalPayableAmount}
       />
       <ViewField
-        title={"Created Date"}
+        label={"Created Date"}
         value={getDate(popupOption?.data?.createdAt)}
       />
       <ViewField
-        title={"Created Time"}
+        label={"Created Time"}
         value={getTime(popupOption?.data?.createdAt)}
       />
       <ViewField
-        title={"Last Updated Date"}
+        label={"Last Updated Date"}
         value={getDate(popupOption?.data?.updatedAt)}
       />
       <ViewField
-        title={"Last Updated Time"}
+        label={"Last Updated Time"}
         value={getTime(popupOption?.data?.updatedAt)}
       />
     </div>

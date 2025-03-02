@@ -17,7 +17,6 @@ const initialState = {
 
 // FORM REDUCER
 function formReducer(state, action) {
-  console.log({ action });
   switch (action.type) {
     // FOR UPDATE FIELD
     case "UPDATE_FIELD":

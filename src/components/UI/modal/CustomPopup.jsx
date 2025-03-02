@@ -17,7 +17,7 @@ export default function CustomPopup({
         backdropFilter: "blur(2px)",
       }}
       closeOnDocumentClick={popupOption?.closeOnDocumentClick}
-      lockScroll={popupOption?.lockScroll ?? true}
+      lockScroll={true}
       className="relative overflow-hidden w-1/2 rounded-xl pop"
     >
       <div

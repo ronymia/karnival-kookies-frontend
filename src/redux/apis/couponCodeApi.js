@@ -27,7 +27,7 @@ export const apis = baseApi.injectEndpoints({
     // UPDATE COUPON CODE
     updateCouponCode: builder.mutation({
       query: (payload) => ({
-        url: `${URL}/${payload?.id}`,
+        url: `${URL}`,
         method: "PATCH",
         data: payload,
       }),

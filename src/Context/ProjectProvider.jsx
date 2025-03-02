@@ -62,7 +62,7 @@ export default function ProjectProvider({ children }) {
             {popupOption?.type === "viewOrder" && <ViewOrder />}
 
             {/* COUPON CODE */}
-            {popupOption?.type === "couponCode" && <CouponForm />}
+            {popupOption?.type === "couponCodeForm" && <CouponForm />}
 
             {/* REVIEW */}
             {popupOption?.type === "review" && <CreateAndUpdateReview />}

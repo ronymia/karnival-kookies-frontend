@@ -21,15 +21,17 @@ export default function CouponCodesPage() {
     limit: 20,
   });
   // ALL SELECTED IDs
-  const { data, isLoading } = useGetCouponCodesQuery();
+  const { data, isLoading } = useGetCouponCodesQuery({
+    page: filters?.page,
+    limit: filters?.limit,
+  });
   const [deleteCouponCode, deleteResult] = useDeleteCouponCodeMutation();
 
   // HANDLE DELETE PRODUCT
   const handleDelete = (data) => {
     deleteData({
       handler: deleteCouponCode,
-      data,
-      deleteMsg: "Coupon Code deleted successfully",
+      data: { id: data?.id, title: "Coupon" },
     });
   };
 
@@ -38,7 +40,7 @@ export default function CouponCodesPage() {
     setPopupOption({
       ...popupOption,
       open: true,
-      type: "couponForm",
+      type: "couponCodeForm",
       title: "Add New Coupon Code",
     });
   };
@@ -47,7 +49,7 @@ export default function CouponCodesPage() {
     setPopupOption({
       ...popupOption,
       open: true,
-      type: "couponForm",
+      type: "couponCodeForm",
       title: "Edit Coupon Code",
       data: data,
     });

@@ -1,27 +1,30 @@
 "use client";
+import FormActions from "@/components/layouts/forms/FormActions";
+import InputField from "@/components/UI/inputFields/InputField";
+import NumberField from "@/components/UI/inputFields/NumberField";
+import RadioButton from "@/components/UI/inputFields/RadioButton";
+import CustomToaster from "@/components/UI/toaster/CustomToaster";
 import { usePopupContext } from "@/Context/ProjectProvider";
+import { errorHandler } from "@/helpers/errorHandler";
+import {
+  useCreateCouponCodeMutation,
+  useUpdateCouponCodeMutation,
+} from "@/redux/apis/couponCodeApi";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import CustomField from "@/Shared/Fields/CustomField";
-import CustomMultiSelect from "@/Shared/Fields/CustomMultiSelect";
-import CustomNumberField from "@/Shared/Fields/CustomNumberField";
-import { postDiscount, updateDiscount } from "@/apis/discounts";
-import CustomToaster from "@/components/UI/toaster/CustomToaster";
-import CustomLoading from "@/components/UI/loader/CustomLoading";
-import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
-import { errorHandler } from "@/helpers/errorHandler";
 
 export default function CouponForm() {
   const { popupOption } = usePopupContext();
+  //
+  const [createCouponCode, createResult] = useCreateCouponCodeMutation();
+  const [updateCouponCode, updateResult] = useUpdateCouponCodeMutation();
   // console.log({ popupOption });
   const [formData, setFormData] = useState({
     id: popupOption?.data ? popupOption?.data?.id : null,
     code: popupOption?.data ? popupOption?.data?.code : "",
     discount_type: popupOption?.data ? popupOption?.data?.discount_type : "",
-    discount_value: popupOption?.data
-      ? popupOption?.data?.discount_value
-      : null,
-    minimum_spend: popupOption?.data ? popupOption?.data?.minimum_spend : null,
+    discount_value: popupOption?.data ? popupOption?.data?.discount_value : "",
+    minimum_spend: popupOption?.data ? popupOption?.data?.minimum_spend : "",
   });
 
   // console.log({ formData });
@@ -30,28 +33,32 @@ export default function CouponForm() {
   const validateForm = () => {
     const newErrors = {};
 
-    // VALIDATE NAME
-    // if (!formData.code || formData.code.trim() === "") {
-    //   newErrors.code = "Code is required";
-    // }
+    // VALIDATE CODE
+    if (!formData.code || formData.code.trim() === "") {
+      newErrors.code = "Code is required";
+    }
+
+    // VALIDATE DISCOUNT TYPE
     if (!formData.discount_type || formData.discount_type.trim() === "") {
       newErrors.discount_type = "Type is required";
     }
-    if (formData.discount_type === "percentage") {
+    if (formData.discount_type === "percent") {
       if (formData.discount_value > 100) {
         newErrors.discount_value = "Amount cannot be greater than 100%";
       }
     }
+
+    // DISCOUNT VALUE
     if (!formData.discount_value) {
       newErrors.discount_value = "Amount is required";
     }
+
+    // MINIMUM SPEND
     if (!formData.minimum_spend) {
-      newErrors.minimum_spend = "Minimum Spend is required";
+      newErrors.minimum_spend = "Minimum Amount is required";
     }
 
     setErrors(newErrors);
-    // console.log({ newErrors });
-    // ValidationErrorHandler(newErrors);
     if (Object.keys(newErrors).length > 0) {
       toast.custom((t) => (
         <CustomToaster
@@ -87,18 +94,17 @@ export default function CouponForm() {
     }));
   };
 
-  const [isDiscountCreating, setIsDiscountCreating] = useState(false);
-  const createFunction = (data) => {
-    setIsDiscountCreating(true);
-    postDiscount(data)
+  // CREATE FUNCTION
+  const createFunction = async (data) => {
+    await createCouponCode(data)
+      .unwrap()
       .then((res) => {
-        console.log({ res });
         if (res?.success) {
           toast.custom((t) => (
             <CustomToaster
               t={t}
               type={"success"}
-              text={`Discount added successfully`}
+              text={`Coupon Code added successfully`}
             />
           ));
 
@@ -109,9 +115,7 @@ export default function CouponForm() {
             discount_value: "",
             minimum_spend: "",
           });
-          popupOption?.onClose();
-          popupOption.setIsUpdating(Math.random());
-          setIsDiscountCreating(false);
+          popupOption?.onClose?.();
         }
       })
       .catch((err) => {
@@ -128,10 +132,10 @@ export default function CouponForm() {
       });
   };
 
-  const [isDiscountUpdating, setIsDiscountUpdating] = useState(false);
-  const updateFunction = (data) => {
-    setIsDiscountUpdating(true);
-    updateDiscount(data)
+  // UPDATE FUNCTION
+  const updateFunction = async (data) => {
+    await updateCouponCode(data)
+      .unwrap()
       .then((res) => {
         if (res?.success) {
           toast.custom((t) => (
@@ -141,58 +145,51 @@ export default function CouponForm() {
               text={`Discount updated successfully`}
             />
           ));
-          popupOption?.onClose();
-          popupOption.setIsUpdating(Math.random());
-          setIsDiscountUpdating(false);
+          popupOption?.onClose?.();
         }
       })
       .catch((err) => {
-        const obj = {};
-
-        // if (err?.status === 422) {
-        //   err?.data?.errorSources?.forEach((item) => {
-        //     obj[item?.path] = item?.message;
-        //   });
-        //   setErrors(obj);
-        // }
-        const resErrors = errorHandler({
-          err,
-          setLoading: setIsDiscountUpdating,
-        });
+        const resErrors = errorHandler({ err });
         setErrors(resErrors);
       });
   };
 
   // SUBMIT DATA
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     // Validate form
     if (validateForm()) {
       if (popupOption?.data) {
         updateFunction({
           ...formData,
           discount_value: parseFloat(formData?.discount_value),
-          minimum_spend: parseFloat(formData?.minimum_spend),
+          minimum_spend: formData?.minimum_spend
+            ? parseFloat(formData?.minimum_spend)
+            : 0,
         });
       } else {
         createFunction({
           ...formData,
           discount_value: parseFloat(formData?.discount_value),
-          minimum_spend: parseFloat(formData?.minimum_spend),
+          minimum_spend: formData?.minimum_spend
+            ? parseFloat(formData?.minimum_spend)
+            : 0,
         });
       }
     }
   };
 
-  if (isDiscountCreating || isDiscountUpdating) {
-    return <CustomLoading />;
-  }
   return (
-    <div className={` pb-12 h-full flex flex-col justify-between`}>
-      <div>
+    <form
+      noValidate
+      onSubmit={handleSubmit}
+      className={`flex flex-col justify-center gap-3`}
+    >
+      <>
         {/* CODE */}
-        <CustomField
+        <InputField
           value={formData?.code}
-          disable={false}
+          disable={createResult.isLoading || updateResult.isLoading}
           fieldClassName={"w-full"}
           error={errors?.code}
           id={"code"}
@@ -205,45 +202,33 @@ export default function CouponForm() {
           required={true}
         />
 
-        {/* DISCOUNT TYPE */}
-        <CustomMultiSelect
-          disable={false}
-          label={"Discount Type"}
-          // loading={isCategoryLoading}
-          placeholder="Select Discount Type"
-          selectedValues={[
-            {
-              id: 1,
-              name: "fixed",
-            },
-            {
-              id: 2,
-              name: "percentage",
-            },
-          ]?.filter((m) => m?.name === formData?.discount_type)}
-          setSelectedValues={(e) => {
-            console.log({ e });
-            setFormData({ ...formData, discount_type: e[0]?.name });
-          }}
+        {/* COUPON CODE TYPE */}
+        <RadioButton
+          defaultChecked={formData?.discount_type}
+          error={errors?.discount_type}
+          label="Discount Type"
+          disabled={createResult.isLoading || updateResult.isLoading}
+          required={true}
+          onChange={handleFormChange}
           options={[
             {
-              id: 1,
-              name: "fixed",
+              name: "discount_type",
+              value: "fixed",
+              title: "Fixed",
             },
             {
-              id: 2,
-              name: "percentage",
+              name: "discount_type",
+              value: "percent",
+              title: "Percent",
             },
           ]}
-          singleSelect
-          error={errors?.discount_type}
-          required
+          inputFieldClassName={"grid-cols-2 gap-2"}
         />
 
-        {/* AMOUNT */}
-        <CustomNumberField
+        {/* CODE CODE VALUE */}
+        <NumberField
           value={formData?.discount_value}
-          disable={false}
+          disable={createResult.isLoading || updateResult.isLoading}
           fieldClassName={"w-full"}
           error={errors?.discount_value}
           id={"discount_value"}
@@ -254,9 +239,11 @@ export default function CouponForm() {
           wrapperClassName={"w-full"}
           required={true}
         />
-        <CustomNumberField
+
+        {/* MINIMUM SPEND AMOUNT */}
+        <NumberField
           value={formData?.minimum_spend}
-          disable={false}
+          disable={createResult.isLoading || updateResult.isLoading}
           fieldClassName={"w-full"}
           error={errors?.minimum_spend}
           id={"minimum_spend"}
@@ -267,29 +254,14 @@ export default function CouponForm() {
           wrapperClassName={"w-full"}
           required={true}
         />
-      </div>
-      <div className="flex flex-col md:flex-row w-full justify-center md:justify-end items-center py-5 gap-2">
-        <button
-          disabled={isDiscountCreating || isDiscountUpdating}
-          onClick={popupOption?.onClose}
-          className="btn w-full md:btn-wide btn-outline btn-primary"
-        >
-          Cancel
-        </button>
-        <button
-          disabled={isDiscountCreating || isDiscountUpdating}
-          onClick={handleSubmit}
-          className="btn w-full md:btn-wide btn-primary"
-        >
-          {isDiscountCreating || isDiscountUpdating ? (
-            <ButtonSpinner />
-          ) : popupOption?.data ? (
-            "Update"
-          ) : (
-            "Create"
-          )}
-        </button>
-      </div>
-    </div>
+      </>
+
+      {/* BUTTONS */}
+      <FormActions
+        isLoading={createResult.isLoading || updateResult.isLoading}
+        onCancel={popupOption?.onClose}
+        submitText="Submit"
+      />
+    </form>
   );
 }

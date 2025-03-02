@@ -123,7 +123,10 @@ export default function Table({
           ))
         ) : (
           <tr>
-            <td className="text-center py-5">
+            <td
+              colSpan={columns.length}
+              className="py-5 flex items-center justify-center"
+            >
               <span className="loading loading-spinner text-tertiary loading-lg"></span>
             </td>
           </tr>

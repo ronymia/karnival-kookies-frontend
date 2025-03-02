@@ -161,13 +161,13 @@ export default function MetaDataForm() {
   &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*/
 
   if (createResult.isLoading || updateResult.isLoading) {
-    return <CustomLoading />;
+    return <CustomLoading height="h-[40vh]" />;
   }
   return (
     <form
       noValidate
       onSubmit={handleSubmit}
-      className={` pb-12 h-full flex flex-col justify-between`}
+      className={`h-full flex flex-col justify-between`}
     >
       <div>
         {/* META KEY */}
@@ -227,6 +227,7 @@ export default function MetaDataForm() {
         onCancel={popupOption?.onClose}
         onSubmit={handleSubmit}
         submitText="Submit"
+        className={`mt-auto`}
       />
     </form>
   );

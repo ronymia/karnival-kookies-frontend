@@ -10,7 +10,7 @@ import PackageForm from "@/app/admin/packages/PackageForm";
 import PackageView from "@/app/admin/packages/PackageView";
 import UserForm from "@/app/admin/users/UserForm";
 import ViewUser from "@/app/admin/users/ViewUser";
-import CreateAndUpdateReview from "@/app/products/[id]/CreateAndUpdateReview";
+import ReviewForm from "@/app/products/[id]/ReviewForm";
 import CustomPopup from "@/components/UI/modal/CustomPopup";
 import FileViewer from "@/components/UI/modal/FileViewer";
 import { createContext, useContext, useState } from "react";
@@ -65,7 +65,7 @@ export default function ProjectProvider({ children }) {
             {popupOption?.type === "couponCodeForm" && <CouponForm />}
 
             {/* REVIEW */}
-            {popupOption?.type === "review" && <CreateAndUpdateReview />}
+            {popupOption?.type === "reviewForm" && <ReviewForm />}
 
             {/* PACKAGES */}
             {popupOption?.type === "packageForm" && <PackageForm />}

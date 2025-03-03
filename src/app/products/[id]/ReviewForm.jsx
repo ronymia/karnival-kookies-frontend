@@ -1,29 +1,37 @@
 "use client";
 
+import { postReview } from "@/apis/reviews";
+import FormActions from "@/components/layouts/forms/FormActions";
+import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
+import TextareaField from "@/components/UI/inputFields/TextareaField";
+import CustomLoading from "@/components/UI/loader/CustomLoading";
+import CustomToaster from "@/components/UI/toaster/CustomToaster";
 import { usePopupContext } from "@/Context/ProjectProvider";
-import CustomTextareaField from "@/Shared/Fields/CustomTextAreaField";
+import { errorHandler } from "@/helpers/errorHandler";
+import {
+  useCreateReviewMutation,
+  useUpdateReviewMutation,
+} from "@/redux/apis/reviewApi";
+import { Rating } from "@smastrom/react-rating";
+import "@smastrom/react-rating/style.css";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { Rating } from "@smastrom/react-rating";
-import "@smastrom/react-rating/style.css";
-import { postReview, updateReview } from "@/apis/reviews";
 import { useSelector } from "react-redux";
-import CustomToaster from "@/components/UI/toaster/CustomToaster";
-import { errorHandler } from "@/helpers/errorHandler";
-import CustomLoading from "@/components/UI/loader/CustomLoading";
-import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
 
-const CreateAndUpdateReview = () => {
+export default function ReviewForm() {
   const { popupOption } = usePopupContext();
   // USER FROM REDUX STORE
   const { user } = useSelector((state) => state.auth);
   const params = useParams();
-  console.log({ params });
+  const [createReview, createResult] = useCreateReviewMutation();
+  const [updateReview, updateResult] = useUpdateReviewMutation();
+
+  // USER FROM REDUX STORE
   const [formData, setFormData] = useState({
     id: popupOption?.data ? popupOption?.data?.id : "",
-    productId: params?.id,
-    email: user?.email,
+    product_id: params?.id || null,
+    user_id: user?.id || null,
     rating: popupOption?.data ? popupOption?.data?.rating : 1,
     comment: popupOption?.data ? popupOption?.data?.comment : "",
   });
@@ -36,11 +44,11 @@ const CreateAndUpdateReview = () => {
     const newErrors = {};
 
     // VALIDATE NAME
-    if (!formData.productId) {
-      newErrors.productId = "Product is required";
+    if (!formData.product_id) {
+      newErrors.product_id = "Product is required";
     }
-    if (!formData.email || formData.email.trim() === "") {
-      newErrors.email = "Email is required";
+    if (!formData.user_id) {
+      newErrors.user_id = "User ID is required";
     }
     if (!formData.rating) {
       newErrors.rating = "rating is required";
@@ -88,22 +96,9 @@ const CreateAndUpdateReview = () => {
     }));
   };
 
-  // SUBMIT DATA
-  const handleSubmit = async () => {
-    // Validate form
-    if (validateForm()) {
-      if (popupOption?.data) {
-        updateFunction(formData);
-      } else {
-        createFunction(formData);
-      }
-    }
-  };
-
-  const [isCategoryCreating, setIsCategoryCreating] = useState(false);
-  const createFunction = (data) => {
-    setIsCategoryCreating(true);
-    postReview(data)
+  const createFunction = async (data) => {
+    await createReview(data)
+      .unwrap()
       .then((res) => {
         console.log({ res });
         if (res?.success) {
@@ -124,19 +119,16 @@ const CreateAndUpdateReview = () => {
             images: [],
           });
           popupOption?.onClose();
-          popupOption?.setIsUpdating(Math.random());
-          setIsCategoryCreating(false);
         }
       })
       .catch((err) => {
-        errorHandler({ err, setLoading: setIsCategoryCreating });
+        errorHandler({ err });
       });
   };
 
-  const [isCategoryUpdating, setIsCategoryUpdating] = useState(false);
-  const updateFunction = (data) => {
-    setIsCategoryUpdating(true);
-    updateReview(data)
+  const updateFunction = async (data) => {
+    await updateReview(data)
+      .unwrap()
       .then((res) => {
         if (res?.success) {
           toast.custom((t) => (
@@ -147,22 +139,36 @@ const CreateAndUpdateReview = () => {
             />
           ));
           popupOption?.onClose();
-          popupOption.setIsUpdating(Math.random());
-          setIsCategoryUpdating(false);
         }
       })
       .catch((err) => {
-        errorHandler({ err, setLoading: setIsCategoryUpdating });
+        errorHandler({ err });
       });
   };
 
-  if (isCategoryCreating || isCategoryUpdating) {
-    return <CustomLoading />;
-  }
+  // SUBMIT DATA
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validate form
+    if (validateForm()) {
+      if (popupOption?.data) {
+        updateFunction(formData);
+      } else {
+        createFunction(formData);
+      }
+    }
+  };
+
   return (
-    <div className={` pb-12 h-full flex flex-col justify-between`}>
-      <div>
+    <form
+      noValidate
+      onSubmit={handleSubmit}
+      className={` pb-12 h-full flex flex-col justify-between`}
+    >
+      <>
         <div>
+          {/* RATING */}
           <label
             className={`text-base-300 font-semibold text-lg`}
             htmlFor="rating"
@@ -173,7 +179,6 @@ const CreateAndUpdateReview = () => {
             style={{ maxWidth: 200, display: "flex" }}
             value={formData?.rating}
             onChange={(e) => {
-              console.log({ e });
               setFormData((prev) => ({
                 ...prev,
                 rating: e,
@@ -182,8 +187,8 @@ const CreateAndUpdateReview = () => {
           />
         </div>
 
-        {/* DESCRIPTION */}
-        <CustomTextareaField
+        {/* COMMENTS */}
+        <TextareaField
           value={formData?.comment}
           disable={false}
           fieldClassName={"w-full"}
@@ -196,31 +201,13 @@ const CreateAndUpdateReview = () => {
           type={"text"}
           wrapperClassName={"w-full"}
         />
-      </div>
-      <div className="flex flex-col md:flex-row w-full justify-center md:justify-end items-center py-5 gap-2">
-        <button
-          disabled={isCategoryCreating || isCategoryUpdating}
-          onClick={popupOption?.onClose}
-          className="btn w-full md:btn-wide btn-outline btn-primary"
-        >
-          Cancel
-        </button>
-        <button
-          disabled={isCategoryCreating || isCategoryUpdating}
-          onClick={handleSubmit}
-          className="btn w-full md:btn-wide btn-primary"
-        >
-          {isCategoryCreating || isCategoryUpdating ? (
-            <ButtonSpinner />
-          ) : popupOption?.data ? (
-            "Update"
-          ) : (
-            "Create"
-          )}
-        </button>
-      </div>
-    </div>
-  );
-};
+      </>
 
-export default CreateAndUpdateReview;
+      <FormActions
+        isLoading={createResult.isLoading || updateResult.isLoading}
+        onCancel={popupOption?.onClose}
+        submitText="Submit"
+      />
+    </form>
+  );
+}

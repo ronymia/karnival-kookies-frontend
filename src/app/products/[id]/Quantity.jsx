@@ -1,8 +1,9 @@
 "use client";
+import PropTypes from "prop-types";
 
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
-const Quantity = ({ quantity, setQuantity }) => {
+export default function Quantity({ quantity, setQuantity }) {
   const handleQuantityDown = () => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
@@ -28,6 +29,10 @@ const Quantity = ({ quantity, setQuantity }) => {
       />
     </div>
   );
-};
+}
 
-export default Quantity;
+/* <======================================== PROP TYPES ======================================> */
+Quantity.propTypes = {
+  quantity: PropTypes.number.isRequired,
+  setQuantity: PropTypes.func.isRequired,
+};

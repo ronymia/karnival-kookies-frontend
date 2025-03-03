@@ -2,12 +2,12 @@ import { Rating } from "@smastrom/react-rating";
 import moment from "moment";
 import React from "react";
 
-const ReviewCard = ({ review }) => {
+export default function ReviewCard({ review }) {
   return (
     <div className={`flex gap-3`}>
       <div className="h-9 w-9 flex-shrink-0 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
         <span className="text-sm font-medium text-primary flex-shrink-0">
-          {review?.name
+          {review?.user?.name
             ?.split(" ")
             ?.map((char) => char.charAt(0).toUpperCase())}
         </span>
@@ -16,7 +16,7 @@ const ReviewCard = ({ review }) => {
         <div>
           <div className={`flex flex-col sm:flex-row sm:items-center sm:gap-2`}>
             <p className={`font-bold text-base-300`}>{review?.name}</p>
-            <p>{moment(review?.updatedAt).fromNow()}</p>
+            <p>{moment(review?.updated_at).fromNow()}</p>
           </div>
           <Rating
             style={{ maxWidth: 50, display: "flex" }}
@@ -28,6 +28,4 @@ const ReviewCard = ({ review }) => {
       </div>
     </div>
   );
-};
-
-export default ReviewCard;
+}

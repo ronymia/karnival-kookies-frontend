@@ -1,16 +1,16 @@
 "use client";
-import Button from "@/components/UI/buttons/Button";
-import InputField from "@/components/UI/inputFields/InputField";
-import PasswordField from "@/components/UI/inputFields/PasswordField";
-import CustomToaster from "@/components/UI/toaster/CustomToaster";
+import Button from "@/components/ui/buttons/Button";
+import InputField from "@/components/ui/inputfields/InputField";
+import PasswordField from "@/components/ui/inputfields/PasswordField";
+import CustomToaster from "@/components/ui/toaster/CustomToaster";
 import {
   useGetAccessTokenMutation,
   useResetPasswordMutation,
   useSendVerificationCodeMutation,
   useVerifyEmailCodeMutation,
 } from "@/redux/apis/authApis";
-import CustomNumberFieldForOtp from "@/Shared/Fields/CustomNumberFieldForOtp";
-import { validationErrorHandler } from "@/Utils/validationErrorHandler";
+import CustomNumberFieldForOtp from "@/shared/fields/CustomNumberFieldForOtp";
+import { validationErrorHandler } from "@/utils/validationErrorHandler";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";

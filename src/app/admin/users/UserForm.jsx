@@ -1,14 +1,14 @@
 "use client";
 
-import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
-import DatePicker from "@/components/UI/inputFields/DatePicker";
-import InputField from "@/components/UI/inputFields/InputField";
-import NumberField from "@/components/UI/inputFields/NumberField";
-import PasswordField from "@/components/UI/inputFields/PasswordField";
-import RadioButton from "@/components/UI/inputFields/RadioButton";
-import Select from "@/components/UI/inputFields/Select";
-import CustomToaster from "@/components/UI/toaster/CustomToaster";
-import { usePopupContext } from "@/Context/ProjectProvider";
+import ButtonSpinner from "@/components/ui/buttons/ButtonSpinner";
+import DatePicker from "@/components/ui/inputfields/DatePicker";
+import InputField from "@/components/ui/inputfields/InputField";
+import NumberField from "@/components/ui/inputfields/NumberField";
+import PasswordField from "@/components/ui/inputfields/PasswordField";
+import RadioButton from "@/components/ui/inputfields/RadioButton";
+import Select from "@/components/ui/inputfields/Select";
+import CustomToaster from "@/components/ui/toaster/CustomToaster";
+import { usePopupContext } from "@/hooks/usePopupContext";
 import {
   useCreateUserMutation,
   useUpdateUserMutation,

@@ -2,11 +2,11 @@
 
 import { postReview } from "@/apis/reviews";
 import FormActions from "@/components/layouts/forms/FormActions";
-import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
-import TextareaField from "@/components/UI/inputFields/TextareaField";
-import CustomLoading from "@/components/UI/loader/CustomLoading";
-import CustomToaster from "@/components/UI/toaster/CustomToaster";
-import { usePopupContext } from "@/Context/ProjectProvider";
+import ButtonSpinner from "@/components/ui/buttons/ButtonSpinner";
+import TextareaField from "@/components/ui/inputfields/TextareaField";
+import CustomLoading from "@/components/ui/loader/CustomLoading";
+import CustomToaster from "@/components/ui/toaster/CustomToaster";
+import { usePopupContext } from "@/hooks/usePopupContext";
 import { errorHandler } from "@/helpers/errorHandler";
 import {
   useCreateReviewMutation,

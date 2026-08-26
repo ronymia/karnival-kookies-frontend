@@ -1,6 +1,6 @@
-import ViewField from "@/components/UI/inputFields/ViewField";
-import { usePopupContext } from "@/Context/ProjectProvider";
-import SplitDescription from "@/Shared/SplitDescription";
+import ViewField from "@/components/ui/inputfields/ViewField";
+import { usePopupContext } from "@/hooks/usePopupContext";
+import SplitDescription from "@/shared/SplitDescription";
 
 const ShippingComponent = () => {
   const { popupOption } = usePopupContext();

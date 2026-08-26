@@ -1,10 +1,10 @@
 "use client";
-import VerificationCode from "@/components/layouts/Authentication/VerificationCode";
-import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
-import InputField from "@/components/UI/inputFields/InputField";
-import PasswordField from "@/components/UI/inputFields/PasswordField";
-import CustomLoading from "@/components/UI/loader/CustomLoading";
-import CustomToaster from "@/components/UI/toaster/CustomToaster";
+import VerificationCode from "@/components/layouts/authentication/VerificationCode";
+import ButtonSpinner from "@/components/ui/buttons/ButtonSpinner";
+import InputField from "@/components/ui/inputfields/InputField";
+import PasswordField from "@/components/ui/inputfields/PasswordField";
+import CustomLoading from "@/components/ui/loader/CustomLoading";
+import CustomToaster from "@/components/ui/toaster/CustomToaster";
 import { errorHandler } from "@/helpers/errorHandler";
 import { useLoginUserMutation } from "@/redux/apis/authApis";
 import { useRouter } from "next/navigation";

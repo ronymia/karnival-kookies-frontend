@@ -3,11 +3,11 @@
 import emailjs from "@emailjs/browser";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
-import CustomToaster from "@/components/UI/toaster/CustomToaster";
-import CustomLoading from "@/components/UI/loader/CustomLoading";
-import Button from "@/components/UI/buttons/Button";
-import InputField from "@/components/UI/inputFields/InputField";
-import TextareaField from "@/components/UI/inputFields/TextareaField";
+import CustomToaster from "@/components/ui/toaster/CustomToaster";
+import CustomLoading from "@/components/ui/loader/CustomLoading";
+import Button from "@/components/ui/buttons/Button";
+import InputField from "@/components/ui/inputfields/InputField";
+import TextareaField from "@/components/ui/inputfields/TextareaField";
 
 export default function ContactForm() {
   const formRef = useRef();

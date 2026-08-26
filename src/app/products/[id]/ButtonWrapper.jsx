@@ -1,6 +1,6 @@
 "use client";
-import Button from "@/components/UI/buttons/Button";
-import CustomToaster from "@/components/UI/toaster/CustomToaster";
+import Button from "@/components/ui/buttons/Button";
+import CustomToaster from "@/components/ui/toaster/CustomToaster";
 import { errorHandler } from "@/helpers/errorHandler";
 import { useAddToCartMutation } from "@/redux/apis/cartApis";
 import { useState } from "react";

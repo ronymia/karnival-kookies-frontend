@@ -1,8 +1,7 @@
 "use client";
 
-import { getFullImageLink } from "@/Utils/getFullImageLink";
+import { getFullImageLink } from "@/utils/getFullImageLink";
 import { useState } from "react";
-import MagnifyImage from "./UI/ImageMagnify";
 import Image from "next/image";
 import { MdCancel } from "react-icons/md";
 
@@ -35,9 +34,10 @@ export default function ImageSlider({ images }) {
     <section className="flex flex-col items-center gap-4 p-4">
       {/* Fullscreen Slider */}
       {imageIndex !== null && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/80 z-50">
           {/* Left Arrow */}
           <button
+            type="button"
             className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 rounded-full p-2 hover:bg-gray-600"
             onClick={() => changeSlide("left")}
           >
@@ -60,6 +60,7 @@ export default function ImageSlider({ images }) {
 
           {/* Right Arrow */}
           <button
+            type="button"
             className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 rounded-full p-2 hover:bg-gray-600"
             onClick={() => changeSlide("right")}
           >
@@ -69,6 +70,7 @@ export default function ImageSlider({ images }) {
 
           {/* Close Button */}
           <button
+            type="button"
             className="absolute top-[10%] right-4 text-white text-2xl font-bold p-2 z-[10000000000]"
             onClick={() => setImageIndex(null)}
           >

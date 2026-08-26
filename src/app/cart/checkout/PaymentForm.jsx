@@ -1,6 +1,6 @@
-import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
-import CustomLoading from "@/components/UI/loader/CustomLoading";
-import CustomToaster from "@/components/UI/toaster/CustomToaster";
+import ButtonSpinner from "@/components/ui/buttons/ButtonSpinner";
+import CustomLoading from "@/components/ui/loader/CustomLoading";
+import CustomToaster from "@/components/ui/toaster/CustomToaster";
 import { errorHandler } from "@/helpers/errorHandler";
 import { useCartCheckoutMutation } from "@/redux/apis/cartApis";
 import { resetCart } from "@/redux/features/cartSlice";

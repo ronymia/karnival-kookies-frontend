@@ -7,19 +7,19 @@ import {
 } from "@/redux/apis/productApis";
 import { useEffect, useState } from "react";
 import useProductReducer from "./productReducer";
-import { usePopupContext } from "@/Context/ProjectProvider";
+import { usePopupContext } from "@/hooks/usePopupContext";
 import { useGetAllCategoriesQuery } from "@/redux/apis/categoryApis";
 import toast from "react-hot-toast";
-import QuillEditor from "@/components/UI/QuillEditor";
-import InputField from "@/components/UI/inputFields/InputField";
-import NumberField from "@/components/UI/inputFields/NumberField";
-import RadioButton from "@/components/UI/inputFields/RadioButton";
+import QuillEditor from "@/components/ui/QuillEditor";
+import InputField from "@/components/ui/inputfields/InputField";
+import NumberField from "@/components/ui/inputfields/NumberField";
+import RadioButton from "@/components/ui/inputfields/RadioButton";
 import { BiSolidCheckCircle } from "react-icons/bi";
-import Select from "@/components/UI/inputFields/Select";
-import FileUploader from "@/components/UI/inputFields/FileUploader";
+import Select from "@/components/ui/inputfields/Select";
+import FileUploader from "@/components/ui/inputfields/FileUploader";
 import { errorHandler } from "@/helpers/errorHandler";
-import CustomToaster from "@/components/UI/toaster/CustomToaster";
-import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
+import CustomToaster from "@/components/ui/toaster/CustomToaster";
+import ButtonSpinner from "@/components/ui/buttons/ButtonSpinner";
 import FormActions from "@/components/layouts/forms/FormActions";
 
 export default function ProductForm() {

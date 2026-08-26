@@ -1,10 +1,10 @@
 "use client";
-import Button from "@/components/UI/buttons/Button";
-import Heading from "@/components/UI/Heading/Heading";
-import Pagination from "@/components/UI/table/Pagination";
-import Table from "@/components/UI/table/Table";
-import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
-import { usePopupContext } from "@/Context/ProjectProvider";
+import Button from "@/components/ui/buttons/Button";
+import Heading from "@/components/ui/heading/Heading";
+import Pagination from "@/components/ui/table/Pagination";
+import Table from "@/components/ui/table/Table";
+import TableComponentHeading from "@/components/ui/table/TableComponentHeading";
+import { usePopupContext } from "@/hooks/usePopupContext";
 import { useGetAllUsersQuery } from "@/redux/apis/userApis";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

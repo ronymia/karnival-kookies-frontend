@@ -1,6 +1,6 @@
 "use client";
-import { usePopupContext } from "@/Context/ProjectProvider";
-import Tabs from "@/Shared/Tabs";
+import { usePopupContext } from "@/hooks/usePopupContext";
+import Tabs from "@/shared/Tabs";
 import { useState } from "react";
 import ShippingComponent from "./ShippingComponent";
 import AdditionalInfoComponent from "./AdditionalInfoComponent";

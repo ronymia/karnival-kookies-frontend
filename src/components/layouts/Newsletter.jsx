@@ -3,7 +3,7 @@
 import { useSubscriptionForNewsletterMutation } from "@/redux/apis/newsletterApis";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import CustomToaster from "../UI/toaster/CustomToaster";
+import CustomToaster from "../ui/toaster/CustomToaster";
 import { errorHandler } from "@/helpers/errorHandler";
 
 const NewsletterSection = () => {

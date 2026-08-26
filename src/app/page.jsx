@@ -1,8 +1,8 @@
-import ProductCard from "@/components/UI/ProductCard";
+import ProductCard from "@/components/ui/ProductCard";
 import Slider from "./slider";
-import Heading from "@/components/UI/Heading/Heading";
-import HomeSearchWrapper from "@/components/UI/SearchFields/HomeSearchWrapper";
-import NavigateHandler from "@/components/UI/buttons/NavigateHandler";
+import Heading from "@/components/ui/heading/Heading";
+import HomeSearchWrapper from "@/components/ui/searchfields/HomeSearchWrapper";
+import NavigateHandler from "@/components/ui/buttons/NavigateHandler";
 import FixedBgComponent from "@/components/layouts/FixedBgComponent";
 import axios from "axios";
 import CategorySection from "@/components/CategorySection";
@@ -27,13 +27,20 @@ const fetchData = async (endpoint) => {
 };
 
 export async function generateMetadata() {
-  const result = await api.get(`/v1.0/meta-data?meta_key=home_page`);
-  const metadata = result.data?.data[0] || {};
+  try {
+    const result = await api.get(`/v1.0/meta-data?meta_key=home_page`);
+    const metadata = result.data?.data[0] || {};
 
-  return {
-    title: metadata?.title || "Karnival Kookies | Home",
-    description: metadata?.description || "This is the landing page",
-  };
+    return {
+      title: metadata?.title || "Karnival Kookies | Home",
+      description: metadata?.description || "This is the landing page",
+    };
+  } catch {
+    return {
+      title: "Karnival Kookies | Home",
+      description: "This is the landing page",
+    };
+  }
 }
 
 export default async function HomePage() {

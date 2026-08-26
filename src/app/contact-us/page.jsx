@@ -5,9 +5,9 @@ import { TfiEmail } from "react-icons/tfi";
 import ContactForm from "./ContactForm";
 import SupportCard from "./SupportCard";
 import FixedBgComponent from "@/components/layouts/FixedBgComponent";
-import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
-import NavigateComponent from "@/components/UI/navigate/navigate";
-import Heading from "@/components/UI/Heading/Heading";
+import TableComponentHeading from "@/components/ui/table/TableComponentHeading";
+import NavigateComponent from "@/components/ui/navigate/navigate";
+import Heading from "@/components/ui/heading/Heading";
 
 export default async function FaqPage() {
   const faqs = await getAllFaqs();

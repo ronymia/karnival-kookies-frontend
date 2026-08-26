@@ -1,10 +1,10 @@
 "use client";
 import FormActions from "@/components/layouts/forms/FormActions";
-import InputField from "@/components/UI/inputFields/InputField";
-import NumberField from "@/components/UI/inputFields/NumberField";
-import RadioButton from "@/components/UI/inputFields/RadioButton";
-import CustomToaster from "@/components/UI/toaster/CustomToaster";
-import { usePopupContext } from "@/Context/ProjectProvider";
+import InputField from "@/components/ui/inputfields/InputField";
+import NumberField from "@/components/ui/inputfields/NumberField";
+import RadioButton from "@/components/ui/inputfields/RadioButton";
+import CustomToaster from "@/components/ui/toaster/CustomToaster";
+import { usePopupContext } from "@/hooks/usePopupContext";
 import { errorHandler } from "@/helpers/errorHandler";
 import {
   useCreateCouponCodeMutation,

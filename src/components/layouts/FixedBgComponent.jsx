@@ -15,7 +15,7 @@ const FixedBgComponent = ({
       }}
       className={`bg-fixed bg-center bg-repeat bg-cover `}
     >
-      <div className={`bg-base-100 bg-opacity-60 ${wrapperClass}`}>
+      <div className={`bg-base-100/60 ${wrapperClass}`}>
         {component}
       </div>
     </div>

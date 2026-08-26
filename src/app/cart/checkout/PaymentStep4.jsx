@@ -10,8 +10,8 @@ import {
 } from "@/redux/apis/paymentApis";
 import { useSelector } from "react-redux";
 import { errorHandler } from "@/helpers/errorHandler";
-import Button from "@/components/UI/buttons/Button";
-import CustomLoading from "@/components/UI/loader/CustomLoading";
+import Button from "@/components/ui/buttons/Button";
+import CustomLoading from "@/components/ui/loader/CustomLoading";
 
 export default function PaymentStep4({ formData, handlePrevStep }) {
   const { totalPrice: checkoutTotal } = useSelector((state) => state.cart);

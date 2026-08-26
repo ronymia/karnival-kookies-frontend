@@ -1,4 +1,4 @@
-import Heading from "@/components/UI/Heading/Heading";
+import Heading from "@/components/ui/heading/Heading";
 import { useSelector } from "react-redux";
 
 const CheckoutStep2 = ({ handleNextStep, handlePrevStep }) => {

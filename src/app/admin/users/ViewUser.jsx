@@ -1,5 +1,5 @@
-import ViewField from "@/components/UI/inputFields/ViewField";
-import { usePopupContext } from "@/Context/ProjectProvider";
+import ViewField from "@/components/ui/inputfields/ViewField";
+import { usePopupContext } from "@/hooks/usePopupContext";
 import moment from "moment";
 
 function ViewUser() {

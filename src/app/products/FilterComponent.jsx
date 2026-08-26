@@ -1,5 +1,5 @@
 "use client";
-import Button from "@/components/UI/buttons/Button";
+import Button from "@/components/ui/buttons/Button";
 import { useGetPriceBoundsQuery } from "@/redux/apis/productApis";
 import { useState } from "react";
 

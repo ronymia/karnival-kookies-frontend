@@ -1,7 +1,7 @@
-import ViewField from "@/components/UI/inputFields/ViewField";
-import { usePopupContext } from "@/Context/ProjectProvider";
-import { formatRole } from "@/Utils/formatRole";
-import { getDate, getTime } from "@/Utils/getDate";
+import ViewField from "@/components/ui/inputfields/ViewField";
+import { usePopupContext } from "@/hooks/usePopupContext";
+import { formatRole } from "@/utils/formatRole";
+import { getDate, getTime } from "@/utils/getDate";
 
 const AdditionalInfoComponent = () => {
   const { popupOption } = usePopupContext();

@@ -1,6 +1,6 @@
 "use client";
 
-import { getFullImageLink } from "@/Utils/getFullImageLink";
+import { getFullImageLink } from "@/utils/getFullImageLink";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { BsTrash } from "react-icons/bs";

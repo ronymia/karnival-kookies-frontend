@@ -1,18 +1,18 @@
 "use client";
-import Button from "@/components/UI/buttons/Button";
-import Heading from "@/components/UI/Heading/Heading";
-import CustomLoading from "@/components/UI/loader/CustomLoading";
-import Pagination from "@/components/UI/table/Pagination";
-import Table from "@/components/UI/table/Table";
-import { usePopupContext } from "@/Context/ProjectProvider";
+import Button from "@/components/ui/buttons/Button";
+import Heading from "@/components/ui/heading/Heading";
+import CustomLoading from "@/components/ui/loader/CustomLoading";
+import Pagination from "@/components/ui/table/Pagination";
+import Table from "@/components/ui/table/Table";
+import { usePopupContext } from "@/hooks/usePopupContext";
 import { deleteData } from "@/helpers/DeleteData";
-import withPermission from "@/Hoc/WithPermission";
+import withPermission from "@/hoc/WithPermission";
 import {
   useDeleteProductsMutation,
   useGetAllProductsQuery,
 } from "@/redux/apis/productApis";
-import SplitDescription from "@/Shared/SplitDescription";
-import { getFullImageLink } from "@/Utils/getFullImageLink";
+import SplitDescription from "@/shared/SplitDescription";
+import { getFullImageLink } from "@/utils/getFullImageLink";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { AiFillEye } from "react-icons/ai";

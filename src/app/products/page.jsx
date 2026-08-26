@@ -2,15 +2,15 @@
 import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import FilterComponent from "./FilterComponent";
-import ProductCard from "@/components/UI/ProductCard";
+import ProductCard from "@/components/ui/ProductCard";
 import { useGetAllCategoriesQuery } from "@/redux/apis/categoryApis";
 import { useGetAllProductsQuery } from "@/redux/apis/productApis";
 import { RiSoundModuleFill } from "react-icons/ri";
-import Pagination from "@/components/UI/table/Pagination";
+import Pagination from "@/components/ui/table/Pagination";
 import FixedBgComponent from "@/components/layouts/FixedBgComponent";
-import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
-import NavigateComponent from "@/components/UI/navigate/navigate";
-import CustomLoading from "@/components/UI/loader/CustomLoading";
+import TableComponentHeading from "@/components/ui/table/TableComponentHeading";
+import NavigateComponent from "@/components/ui/navigate/navigate";
+import CustomLoading from "@/components/ui/loader/CustomLoading";
 
 export default function ProductPage() {
   // FILTER SIDEBAR

@@ -8,7 +8,7 @@ import { FiAlignLeft, FiX } from "react-icons/fi";
 import { MdChevronRight } from "react-icons/md";
 import { useSelector } from "react-redux";
 import Logout from "@/components/layouts/Logout";
-import useClickOutside from "@/Hooks/useClickOutside";
+import useClickOutside from "@/hooks/useClickOutside";
 import Image from "next/image";
 
 export default function Navbar() {

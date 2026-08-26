@@ -1,17 +1,17 @@
 "use client";
-import Button from "@/components/UI/buttons/Button";
-import Heading from "@/components/UI/Heading/Heading";
-import CustomLoading from "@/components/UI/loader/CustomLoading";
-import CustomPopup from "@/components/UI/modal/CustomPopup";
-import Pagination from "@/components/UI/table/Pagination";
-import Table from "@/components/UI/table/Table";
-import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
+import Button from "@/components/ui/buttons/Button";
+import Heading from "@/components/ui/heading/Heading";
+import CustomLoading from "@/components/ui/loader/CustomLoading";
+import CustomPopup from "@/components/ui/modal/CustomPopup";
+import Pagination from "@/components/ui/table/Pagination";
+import Table from "@/components/ui/table/Table";
+import TableComponentHeading from "@/components/ui/table/TableComponentHeading";
 import {
   useDeletePackageMutation,
   useGetAllPackagesQuery,
 } from "@/redux/apis/packageApis";
-import SplitDescription from "@/Shared/SplitDescription";
-import { getFullImageLink } from "@/Utils/getFullImageLink";
+import SplitDescription from "@/shared/SplitDescription";
+import { getFullImageLink } from "@/utils/getFullImageLink";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -19,7 +19,7 @@ import { AiFillEye } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 import PackageForm from "./PackageForm";
-import withPermission from "@/Hoc/WithPermission";
+import withPermission from "@/hoc/WithPermission";
 import { deleteData } from "@/helpers/DeleteData";
 import PackageView from "./PackageView";
 

@@ -6,13 +6,13 @@ import CartItemsCard from "./CartItemsCard";
 import { useSelector } from "react-redux";
 import { useGetCartByEmailQuery } from "@/redux/apis/cartApis";
 import { errorHandler } from "@/helpers/errorHandler";
-import CustomToaster from "@/components/UI/toaster/CustomToaster";
-import CustomLoading from "@/components/UI/loader/CustomLoading";
+import CustomToaster from "@/components/ui/toaster/CustomToaster";
+import CustomLoading from "@/components/ui/loader/CustomLoading";
 import FixedBgComponent from "@/components/layouts/FixedBgComponent";
-import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
-import NavigateComponent from "@/components/UI/navigate/navigate";
-import Button from "@/components/UI/buttons/Button";
-import withAuth from "@/Hoc/WithAuth";
+import TableComponentHeading from "@/components/ui/table/TableComponentHeading";
+import NavigateComponent from "@/components/ui/navigate/navigate";
+import Button from "@/components/ui/buttons/Button";
+import withAuth from "@/hoc/WithAuth";
 
 function CartPage() {
   const { user } = useSelector((state) => state.auth);

@@ -1,6 +1,6 @@
 "use client";
-import Heading from "@/components/UI/Heading/Heading";
-import { formatRole } from "@/Utils/formatRole";
+import Heading from "@/components/ui/heading/Heading";
+import { formatRole } from "@/utils/formatRole";
 import { useSelector } from "react-redux";
 
 export default function Page() {

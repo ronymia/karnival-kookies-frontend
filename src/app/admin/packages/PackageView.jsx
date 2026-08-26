@@ -1,7 +1,7 @@
-import ViewField from "@/components/UI/inputFields/ViewField";
-import SplitDescription from "@/Shared/SplitDescription";
-import { getDate } from "@/Utils/getDate";
-import { htmlToPlainText } from "@/Utils/htmlToPlainText";
+import ViewField from "@/components/ui/inputfields/ViewField";
+import SplitDescription from "@/shared/SplitDescription";
+import { getDate } from "@/utils/getDate";
+import { htmlToPlainText } from "@/utils/htmlToPlainText";
 
 export default function PackageView({ data, handleClosePopup }) {
   return (

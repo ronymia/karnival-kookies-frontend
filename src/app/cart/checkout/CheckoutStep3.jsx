@@ -1,5 +1,5 @@
-import Heading from "@/components/UI/Heading/Heading";
-import ViewField from "@/components/UI/inputFields/ViewField";
+import Heading from "@/components/ui/heading/Heading";
+import ViewField from "@/components/ui/inputfields/ViewField";
 import { useSelector } from "react-redux";
 
 const CheckoutStep3 = ({ formData, handleNextStep, handlePrevStep }) => {

@@ -1,39 +1,60 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300..700;1,300..700&display=swap");
 
-/* REACT QUILL */
-@import "quill/dist/quill.core.css";
+/* QUILL STYLES */
+@import "quill/dist/quill.snow.css";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: defaultTheme --default, dark;
+}
+
+[data-theme="defaultTheme"],
+:root {
+  --color-primary: #d2982c;
+  --color-primary-content: #F0E5C1;
+  --color-secondary: #2D2627;
+  --color-secondary-content: #ffffff;
+  --color-accent: #e5e7eb;
+  --color-neutral: #f9fafb;
+  --color-base-100: #0B0A0B;
+  --color-base-200: #6F6E6F;
+  --color-base-300: #ffffff;
+  --color-info: #d1d5db;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-error: #ef4444;
+  --color-heading-main: #ffffff;
+  --color-heading-brand: #d2982c;
+  --color-btn-secondary: #2D2627;
+  color: var(--color-base-300);
+  background-color: var(--color-base-100);
+}
+
+@theme {
+  --color-primary: #d2982c;
+  --color-primary-content: #F0E5C1;
+  --color-secondary: #2D2627;
+  --color-secondary-content: #ffffff;
+  --color-accent: #e5e7eb;
+  --color-neutral: #f9fafb;
+  --color-base-100: #0B0A0B;
+  --color-base-200: #6F6E6F;
+  --color-base-300: #ffffff;
+  --color-info: #d1d5db;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-error: #ef4444;
+  --color-heading-main: #ffffff;
+  --color-heading-brand: #d2982c;
+  --color-btn-secondary: #2D2627;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
 
 :root {
   --background: #ffffff;
   --foreground: #000000;
 }
-
-/* nav::after {
-  content: "";
-  display: block;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: calc(2 * var(--R));
-  background: red;
-  mask: radial-gradient(
-        var(--R) at left 50% bottom calc(-1 * var(--m) * var(--s)),
-        var(--_g)
-      )
-      calc(50% - 2 * var(--s)) calc(50% - var(--s) / 2 - var(--b) / 2) /
-      calc(4 * var(--s)) calc(var(--s) + var(--b)) repeat-x,
-    radial-gradient(
-        var(--R) at left 50% top calc(-1 * var(--m) * var(--s)),
-        var(--_g)
-      )
-      50% calc(50% + var(--s) / 2 + var(--b) / 2) / calc(4 * var(--s))
-      calc(var(--s) + var(--b)) repeat-x;
-} */
 
 .wavy-line-nav {
   --s: 10px; /* size of the wave */

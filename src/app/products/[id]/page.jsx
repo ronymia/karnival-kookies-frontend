@@ -1,19 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import axios from "axios";
 import Reviews from "./Reviews";
 import Image from "next/image";
 import ImageSlider from "@/components/ImageSlider";
-import CustomLoading from "@/components/UI/loader/CustomLoading";
+import CustomLoading from "@/components/ui/loader/CustomLoading";
 import FixedBgComponent from "@/components/layouts/FixedBgComponent";
-import TableComponentHeading from "@/components/UI/table/TableComponentHeading";
-import NavigateComponent from "@/components/UI/navigate/navigate";
-import ProductCard from "@/components/UI/ProductCard";
+import TableComponentHeading from "@/components/ui/table/TableComponentHeading";
+import NavigateComponent from "@/components/ui/navigate/navigate";
+import ProductCard from "@/components/ui/ProductCard";
 import ButtonWrapper from "./ButtonWrapper";
-import { htmlToPlainText } from "@/Utils/htmlToPlainText";
+import { htmlToPlainText } from "@/utils/htmlToPlainText";
 
-export default function SingleProductPage({ params }) {
+export default function SingleProductPage() {
+  const params = useParams();
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);

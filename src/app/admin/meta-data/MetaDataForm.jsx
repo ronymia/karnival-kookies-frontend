@@ -1,19 +1,19 @@
 "use client";
-import { usePopupContext } from "@/Context/ProjectProvider";
+import { usePopupContext } from "@/hooks/usePopupContext";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { validationErrorHandler } from "@/Utils/validationErrorHandler";
+import { validationErrorHandler } from "@/utils/validationErrorHandler";
 import {
   useCreateMetaDataMutation,
   useUpdateMetaDataMutation,
 } from "@/redux/apis/metaDataApis";
-import CustomToaster from "@/components/UI/toaster/CustomToaster";
+import CustomToaster from "@/components/ui/toaster/CustomToaster";
 import { errorHandler } from "@/helpers/errorHandler";
-import CustomLoading from "@/components/UI/loader/CustomLoading";
+import CustomLoading from "@/components/ui/loader/CustomLoading";
 import FormActions from "@/components/layouts/forms/FormActions";
-import InputField from "@/components/UI/inputFields/InputField";
-import TextareaField from "@/components/UI/inputFields/TextareaField";
-import Select from "@/components/UI/inputFields/Select";
+import InputField from "@/components/ui/inputfields/InputField";
+import TextareaField from "@/components/ui/inputfields/TextareaField";
+import Select from "@/components/ui/inputfields/Select";
 
 const META_KEY = [
   {

@@ -1,8 +1,8 @@
 "use client";
 
-import CustomLoading from "@/components/UI/loader/CustomLoading";
+import CustomLoading from "@/components/ui/loader/CustomLoading";
 import { useGetCustomerDashboardDataQuery } from "@/redux/apis/dashboardApi";
-import DashboardCard from "@/Shared/DashboardCard";
+import DashboardCard from "@/shared/DashboardCard";
 import React from "react";
 import { useSelector } from "react-redux";
 

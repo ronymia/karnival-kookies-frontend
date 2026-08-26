@@ -1,10 +1,10 @@
-import Button from "@/components/UI/buttons/Button";
-import ViewField from "@/components/UI/inputFields/ViewField";
-import { usePopupContext } from "@/Context/ProjectProvider";
-import SplitDescription from "@/Shared/SplitDescription";
-import { formatRole } from "@/Utils/formatRole";
-import { getDate } from "@/Utils/getDate";
-import { htmlToPlainText } from "@/Utils/htmlToPlainText";
+import Button from "@/components/ui/buttons/Button";
+import ViewField from "@/components/ui/inputfields/ViewField";
+import { usePopupContext } from "@/hooks/usePopupContext";
+import SplitDescription from "@/shared/SplitDescription";
+import { formatRole } from "@/utils/formatRole";
+import { getDate } from "@/utils/getDate";
+import { htmlToPlainText } from "@/utils/htmlToPlainText";
 
 function ViewProduct() {
   const { popupOption } = usePopupContext();

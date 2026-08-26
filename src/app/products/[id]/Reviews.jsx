@@ -1,6 +1,6 @@
 "use client";
-import Button from "@/components/UI/buttons/Button";
-import { usePopupContext } from "@/Context/ProjectProvider";
+import Button from "@/components/ui/buttons/Button";
+import { usePopupContext } from "@/hooks/usePopupContext";
 import { useGetReviewsQuery } from "@/redux/apis/reviewApi";
 import "@smastrom/react-rating/style.css";
 import { useParams } from "next/navigation";

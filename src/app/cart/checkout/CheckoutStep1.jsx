@@ -1,8 +1,8 @@
-import Heading from "@/components/UI/Heading/Heading";
-import InputField from "@/components/UI/inputFields/InputField";
-import NumberField from "@/components/UI/inputFields/NumberField";
-import TextareaField from "@/components/UI/inputFields/TextareaField";
-import { formatRole } from "@/Utils/formatRole";
+import Heading from "@/components/ui/heading/Heading";
+import InputField from "@/components/ui/inputfields/InputField";
+import NumberField from "@/components/ui/inputfields/NumberField";
+import TextareaField from "@/components/ui/inputfields/TextareaField";
+import { formatRole } from "@/utils/formatRole";
 
 function CheckoutStep1({
   errors,

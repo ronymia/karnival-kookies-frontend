@@ -1,5 +1,5 @@
-import { usePopupContext } from "@/Context/ProjectProvider";
-import { getFullImageLink } from "@/Utils/getFullImageLink";
+import { usePopupContext } from "@/hooks/usePopupContext";
+import { getFullImageLink } from "@/utils/getFullImageLink";
 
 const ProductComponent = () => {
   const { popupOption } = usePopupContext();

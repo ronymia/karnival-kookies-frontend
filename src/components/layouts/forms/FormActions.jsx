@@ -1,4 +1,4 @@
-import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
+import ButtonSpinner from "@/components/ui/buttons/ButtonSpinner";
 
 export default function FormActions({
   isLoading,

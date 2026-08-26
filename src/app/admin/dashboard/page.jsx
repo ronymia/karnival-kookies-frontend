@@ -1,10 +1,10 @@
 "use client";
-import { usePopupContext } from "@/Context/ProjectProvider";
-import DashboardCard from "@/Shared/DashboardCard";
+import { usePopupContext } from "@/hooks/usePopupContext";
+import DashboardCard from "@/shared/DashboardCard";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
-import CustomLoading from "@/components/UI/loader/CustomLoading";
-import Button from "@/components/UI/buttons/Button";
+import CustomLoading from "@/components/ui/loader/CustomLoading";
+import Button from "@/components/ui/buttons/Button";
 import { useGetDashboardDataQuery } from "@/redux/apis/dashboardApi";
 
 function Page() {

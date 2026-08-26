@@ -1,12 +1,12 @@
 "use client";
-import { validationErrorHandler } from "@/Utils/validationErrorHandler";
+import { validationErrorHandler } from "@/utils/validationErrorHandler";
 import { useEffect, useState } from "react";
 import CheckoutStep2 from "./CheckoutStep2";
 import CheckoutStep3 from "./CheckoutStep3";
 import PaymentStep4 from "./PaymentStep4";
 import useCheckoutReducer from "./checkoutReducer";
 import { useSelector } from "react-redux";
-import CustomMultiStepper from "@/Shared/steppers/CustomMultiStepper";
+import CustomMultiStepper from "@/shared/steppers/CustomMultiStepper";
 import CheckoutStep1 from "./CheckoutStep1";
 
 function CheckOutPage() {

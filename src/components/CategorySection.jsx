@@ -3,11 +3,11 @@ import { errorHandler } from "@/helpers/errorHandler";
 import { useGetAllProductsQuery } from "@/redux/apis/productApis";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import CustomLoading from "./UI/loader/CustomLoading";
-import Heading from "./UI/Heading/Heading";
-import Button from "./UI/buttons/Button";
-import Tabs from "./UI/tab/Tabs";
-import ProductCardOnCategory from "./UI/ProductCardOnCategory";
+import CustomLoading from "./ui/loader/CustomLoading";
+import Heading from "./ui/heading/Heading";
+import Button from "./ui/buttons/Button";
+import Tabs from "./ui/tab/Tabs";
+import ProductCardOnCategory from "./ui/ProductCardOnCategory";
 
 export default function CategorySection({ tabs }) {
   const router = useRouter();

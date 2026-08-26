@@ -77,7 +77,7 @@ const Slider = ({
             initial="initial"
             animate="animate"
             exit="exit"
-            className="text-center text-base-300 flex flex-col items-center justify-center gap-5 w-full h-full bg-base-100 bg-opacity-30"
+            className="text-center text-base-300 flex flex-col items-center justify-center gap-5 w-full h-full bg-base-100/30"
           >
             <div>
               <h2 className="text-4xl lg:text-6xl ">
@@ -97,6 +97,7 @@ const Slider = ({
       {prevNextBtn && (
         <>
           <button
+            type="button"
             onClick={prev}
             className="absolute top-1/2 left-2 rounded-full shadow text-4xl hover:text-primary text-base-300 transition-all active:scale-90"
           >
@@ -104,6 +105,7 @@ const Slider = ({
           </button>
 
           <button
+            type="button"
             onClick={next}
             className="absolute top-1/2 right-2 rounded-full shadow text-4xl hover:text-primary text-base-300 transition-all active:scale-90"
           >

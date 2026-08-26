@@ -1,4 +1,4 @@
-import CustomConfirmation from "@/components/UI/modal/CustomConfirmation";
+import CustomConfirmation from "@/components/ui/modal/CustomConfirmation";
 import { errorHandler } from "./errorHandler";
 
 export const deleteData = ({ handler, data }) => {

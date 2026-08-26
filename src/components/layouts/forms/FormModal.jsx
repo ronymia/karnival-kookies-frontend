@@ -5,7 +5,7 @@ import CategoryForm from "@/app/admin/categories/CategoryForm";
 import CouponForm from "@/app/admin/coupon-codes/CouponForm";
 import PackageForm from "@/app/admin/packages/PackageForm";
 import PackageView from "@/app/admin/packages/PackageView";
-import Button from "@/components/UI/buttons/Button";
+import Button from "@/components/ui/buttons/Button";
 import { useState } from "react";
 import { FiX } from "react-icons/fi";
 import Popup from "reactjs-popup";

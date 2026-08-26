@@ -8,14 +8,14 @@ import {
   useUploadPackageImagesMutation,
 } from "@/redux/apis/packageApis";
 import toast from "react-hot-toast";
-import RadioButton from "@/components/UI/inputFields/RadioButton";
-import CustomToaster from "@/components/UI/toaster/CustomToaster";
+import RadioButton from "@/components/ui/inputfields/RadioButton";
+import CustomToaster from "@/components/ui/toaster/CustomToaster";
 import { errorHandler } from "@/helpers/errorHandler";
-import ButtonSpinner from "@/components/UI/buttons/ButtonSpinner";
-import InputField from "@/components/UI/inputFields/InputField";
-import NumberField from "@/components/UI/inputFields/NumberField";
-import FileUploader from "@/components/UI/inputFields/FileUploader";
-import QuillEditor from "@/components/UI/QuillEditor";
+import ButtonSpinner from "@/components/ui/buttons/ButtonSpinner";
+import InputField from "@/components/ui/inputfields/InputField";
+import NumberField from "@/components/ui/inputfields/NumberField";
+import FileUploader from "@/components/ui/inputfields/FileUploader";
+import QuillEditor from "@/components/ui/QuillEditor";
 import { BiSolidCheckCircle } from "react-icons/bi";
 
 export default function PackageForm({ data, handleClosePopup }) {

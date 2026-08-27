@@ -1,6 +1,6 @@
 import React from "react";
 import { FaTwitter, FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
-import ShowSocialCard from "./ShowSocialCard";
+import ShowSocialCard from "../shared/ShowSocialCard";
 import { FiPhoneCall } from "react-icons/fi";
 import NewsletterSection from "@/components/layouts/Newsletter";
 import Heading from "@/components/ui/heading/Heading";

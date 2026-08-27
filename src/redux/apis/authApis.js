@@ -12,11 +12,6 @@ export const authApis = baseApi.injectEndpoints({
         url: `${URL}/user/info`,
       }),
     }),
-    getUserByToken: builder.query({
-      query: () => ({
-        url: `${URL}/user-by-token`,
-      }),
-    }),
 
     // REGISTER
     registerUser: builder.mutation({
@@ -103,7 +98,6 @@ export const {
   useLoginUserMutation,
   useLogOutUserMutation,
   useVerifyUserEmailMutation,
-  useLazyGetUserByTokenQuery,
   useResetPasswordMutation,
   useSendVerificationCodeMutation,
   useVerifyEmailCodeMutation,

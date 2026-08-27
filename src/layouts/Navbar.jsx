@@ -202,6 +202,7 @@ export default function Navbar() {
           alt="logo"
           width={100}
           height={100}
+          priority
         />
         {/* LEFT SIDE */}
         <div
@@ -218,6 +219,7 @@ export default function Navbar() {
             alt="logo"
             width={100}
             height={100}
+            priority
           />
           {/* BLANK SPACE FOR CENTER LOGO */}
           <div className={`xl:hidden`}></div>

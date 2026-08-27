@@ -1,25 +1,23 @@
-import CustomLoading from "@/components/ui/loader/CustomLoading";
-import { useAuthContext } from "@/hooks/usePopupContext";
+"use client";
+
+import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const PrivateRoute = ({ children }) => {
-  const { isAuthenticated } = useSelector((state) => state.auth);
-  const { isLoading } = useAuthContext();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
 
-  // Handle loading state
-  if (isLoading) {
-    return <CustomLoading />;
-  }
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/login");
+    }
+  }, [isAuthenticated, router]);
 
-  // If not authenticated, redirect to login
   if (!isAuthenticated) {
-    router.push("/login");
     return null;
   }
 
-  // Render the protected component
   return children;
 };
 

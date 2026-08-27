@@ -1,13 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    dangerouslyAllowLocalIP: true,
     remotePatterns: [
-      {
-        protocol: "http",
-        hostname: "localhost",
-        port: "5000",
-        pathname: "/Products/**",
-      },
       {
         protocol: "http",
         hostname: "localhost",
@@ -22,6 +17,11 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "backend.karnivalkookies.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "placehold.co",
         pathname: "/**",
       },
     ],

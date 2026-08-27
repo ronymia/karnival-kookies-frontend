@@ -1,26 +1,24 @@
-import { useSelector } from "react-redux";
-import CustomLoading from "@/components/ui/loader/CustomLoading";
+"use client";
+
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function withAuth(Component) {
   const WrappedComponent = (props) => {
-    const { user } = useSelector((state) => state.auth);
-    const { isLoading } = useAuth();
+    const { isAuthenticated } = useAuth();
     const router = useRouter();
 
-    // Handle loading state
-    if (isLoading) {
-      return <CustomLoading />;
-    }
+    useEffect(() => {
+      if (!isAuthenticated) {
+        router.push("/login");
+      }
+    }, [isAuthenticated, router]);
 
-    // If not authenticated, redirect to login
-    if (!user) {
-      router.push("/login");
+    if (!isAuthenticated) {
       return null;
     }
 
-    // Render the protected component
     return <Component {...props} />;
   };
 

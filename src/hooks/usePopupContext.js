@@ -2,12 +2,11 @@ import { useContext } from "react";
 import { ProjectContext } from "@/contexts/ProjectContext";
 
 export const usePopupContext = () => {
-  const { popupOption, setPopupOption } = useContext(ProjectContext);
-  return { popupOption, setPopupOption };
-};
-
-export const useAuthContext = () => {
-  return null;
+  const context = useContext(ProjectContext);
+  if (!context) {
+    throw new Error("usePopupContext must be used within a ProjectProvider");
+  }
+  return context;
 };
 
 export default usePopupContext;

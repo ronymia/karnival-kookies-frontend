@@ -2,11 +2,9 @@ import ProjectProvider from "@/providers/ProjectProvider";
 import { Cormorant } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
-import Footer from "@/shared/Footer";
+import Footer from "@/layouts/Footer";
 import ReduxProvider from "@/providers/ReduxProvider";
-import LiveChat from "@/components/layouts/LiveChat";
-import AuthProvider from "@/providers/AuthProvider";
-import Navbar from "@/components/layouts/Navbar";
+import Navbar from "@/layouts/Navbar";
 import AppErrorBoundary from "@/components/AppErrorBoundary";
 
 const cormorant = Cormorant({ subsets: ["latin"] });
@@ -31,24 +29,19 @@ export default function RootLayout({ children }) {
       >
         <AppErrorBoundary>
           <ReduxProvider>
-            <AuthProvider>
-              <ProjectProvider>
-                {/* <=================== NAVBAR ===================> */}
-                <Navbar />
+            <ProjectProvider>
+              {/* <=================== NAVBAR ===================> */}
+              <Navbar />
 
-                {/* <=================== MAIN CONTENT ==================> */}
-                <main className="">{children}</main>
+              {/* <=================== MAIN CONTENT ==================> */}
+              <main className="">{children}</main>
 
-                {/* <=================== FOOTER ===================> */}
-                <Footer />
+              {/* <=================== FOOTER ===================> */}
+              <Footer />
 
-                {/* <=================== LIVE CHAT ===================> */}
-                <LiveChat />
-
-                {/* <=================== NOTIFICATION TOASTER ===================> */}
-                <Toaster position="top-right" />
-              </ProjectProvider>
-            </AuthProvider>
+              {/* <=================== NOTIFICATION TOASTER ===================> */}
+              <Toaster position="top-right" />
+            </ProjectProvider>
           </ReduxProvider>
         </AppErrorBoundary>
       </body>

@@ -12,7 +12,7 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 6000, // Optional: Set request timeout
+  timeout: 1000 * 30, // Request timeout (accommodates cold start)
 });
 
 // Fetch Data Function

@@ -2,60 +2,70 @@
 
 import { errorHandler } from "@/helpers/errorHandler";
 import { useLogOutUserMutation } from "@/redux/apis/authApis";
+import { removeFromLocalStorage } from "@/helpers/local-storage";
+import { localDBKey } from "@/constants/localDBKey";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
 export default function Logout() {
   const [userLogOut, logOutResult] = useLogOutUserMutation();
   const router = useRouter();
-  const handleLogout = async () => {
-    Swal.fire({
-      title: "Are you sure?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Logout!",
-      customClass: {
-        confirmButton: "bg-primary",
-        cancelButton: "bg-error",
-      },
-    })
-      .then(async (result) => {
-        try {
-          if (result.isConfirmed) {
-            // CALL LOGOUT API
-            const res = await userLogOut().unwrap();
-            if (res?.success) {
-              // NAVIGATE TO LOGIN PAGE
-              router.push("/login");
-              // Clear storage
-              if (typeof window !== "undefined") {
-                localStorage.clear();
-              }
 
-              // SUCCESS MESSAGE
-              Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Logout successful",
-                showConfirmButton: false,
-                timer: 1500,
-              });
-            }
+  const handleLogout = async () => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You will be logged out of your session.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Logout",
+        cancelButtonText: "Cancel",
+        buttonsStyling: false,
+        allowOutsideClick: () => !Swal.isLoading(),
+        allowEscapeKey: () => !Swal.isLoading(),
+        showLoaderOnConfirm: true,
+        customClass: {
+          popup:
+            "bg-base-100 text-base-300 border border-primary/20 rounded-2xl p-6 shadow-2xl",
+          title: "text-base-300 font-bold text-xl",
+          htmlContainer: "text-base-200 text-sm mt-2",
+          confirmButton:
+            "px-6 py-2.5 mx-2 rounded-md bg-red-500 text-white font-bold hover:brightness-110 transition-all cursor-pointer",
+          cancelButton:
+            "px-6 py-2.5 mx-2 rounded-md border border-base-200 text-base-300 font-semibold bg-transparent cursor-pointer text-black",
+        },
+        preConfirm: async () => {
+          try {
+            const res = await userLogOut().unwrap();
+            return res;
+          } catch (err) {
+            Swal.showValidationMessage(
+              err?.data?.message || "Logout failed. Please try again.",
+            );
+            return false;
           }
-        } catch (err) {
-          errorHandler({ err });
-        }
-      })
-      .catch((err) => {
-        errorHandler({ err });
+        },
       });
+
+      if (result.isConfirmed && result.value?.success) {
+        // Clear token from storage
+        removeFromLocalStorage(localDBKey.token);
+        removeFromLocalStorage(localDBKey.authKey);
+
+        // NAVIGATE TO LOGIN PAGE
+        router.push("/login");
+      }
+    } catch (err) {
+      errorHandler({ err });
+    }
   };
+
   return (
     <button
       type="button"
       disabled={logOutResult.isLoading}
       onClick={handleLogout}
-      className="w-full px-4 py-2 text-sm font-medium bg-primary text-heading-main hover:text-gray-100 hover:bg-gray-700 rounded-md flex items-center justify-start"
+      className="w-full px-4 py-2 text-sm font-medium bg-primary text-heading-main hover:text-gray-100 hover:bg-black rounded-md flex items-center justify-start cursor-pointer"
     >
       Logout
     </button>

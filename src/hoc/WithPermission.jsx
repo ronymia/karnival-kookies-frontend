@@ -1,20 +1,21 @@
-import { useSelector } from "react-redux";
-import CustomLoading from "@/components/ui/loader/CustomLoading";
+"use client";
+
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const withPermission = (Component, allowedRoles) => {
   const WrappedComponent = (props) => {
-    const { user } = useSelector((state) => state.auth);
-    const { isLoading } = useAuth();
+    const { user } = useAuth();
     const router = useRouter();
 
-    if (isLoading) {
-      return <CustomLoading />;
-    }
+    useEffect(() => {
+      if (!user || !allowedRoles.includes(user.role)) {
+        router.push("/login");
+      }
+    }, [user, router]);
 
     if (!user || !allowedRoles.includes(user.role)) {
-      router.push("/login"); // Server-side redirect for App Router
       return null;
     }
 

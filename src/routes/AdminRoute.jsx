@@ -1,34 +1,36 @@
-import { useAuthContext } from "@/hooks/usePopupContext";
-import CustomLoading from "@/shared/CustomLoading";
+"use client";
+
+import { useAuth } from "@/hooks/useAuth";
 import CustomToaster from "@/shared/CustomToaster";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
 
 const AdminRoute = ({ children }) => {
-  // USER FROM REDUX STORE
-  const { user } = useSelector((state) => state.auth);
-  const { isLoading } = useAuthContext(); // Use your context or state for loading
+  const { user, isAdmin } = useAuth();
   const router = useRouter();
 
-  // Handle loading state
-  if (isLoading) {
-    return <CustomLoading />; // Show a loading spinner while resolving authentication
+  useEffect(() => {
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+    if (!isAdmin) {
+      toast.custom((t) => (
+        <CustomToaster
+          t={t}
+          type="error"
+          text="Only admin can access this route"
+        />
+      ));
+      router.push("/");
+    }
+  }, [user, isAdmin, router]);
+
+  if (!user || !isAdmin) {
+    return null;
   }
 
-  if (!user) {
-    return router.push("/login");
-  }
-  if (user?.role !== "admin") {
-    toast.custom((t) => (
-      <CustomToaster
-        t={t}
-        type={"error"}
-        text={`Only admin can access this route`}
-      />
-    ));
-    return router.push("/");
-  }
   return children;
 };
 

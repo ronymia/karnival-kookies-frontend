@@ -18,6 +18,8 @@ const initialState = {
 const clearTokensFromStorage = () => {
   removeFromLocalStorage(localDBKey.token);
   removeFromLocalStorage(localDBKey.authKey);
+  removeFromLocalStorage(localDBKey.user);
+  removeFromLocalStorage(localDBKey.shippingInfo);
 };
 
 const saveTokenToStorage = (token) => {
@@ -53,6 +55,9 @@ const authSlice = createSlice({
       if (state.token) {
         saveTokenToStorage(state.token);
       }
+      if (user) {
+        setToLocalStorage(localDBKey.user, user);
+      }
     },
     setAdmin: (state, action) => {
       state.isAdmin = action.payload?.user?.role === "admin";
@@ -64,15 +69,19 @@ const authSlice = createSlice({
       authApis.endpoints.loginUser.matchFulfilled,
       (state, action) => {
         const loggedUser = action.payload?.data;
-        state.user = loggedUser?.user || null;
+        const userObj = loggedUser?.user || loggedUser || null;
+        state.user = userObj;
         state.isAdmin =
-          loggedUser?.role === "admin" || loggedUser?.user?.role === "admin";
+          loggedUser?.role === "admin" || userObj?.role === "admin";
         state.token = loggedUser?.accessToken || null;
         state.isAuthenticated = true;
         state.isAuthChecked = true;
 
         if (loggedUser?.accessToken) {
           saveTokenToStorage(loggedUser.accessToken);
+        }
+        if (userObj) {
+          setToLocalStorage(localDBKey.user, userObj);
         }
       }
     );
@@ -90,6 +99,9 @@ const authSlice = createSlice({
 
         if (verifiedUser?.accessToken) {
           saveTokenToStorage(verifiedUser.accessToken);
+        }
+        if (verifiedUser) {
+          setToLocalStorage(localDBKey.user, verifiedUser);
         }
       }
     );

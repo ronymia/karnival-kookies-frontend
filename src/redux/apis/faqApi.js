@@ -13,8 +13,9 @@ export const apis = baseApi.injectEndpoints({
         method: "GET",
         params: arg,
       }),
-      providesTags: (result) => (result ? [TagTypes.faqs] : []),
+      providesTags: [TagTypes.faqs],
     }),
+
     // CREATE FAQ
     createFaq: builder.mutation({
       query: (payload) => ({
@@ -22,8 +23,9 @@ export const apis = baseApi.injectEndpoints({
         method: "POST",
         data: payload,
       }),
-      invalidatesTags: (result) => (result ? [TagTypes.faqs] : []),
+      invalidatesTags: [TagTypes.faqs],
     }),
+
     // UPDATE FAQ
     updateFaq: builder.mutation({
       query: (payload) => ({
@@ -31,7 +33,7 @@ export const apis = baseApi.injectEndpoints({
         method: "PUT",
         data: payload,
       }),
-      invalidatesTags: (result) => (result ? [TagTypes.faqs] : []),
+      invalidatesTags: [TagTypes.faqs],
     }),
 
     // DELETE FAQ
@@ -40,7 +42,7 @@ export const apis = baseApi.injectEndpoints({
         url: `${URL}/${Array.isArray(payload) ? payload.join(",") : payload}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result) => (result ? [TagTypes.faqs] : []),
+      invalidatesTags: [TagTypes.faqs],
     }),
   }),
 });

@@ -13,7 +13,7 @@ export const apis = baseApi.injectEndpoints({
         method: "GET",
         params: arg,
       }),
-      providesTags: (result) => (result ? [TagTypes.user] : []),
+      providesTags: [TagTypes.user],
     }),
     // CREATE USER
     createUser: builder.mutation({
@@ -22,7 +22,7 @@ export const apis = baseApi.injectEndpoints({
         method: "POST",
         data: payload,
       }),
-      invalidatesTags: () => [TagTypes?.user],
+      invalidatesTags: [TagTypes.user],
     }),
     // UPDATE USER
     updateUser: builder.mutation({
@@ -31,7 +31,7 @@ export const apis = baseApi.injectEndpoints({
         method: "PATCH",
         data: payload,
       }),
-      invalidatesTags: () => [TagTypes?.user],
+      invalidatesTags: [TagTypes.user],
     }),
   }),
 });

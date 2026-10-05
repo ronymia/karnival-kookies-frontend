@@ -13,17 +13,19 @@ export const apis = baseApi.injectEndpoints({
         method: "GET",
         params: arg,
       }),
-      providesTags: (result) => (result ? [TagTypes.reviews] : []),
+      providesTags: [TagTypes.reviews],
     }),
-    // GET ALL REVIEW
+
+    // GET REVIEW BY ID
     getReviewById: builder.query({
       query: (arg) => ({
         url: `${URL}/${arg?.id}`,
         method: "GET",
         params: arg,
       }),
-      providesTags: (result) => (result ? [TagTypes.reviews] : []),
+      providesTags: [TagTypes.reviews],
     }),
+
     // CREATE REVIEW
     createReview: builder.mutation({
       query: (payload) => ({
@@ -31,8 +33,9 @@ export const apis = baseApi.injectEndpoints({
         method: "POST",
         data: payload,
       }),
-      invalidatesTags: (result) => (result ? [TagTypes.reviews] : []),
+      invalidatesTags: [TagTypes.reviews],
     }),
+
     // UPDATE REVIEW
     updateReview: builder.mutation({
       query: (payload) => ({
@@ -40,7 +43,7 @@ export const apis = baseApi.injectEndpoints({
         method: "PATCH",
         data: payload,
       }),
-      invalidatesTags: (result) => (result ? [TagTypes.reviews] : []),
+      invalidatesTags: [TagTypes.reviews],
     }),
 
     // DELETE REVIEW
@@ -49,7 +52,7 @@ export const apis = baseApi.injectEndpoints({
         url: `${URL}/${Array.isArray(payload) ? payload.join(",") : payload}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result) => (result ? [TagTypes.reviews] : []),
+      invalidatesTags: [TagTypes.reviews],
     }),
   }),
 });

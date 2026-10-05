@@ -1,0 +1,130 @@
+[
+  {
+    "id": "ord_101",
+    "order_number": "ORD-98241",
+    "tracking_number": "TRK-KK-883921",
+    "status": "delivered",
+    "payment_method": "stripe",
+    "totalAmount": 54.00,
+    "shipping_info": {
+      "name": "Sarah Jenkins",
+      "email": "sarah.jenkins@example.com",
+      "phone": "+1 (555) 789-0123",
+      "streetAddress": "415 Mission Street, Floor 22",
+      "apartment": "Suite 2200",
+      "city": "San Francisco",
+      "state": "CA",
+      "postalCode": "94105",
+      "country": "United States",
+      "deliveryInstruction": "Please leave with concierge if unavailable."
+    },
+    "order_items": [
+      {
+        "id": "item_01",
+        "product_id": "prod_1",
+        "name": "Triple Belgian Chocolate Chip Kookie",
+        "price": 4.50,
+        "quantity": 6,
+        "image": "/images/cookie-1.jpg"
+      },
+      {
+        "id": "item_02",
+        "product_id": "prod_2",
+        "name": "Red Velvet Cream Cheese Molten Kookie",
+        "price": 4.50,
+        "quantity": 6,
+        "image": "/images/cookie-2.jpg"
+      }
+    ],
+    "created_at": "2025-02-14T09:30:00Z",
+    "updated_at": "2025-02-16T14:45:00Z"
+  },
+  {
+    "id": "ord_102",
+    "order_number": "ORD-98242",
+    "tracking_number": "TRK-KK-883922",
+    "status": "preparing",
+    "payment_method": "stripe",
+    "totalAmount": 42.50,
+    "shipping_info": {
+      "name": "David Miller",
+      "email": "david.miller@example.com",
+      "phone": "+1 (555) 345-6789",
+      "streetAddress": "742 Evergreen Terrace",
+      "apartment": "",
+      "city": "Springfield",
+      "state": "OR",
+      "postalCode": "97477",
+      "country": "United States",
+      "deliveryInstruction": "Ring doorbell upon drop-off."
+    },
+    "order_items": [
+      {
+        "id": "item_03",
+        "product_id": "prod_3",
+        "name": "Campfire Toasted S'mores Kookie",
+        "price": 5.00,
+        "quantity": 4,
+        "image": "/images/cookie-3.jpg"
+      },
+      {
+        "id": "item_04",
+        "product_id": "prod_4",
+        "name": "Salted Caramel Pecan Fudge Brownie",
+        "price": 4.50,
+        "quantity": 5,
+        "image": "/images/brownie-1.jpg"
+      }
+    ],
+    "created_at": "2025-02-15T11:20:00Z",
+    "updated_at": "2025-02-15T13:00:00Z"
+  },
+  {
+    "id": "ord_103",
+    "order_number": "ORD-98243",
+    "tracking_number": "TRK-KK-883923",
+    "status": "shipped",
+    "payment_method": "stripe",
+    "totalAmount": 85.00,
+    "shipping_info": {
+      "name": "Emily Watson",
+      "email": "emily.watson@example.com",
+      "phone": "+1 (555) 901-2345",
+      "streetAddress": "1200 Grand Avenue, Apt 4C",
+      "apartment": "4C",
+      "city": "Chicago",
+      "state": "IL",
+      "postalCode": "60601",
+      "country": "United States",
+      "deliveryInstruction": "Gate code #4920."
+    },
+    "order_items": [
+      {
+        "id": "item_05",
+        "product_id": "pkg_1",
+        "name": "Artisanal Baker's Dozen Crate",
+        "price": 48.00,
+        "quantity": 1,
+        "image": "/images/crate-1.jpg"
+      },
+      {
+        "id": "item_06",
+        "product_id": "prod_5",
+        "name": "Nutella Lava Center Kookie",
+        "price": 4.75,
+        "quantity": 4,
+        "image": "/images/cookie-4.jpg"
+      },
+      {
+        "id": "item_07",
+        "product_id": "prod_6",
+        "name": "Matcha White Chocolate Bliss",
+        "price": 4.50,
+        "quantity": 4,
+        "image": "/images/cookie-5.jpg"
+      }
+    ],
+    "created_at": "2025-02-15T14:10:00Z",
+    "updated_at": "2025-02-16T08:15:00Z"
+  }
+]

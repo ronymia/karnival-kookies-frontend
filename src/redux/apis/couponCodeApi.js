@@ -13,8 +13,9 @@ export const apis = baseApi.injectEndpoints({
         method: "GET",
         params: arg,
       }),
-      providesTags: (result) => (result ? [TagTypes.couponCode] : []),
+      providesTags: [TagTypes.couponCode],
     }),
+
     // CREATE COUPON CODE
     createCouponCode: builder.mutation({
       query: (payload) => ({
@@ -22,8 +23,9 @@ export const apis = baseApi.injectEndpoints({
         method: "POST",
         data: payload,
       }),
-      invalidatesTags: (result) => (result ? [TagTypes.couponCode] : []),
+      invalidatesTags: [TagTypes.couponCode],
     }),
+
     // UPDATE COUPON CODE
     updateCouponCode: builder.mutation({
       query: (payload) => ({
@@ -31,7 +33,7 @@ export const apis = baseApi.injectEndpoints({
         method: "PATCH",
         data: payload,
       }),
-      invalidatesTags: (result) => (result ? [TagTypes.couponCode] : []),
+      invalidatesTags: [TagTypes.couponCode],
     }),
 
     // DELETE COUPON CODE
@@ -40,7 +42,7 @@ export const apis = baseApi.injectEndpoints({
         url: `${URL}/${Array.isArray(payload) ? payload.join(",") : payload}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result) => (result ? [TagTypes.couponCode] : []),
+      invalidatesTags: [TagTypes.couponCode],
     }),
   }),
 });

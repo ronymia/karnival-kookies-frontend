@@ -10,6 +10,7 @@ export const useAuth = () => {
     token: auth?.token || null,
     isAuthenticated: !!auth?.user && !!auth?.isAuthenticated,
     isAdmin: auth?.isAdmin || auth?.user?.role === "admin",
+    isCustomer: auth?.user?.role === "customer",
     permissions: auth?.permissions || [],
     isLoading: false,
   };

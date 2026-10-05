@@ -13,17 +13,18 @@ export const categoryApis = baseApi.injectEndpoints({
         method: "GET",
         params: arg,
       }),
-      providesTags: (result) => (result ? [TagTypes.categories] : []),
-      keepUnusedDataFor: 0,
+      providesTags: [TagTypes.categories],
     }),
+
     // GET CATEGORY BY ID
     getCategoryById: builder.query({
       query: ({ id }) => ({
         url: `${URL}/${id}`,
         method: "GET",
       }),
-      keepUnusedDataFor: 0,
+      providesTags: [TagTypes.categories],
     }),
+
     // CREATE CATEGORY
     createCategory: builder.mutation({
       query: (payload) => ({
@@ -31,8 +32,9 @@ export const categoryApis = baseApi.injectEndpoints({
         method: "POST",
         data: payload,
       }),
-      invalidatesTags: () => [TagTypes.categories],
+      invalidatesTags: [TagTypes.categories],
     }),
+
     // UPDATE CATEGORY
     updateCategory: builder.mutation({
       query: (payload) => ({
@@ -40,15 +42,16 @@ export const categoryApis = baseApi.injectEndpoints({
         method: "PUT",
         data: payload,
       }),
-      invalidatesTags: () => [TagTypes.categories],
+      invalidatesTags: [TagTypes.categories],
     }),
+
     // DELETE CATEGORY
     deleteCategory: builder.mutation({
       query: (payload) => ({
         url: `${URL}/${Array.isArray(payload) ? payload.join(",") : payload}`,
         method: "DELETE",
       }),
-      invalidatesTags: () => [TagTypes.categories],
+      invalidatesTags: [TagTypes.categories],
     }),
   }),
 });
@@ -58,4 +61,5 @@ export const {
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
   useDeleteCategoryMutation,
+  useGetCategoryByIdQuery,
 } = categoryApis;

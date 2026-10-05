@@ -59,6 +59,12 @@ function Page() {
             <Button
               parentClasses="w-full md:w-auto"
               paddings="px-5 py-3 w-full md:w-auto flex justify-center"
+              text={"Manage Campaigns"}
+              handler={() => router.push("/admin/campaigns")}
+            />
+            <Button
+              parentClasses="w-full md:w-auto"
+              paddings="px-5 py-3 w-full md:w-auto flex justify-center"
               text={"Manage Orders"}
               handler={() => router.push("/admin/orders")}
             />

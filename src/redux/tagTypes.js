@@ -9,6 +9,7 @@ export const TagTypes = {
   couponCode: "coupon-codes",
   faqs: "faqs",
   reviews: "reviews",
+  campaigns: "campaigns",
 };
 
 export const tagTypesList = [
@@ -22,4 +23,5 @@ export const tagTypesList = [
   TagTypes.couponCode,
   TagTypes.faqs,
   TagTypes.reviews,
+  TagTypes.campaigns,
 ];

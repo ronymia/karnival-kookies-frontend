@@ -11,6 +11,7 @@ export const authApis = baseApi.injectEndpoints({
       query: () => ({
         url: `${URL}/user/info`,
       }),
+      providesTags: [TagTypes.user],
     }),
 
     // REGISTER
@@ -20,7 +21,7 @@ export const authApis = baseApi.injectEndpoints({
         method: "POST",
         data: payload,
       }),
-      invalidatesTags: () => [TagTypes?.user],
+      invalidatesTags: [TagTypes.user],
     }),
 
     // LOGIN USER
@@ -30,7 +31,7 @@ export const authApis = baseApi.injectEndpoints({
         method: "POST",
         data: payload,
       }),
-      invalidatesTags: () => [TagTypes?.user],
+      invalidatesTags: [TagTypes.user],
     }),
 
     // LOGOUT
@@ -40,7 +41,7 @@ export const authApis = baseApi.injectEndpoints({
         method: "POST",
         data: payload,
       }),
-      invalidatesTags: () => [TagTypes?.user],
+      invalidatesTags: [TagTypes.user],
     }),
 
     // GET ACCESS TOKEN
@@ -50,7 +51,7 @@ export const authApis = baseApi.injectEndpoints({
         method: "POST",
         data: payload,
       }),
-      invalidatesTags: () => [TagTypes?.user],
+      invalidatesTags: [TagTypes.user],
     }),
 
     // VERIFY USER EMAIL
@@ -60,6 +61,7 @@ export const authApis = baseApi.injectEndpoints({
         method: "PUT",
         data: payload,
       }),
+      invalidatesTags: [TagTypes.user],
     }),
 
     // USER PASSWORD RESET

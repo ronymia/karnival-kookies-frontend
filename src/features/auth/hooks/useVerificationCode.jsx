@@ -10,7 +10,7 @@ import {
 } from "@/redux/apis/authApis";
 import { authService } from "../services/authService";
 
-export function useVerificationCode({ email }) {
+export function useVerificationCode({ email, onSuccess }) {
   const router = useRouter();
   const [verifyEmailCode, verifyResult] = useVerifyEmailCodeMutation();
   const [getAccessToken, tokenResult] = useGetAccessTokenMutation();
@@ -24,6 +24,14 @@ export function useVerificationCode({ email }) {
 
   const [errors, setErrors] = useState({});
 
+  const handleOtpChange = (otpString, otpObject) => {
+    setFormData(otpObject);
+    if (errors?.digit || errors?.verifyError) {
+      setErrors({});
+    }
+  };
+
+  // Backward-compatible handleFormChange if needed
   const handleFormChange = (e, nextId, previousId) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -43,7 +51,9 @@ export function useVerificationCode({ email }) {
   };
 
   const handleOnSubmit = async (e) => {
-    e.preventDefault();
+    if (e?.preventDefault) {
+      e.preventDefault();
+    }
     const validation = authService.validateOtp(formData);
     setErrors(validation.errors);
 
@@ -53,7 +63,7 @@ export function useVerificationCode({ email }) {
           t={t}
           type="error"
           errors={{ validationErrors: Object.values(validation.errors) }}
-          text="You are submitting invalid data"
+          text="Please enter the full 4-digit code"
         />
       ));
       return;
@@ -75,6 +85,13 @@ export function useVerificationCode({ email }) {
           digit_4: "",
         });
 
+        // If a custom onSuccess callback is provided (e.g. password reset transition)
+        if (onSuccess) {
+          onSuccess(res);
+          return;
+        }
+
+        // Default login/registration session flow
         try {
           const tokenRes = await getAccessToken({ email }).unwrap();
           if (tokenRes?.success) {
@@ -99,6 +116,7 @@ export function useVerificationCode({ email }) {
     formData,
     errors,
     isLoading: verifyResult.isLoading || tokenResult.isLoading,
+    handleOtpChange,
     handleFormChange,
     handleOnSubmit,
   };

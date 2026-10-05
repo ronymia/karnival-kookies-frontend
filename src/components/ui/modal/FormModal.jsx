@@ -1,7 +1,6 @@
 "use client";
 
-import CategoryForm from "@/app/admin/categories/CategoryForm";
-import PackageForm from "@/app/admin/packages/PackageForm";
+import { PackageForm } from "@/features/packages";
 import { useState } from "react";
 import { FiX } from "react-icons/fi";
 import Popup from "reactjs-popup";

@@ -1,154 +1,54 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
 import CustomToaster from "@/components/ui/toaster/CustomToaster";
+import { errorHandler } from "@/helpers/errorHandler";
 import {
   useGetAccessTokenMutation,
   useResetPasswordMutation,
   useSendVerificationCodeMutation,
-  useVerifyEmailCodeMutation,
 } from "@/redux/apis/authApis";
-import { authService } from "../services/authService";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 export function useResetPasswordForm() {
   const router = useRouter();
   const [currentTab, setCurrentTab] = useState("reset_password");
-  const [resetUserPassword, sendCodeResult] = useSendVerificationCodeMutation();
-  const [verifyEmailCode, verifyCodeResult] = useVerifyEmailCodeMutation();
-  const [resetPasswordMutation, resetPasswordResult] = useResetPasswordMutation();
+  const [email, setEmail] = useState("");
+
+  const [sendVerificationCode, sendCodeResult] =
+    useSendVerificationCodeMutation();
+  const [resetPasswordMutation, resetPasswordResult] =
+    useResetPasswordMutation();
   const [getAccessToken, accessTokenResult] = useGetAccessTokenMutation();
 
-  // EMAIL FORM STATE
-  const [emailData, setEmailData] = useState({ email: "" });
-  const [emailErrors, setEmailErrors] = useState({});
-
-  // OTP FORM STATE
-  const [otpData, setOtpData] = useState({
-    digit_1: "",
-    digit_2: "",
-    digit_3: "",
-    digit_4: "",
-  });
-  const [otpErrors, setOtpErrors] = useState({});
-
-  // NEW PASSWORD STATE
-  const [passwordData, setPasswordData] = useState({
-    password: "",
-    password_confirmation: "",
-  });
-  const [passwordErrors, setPasswordErrors] = useState({});
-
-  // EMAIL CHANGE
-  const handleEmailChange = (e) => {
-    const { name, value } = e.target;
-    setEmailData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // SUBMIT EMAIL
-  const handleEmailSubmit = async (e) => {
-    e.preventDefault();
-    const validation = authService.validateResetPasswordEmail(emailData);
-    setEmailErrors(validation.errors);
-
-    if (!validation.valid) return;
+  const handleEmailSubmit = async (data) => {
+    const userEmail = data?.email || email;
+    setEmail(userEmail);
 
     try {
-      const res = await resetUserPassword({ email: emailData.email }).unwrap();
+      const res = await sendVerificationCode({ email: userEmail }).unwrap();
       if (res?.success) {
         setCurrentTab("code");
       }
     } catch (err) {
-      setEmailErrors({
-        email: err?.data?.message || "Failed to send verification code",
-      });
+      errorHandler({ err });
+      throw err;
     }
   };
 
-  // OTP CHANGE
-  const handleOtpChange = (e, nextId, previousId) => {
-    const { name, value } = e.target;
-    setOtpData((prev) => ({ ...prev, [name]: value }));
-
-    const nextInput = document.querySelector(`#${nextId}`);
-    const previousInput = document.querySelector(`#${previousId}`);
-
-    if (value === "") {
-      previousInput?.focus();
-    } else {
-      nextInput?.focus();
-    }
-
-    if (otpData.digit_1 && otpData.digit_2 && otpData.digit_3 && otpData.digit_4) {
-      setOtpErrors({});
-    }
-  };
-
-  // SUBMIT OTP
-  const handleOtpSubmit = async (e) => {
-    e.preventDefault();
-    const validation = authService.validateOtp(otpData);
-    setOtpErrors(validation.errors);
-
-    if (!validation.valid) return;
-
-    const otp = `${otpData.digit_1}${otpData.digit_2}${otpData.digit_3}${otpData.digit_4}`;
-
-    try {
-      const res = await verifyEmailCode({
-        otp,
-        email: emailData.email,
-      }).unwrap();
-
-      if (res?.success) {
-        setOtpData({
-          digit_1: "",
-          digit_2: "",
-          digit_3: "",
-          digit_4: "",
-        });
-        setCurrentTab("new_password");
-      } else {
-        setOtpErrors({
-          verifyError: res?.message || "Invalid verification code",
-        });
-      }
-    } catch (err) {
-      setOtpErrors({
-        verifyError: err?.data?.message || "Verification failed",
-      });
-    }
-  };
-
-  // PASSWORD CHANGE
-  const handlePasswordChange = (e) => {
-    const { name, value } = e.target;
-    setPasswordData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // SUBMIT NEW PASSWORD
-  const handlePasswordSubmit = async (e) => {
-    e.preventDefault();
+  const handlePasswordSubmit = async (data) => {
     const payload = {
-      email: emailData.email,
-      password: passwordData.password,
-      password_confirmation: passwordData.password_confirmation,
+      email,
+      password: data.password,
     };
-    const validation = authService.validateNewPasswordForm(payload);
-    setPasswordErrors(validation.errors);
-
-    if (!validation.valid) return;
 
     try {
-      const res = await resetPasswordMutation({
-        email: payload.email,
-        password: payload.password,
-      }).unwrap();
+      const res = await resetPasswordMutation(payload).unwrap();
 
       if (res?.success) {
         try {
-          const tokenRes = await getAccessToken({ email: payload.email }).unwrap();
+          const tokenRes = await getAccessToken({ email }).unwrap();
           if (tokenRes?.success) {
             toast.custom((t) => (
               <CustomToaster
@@ -166,29 +66,20 @@ export function useResetPasswordForm() {
         router.push("/login");
       }
     } catch (err) {
-      setPasswordErrors({
-        password: err?.data?.message || "Failed to reset password",
-      });
+      errorHandler({ err });
+      throw err;
     }
   };
 
   return {
     currentTab,
     setCurrentTab,
-    emailData,
-    emailErrors,
-    otpData,
-    otpErrors,
-    passwordData,
-    passwordErrors,
+    email,
+    setEmail,
     isEmailLoading: sendCodeResult.isLoading,
-    isOtpLoading: verifyCodeResult.isLoading,
-    isPasswordLoading: resetPasswordResult.isLoading || accessTokenResult.isLoading,
-    handleEmailChange,
+    isPasswordLoading:
+      resetPasswordResult.isLoading || accessTokenResult.isLoading,
     handleEmailSubmit,
-    handleOtpChange,
-    handleOtpSubmit,
-    handlePasswordChange,
     handlePasswordSubmit,
   };
 }

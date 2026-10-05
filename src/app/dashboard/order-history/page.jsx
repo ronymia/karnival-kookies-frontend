@@ -1,7 +1,6 @@
 "use client";
 import Heading from "@/components/ui/heading/Heading";
 import CustomLoading from "@/components/ui/loader/CustomLoading";
-import Pagination from "@/components/ui/table/Pagination";
 import Table from "@/components/ui/table/Table";
 import TableComponentHeading from "@/components/ui/table/TableComponentHeading";
 import { usePopupContext } from "@/hooks/usePopupContext";
@@ -205,12 +204,11 @@ export default function Page() {
             }))}
             actions={actions}
             columns={cols}
-          />
-          {/* PAGINATION */}
-          <Pagination
-            setFilters={setFilters}
-            filters={filters}
-            total={data?.meta?.total}
+            pagination={{
+              filters,
+              setFilters,
+              total: data?.meta?.total,
+            }}
           />
         </div>
       </div>

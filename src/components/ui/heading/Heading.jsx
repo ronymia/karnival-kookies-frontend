@@ -1,34 +1,38 @@
 import PropTypes from "prop-types";
 
-const Heading = ({
+export default function Heading({
   isSubHeading = true,
   isWave = true,
   subHeading,
   heading,
-  headingClass = " text-base-300",
-  headingContainerClass = "flex flex-col justify-center items-center",
-}) => {
+  headingClass = "text-white",
+  headingContainerClass = "flex flex-col justify-center items-center text-center gap-1.5",
+}) {
   return (
-    <section className={`${headingContainerClass}`}>
+    <section className={headingContainerClass}>
       {/* <----------------- SUB HEADING --------------------------> */}
-      {isSubHeading && (
-        <p className="text-sm font-medium text-primary">{subHeading}</p>
+      {isSubHeading && subHeading && (
+        <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] text-primary/90">
+          {subHeading}
+        </p>
       )}
 
       {/* <----------------- HEADING --------------------------> */}
-      <h2 className={`text-2xl md:text-4xl font-bold ${headingClass}`}>
+      <h2
+        className={`font-serif text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight ${headingClass}`}
+      >
         {heading}
       </h2>
 
       {/* <----------------- WAVE --------------------------> */}
       {isWave && (
-        <div className={`w-[100px] `}>
-          <div className={`wavy-line-heading`}></div>
+        <div className="w-[100px] pt-1">
+          <div className="wavy-line-heading"></div>
         </div>
       )}
     </section>
   );
-};
+}
 
 /* <------------------------ PROP TYPES DEFINE --------------------------------> */
 Heading.propTypes = {
@@ -39,4 +43,3 @@ Heading.propTypes = {
   headingClass: PropTypes.string,
   headingContainerClass: PropTypes.string,
 };
-export default Heading;

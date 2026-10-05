@@ -13,17 +13,18 @@ export const apis = baseApi.injectEndpoints({
         method: "GET",
         params: { page, limit, perPage },
       }),
-      providesTags: (result) => (result ? [TagTypes.packages] : []),
+      providesTags: [TagTypes.packages],
     }),
+
     // GET PACKAGE BY ID
     getPackageById: builder.query({
       query: ({ id }) => ({
         url: `${URL}/${id}`,
         method: "GET",
       }),
-      // providesTags: (result) => (result ? [TagTypes.packages] : []),
-      keepUnusedDataFor: 0,
+      providesTags: [TagTypes.packages],
     }),
+
     // CREATE PACKAGE
     createPackage: builder.mutation({
       query: (payload) => ({
@@ -31,8 +32,9 @@ export const apis = baseApi.injectEndpoints({
         method: "POST",
         data: payload,
       }),
-      invalidatesTags: () => [TagTypes.packages],
+      invalidatesTags: [TagTypes.packages],
     }),
+
     // UPDATE PACKAGE
     updatePackage: builder.mutation({
       query: (payload) => ({
@@ -40,21 +42,23 @@ export const apis = baseApi.injectEndpoints({
         method: "PATCH",
         data: payload,
       }),
-      invalidatesTags: () => [TagTypes.packages],
+      invalidatesTags: [TagTypes.packages],
     }),
+
     // DELETE PACKAGE
     deletePackage: builder.mutation({
       query: (payload) => ({
         url: `${URL}/${Array.isArray(payload) ? payload.join(",") : payload}`,
         method: "DELETE",
       }),
-      invalidatesTags: () => [TagTypes.packages],
+      invalidatesTags: [TagTypes.packages],
     }),
+
     // UPLOAD PACKAGE IMAGES
     uploadPackageImages: builder.mutation({
       query: (payload) => {
         const formData = new FormData();
-        payload.forEach((file, i) => {
+        payload.forEach((file) => {
           formData.append(`files`, file);
         });
 

@@ -1,0 +1,66 @@
+[
+  {
+    "code": "WELCOME10",
+    "discount_type": "percent",
+    "discount_value": 10,
+    "minimum_spend": 0,
+    "status": "active",
+    "description": "New customer welcome voucher for 10% off with no minimum spend restriction."
+  },
+  {
+    "code": "SWEETTREAT15",
+    "discount_type": "percent",
+    "discount_value": 15,
+    "minimum_spend": 25,
+    "status": "active",
+    "description": "15% off gourmet sweet orders over $25."
+  },
+  {
+    "code": "HOLIDAY20",
+    "discount_type": "percent",
+    "discount_value": 20,
+    "minimum_spend": 50,
+    "status": "active",
+    "description": "Seasonal holiday discount offering 20% off on cookie bundles and gift crates over $50."
+  },
+  {
+    "code": "VIPKOOKIE25",
+    "discount_type": "percent",
+    "discount_value": 25,
+    "minimum_spend": 75,
+    "status": "active",
+    "description": "Exclusive VIP customer reward with 25% off premium orders exceeding $75."
+  },
+  {
+    "code": "SAVE5",
+    "discount_type": "fixed",
+    "discount_value": 5,
+    "minimum_spend": 20,
+    "status": "active",
+    "description": "Direct $5 reduction on standard cookie boxes over $20."
+  },
+  {
+    "code": "CRATE10",
+    "discount_type": "fixed",
+    "discount_value": 10,
+    "minimum_spend": 40,
+    "status": "active",
+    "description": "Flat $10 voucher on artisanal combo crates and cookie baskets over $40."
+  },
+  {
+    "code": "PARTY25",
+    "discount_type": "fixed",
+    "discount_value": 25,
+    "minimum_spend": 100,
+    "status": "active",
+    "description": "Catering and party pack discount with $25 off large event orders over $100."
+  },
+  {
+    "code": "FREESHIP6",
+    "discount_type": "fixed",
+    "discount_value": 6.5,
+    "minimum_spend": 30,
+    "status": "active",
+    "description": "Flat shipping fee discount equivalent on carts over $30."
+  }
+]

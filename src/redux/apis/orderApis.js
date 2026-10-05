@@ -12,16 +12,18 @@ export const orderApis = baseApi.injectEndpoints({
         url: `${URL}`,
         params: { status, start_date, end_date, page, limit, searchTerm },
       }),
-      providesTags: (result) => (result ? [TagTypes.orders] : []),
+      providesTags: [TagTypes.orders],
     }),
-    // GET ALL ORDERS
+
+    // GET ORDERS BY USER ID
     getOrderByUserId: builder.query({
       query: ({ status, start_date, end_date, page, limit, user_id }) => ({
         url: `${URL}/${user_id}`,
         params: { status, start_date, end_date, page, limit },
       }),
-      providesTags: (result) => (result ? [TagTypes.orders] : []),
+      providesTags: [TagTypes.orders],
     }),
+
     // UPDATE ORDER STATUS
     orderStatusChange: builder.mutation({
       query: (payload) => ({
@@ -29,16 +31,17 @@ export const orderApis = baseApi.injectEndpoints({
         method: "PUT",
         data: payload,
       }),
-      invalidatesTags: () => [TagTypes.orders],
+      invalidatesTags: [TagTypes.orders],
     }),
-    // UPDATE ORDER STATUS
+
+    // ORDER CHECK IN
     orderCheckIn: builder.mutation({
       query: (payload) => ({
         url: `${URL}/check-in`,
         method: "POST",
         data: payload,
       }),
-      invalidatesTags: () => [TagTypes.orders],
+      invalidatesTags: [TagTypes.orders],
     }),
   }),
 });

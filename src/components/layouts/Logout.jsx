@@ -7,6 +7,8 @@ import { localDBKey } from "@/constants/localDBKey";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
+import { FiLogOut } from "react-icons/fi";
+
 export default function Logout() {
   const [userLogOut, logOutResult] = useLogOutUserMutation();
   const router = useRouter();
@@ -65,9 +67,10 @@ export default function Logout() {
       type="button"
       disabled={logOutResult.isLoading}
       onClick={handleLogout}
-      className="w-full px-4 py-2 text-sm font-medium bg-primary text-heading-main hover:text-gray-100 hover:bg-black rounded-md flex items-center justify-start cursor-pointer"
+      className="w-full px-3.5 py-2.5 text-sm font-semibold rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300 border border-red-500/20 flex items-center gap-2.5 transition-all cursor-pointer"
     >
-      Logout
+      <FiLogOut className="text-base" />
+      <span>Logout</span>
     </button>
   );
 }

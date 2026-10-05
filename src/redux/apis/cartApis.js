@@ -13,7 +13,7 @@ export const apis = baseApi.injectEndpoints({
         method: "POST",
         data: payload,
       }),
-      invalidatesTags: (result) => (result ? [TagTypes.cart] : []),
+      invalidatesTags: [TagTypes.cart],
     }),
 
     // UPDATE QUANTITY OF CART PRODUCT IN DATABASE
@@ -23,16 +23,16 @@ export const apis = baseApi.injectEndpoints({
         method: "PUT",
         data: payload,
       }),
-      invalidatesTags: (result) => (result ? [TagTypes.cart] : []),
+      invalidatesTags: [TagTypes.cart],
     }),
 
-    // REMOVE FROM
+    // REMOVE FROM CART
     removeFromCart: builder.mutation({
       query: (payload) => ({
         url: `${URL}/${payload}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result) => (result ? [TagTypes.cart] : []),
+      invalidatesTags: [TagTypes.cart],
     }),
 
     // GET CART BY EMAIL
@@ -41,16 +41,17 @@ export const apis = baseApi.injectEndpoints({
         url: `${URL}/${user_id}`,
         method: "GET",
       }),
-      providesTags: (result) => (result ? [TagTypes.cart] : []),
+      providesTags: [TagTypes.cart],
     }),
-    // GET CART BY EMAIL
+
+    // CART CHECKOUT
     cartCheckout: builder.mutation({
       query: (payload) => ({
         url: `${URL}/checkout`,
         method: "POST",
         data: payload,
       }),
-      invalidatesTags: (result) => (result ? [TagTypes.cart] : []),
+      invalidatesTags: [TagTypes.cart, TagTypes.orders],
     }),
   }),
 });

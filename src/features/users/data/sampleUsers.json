@@ -1,0 +1,135 @@
+[
+  {
+    "id": "usr_01",
+    "name": "Eleanor Vance",
+    "email": "eleanor.vance@karnivalkookies.com",
+    "role": "super_admin",
+    "is_email_verified": true,
+    "profile": {
+      "name": "Eleanor Vance",
+      "phone": "+1 (555) 234-5678",
+      "address": "100 Artisan Boulevard, Suite 500",
+      "city": "Seattle",
+      "country": "United States",
+      "postcode": "98101",
+      "gender": "female",
+      "date_of_birth": "1990-05-14"
+    },
+    "created_at": "2025-01-15T08:30:00Z",
+    "updated_at": "2025-02-10T14:20:00Z"
+  },
+  {
+    "id": "usr_02",
+    "name": "Marcus Holloway",
+    "email": "marcus.holloway@karnivalkookies.com",
+    "role": "admin",
+    "is_email_verified": true,
+    "profile": {
+      "name": "Marcus Holloway",
+      "phone": "+1 (555) 456-7890",
+      "address": "45 Bakery Row, Apt 2B",
+      "city": "Portland",
+      "country": "United States",
+      "postcode": "97201",
+      "gender": "male",
+      "date_of_birth": "1988-11-23"
+    },
+    "created_at": "2025-01-20T10:15:00Z",
+    "updated_at": "2025-02-15T09:45:00Z"
+  },
+  {
+    "id": "usr_03",
+    "name": "Clara Oswald",
+    "email": "clara.oswald@karnivalkookies.com",
+    "role": "manager",
+    "is_email_verified": true,
+    "profile": {
+      "name": "Clara Oswald",
+      "phone": "+1 (555) 321-7654",
+      "address": "221B Baker Street",
+      "city": "Boston",
+      "country": "United States",
+      "postcode": "02108",
+      "gender": "female",
+      "date_of_birth": "1991-07-21"
+    },
+    "created_at": "2025-01-25T11:00:00Z",
+    "updated_at": "2025-02-12T10:30:00Z"
+  },
+  {
+    "id": "usr_04",
+    "name": "Lucas Rodriguez",
+    "email": "lucas.rodriguez@karnivalkookies.com",
+    "role": "order_manager",
+    "is_email_verified": true,
+    "profile": {
+      "name": "Lucas Rodriguez",
+      "phone": "+1 (555) 678-9012",
+      "address": "12 Dispatch Lane",
+      "city": "Denver",
+      "country": "United States",
+      "postcode": "80202",
+      "gender": "male",
+      "date_of_birth": "1992-09-19"
+    },
+    "created_at": "2025-02-05T15:45:00Z",
+    "updated_at": "2025-02-20T11:30:00Z"
+  },
+  {
+    "id": "usr_05",
+    "name": "Elena Rostova",
+    "email": "elena.rostova@karnivalkookies.com",
+    "role": "product_manager",
+    "is_email_verified": true,
+    "profile": {
+      "name": "Elena Rostova",
+      "phone": "+1 (555) 987-6543",
+      "address": "88 Gourmet Plaza",
+      "city": "Chicago",
+      "country": "United States",
+      "postcode": "60611",
+      "gender": "female",
+      "date_of_birth": "1993-04-12"
+    },
+    "created_at": "2025-02-08T09:15:00Z",
+    "updated_at": "2025-02-19T17:00:00Z"
+  },
+  {
+    "id": "usr_06",
+    "name": "David Chen",
+    "email": "david.chen@karnivalkookies.com",
+    "role": "analyst",
+    "is_email_verified": true,
+    "profile": {
+      "name": "David Chen",
+      "phone": "+1 (555) 432-1098",
+      "address": "500 Data Ridge Road",
+      "city": "Austin",
+      "country": "United States",
+      "postcode": "78701",
+      "gender": "male",
+      "date_of_birth": "1989-12-05"
+    },
+    "created_at": "2025-02-10T14:30:00Z",
+    "updated_at": "2025-02-22T08:45:00Z"
+  },
+  {
+    "id": "usr_07",
+    "name": "Sophia Bennett",
+    "email": "sophia.bennett@yopmail.com",
+    "role": "customer",
+    "is_email_verified": true,
+    "profile": {
+      "name": "Sophia Bennett",
+      "phone": "+1 (555) 890-1234",
+      "address": "742 Evergreen Terrace",
+      "city": "Springfield",
+      "country": "United States",
+      "postcode": "97477",
+      "gender": "female",
+      "date_of_birth": "1995-03-08"
+    },
+    "created_at": "2025-02-01T12:00:00Z",
+    "updated_at": "2025-02-18T16:10:00Z"
+  }
+]

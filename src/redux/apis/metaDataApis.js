@@ -13,17 +13,19 @@ export const apis = baseApi.injectEndpoints({
         method: "GET",
         params: { page, limit, perPage },
       }),
-      providesTags: (result) => (result ? [TagTypes.metaData] : []),
+      providesTags: [TagTypes.metaData],
     }),
+
     // GET META DATA BY ID
     getMetaDataById: builder.query({
       query: ({ id }) => ({
         url: `${URL}/${id}`,
         method: "GET",
       }),
-      // providesTags: (result) => (result ? [TagTypes.packages] : []),
+      providesTags: [TagTypes.metaData],
       keepUnusedDataFor: 0,
     }),
+
     // CREATE META DATA
     createMetaData: builder.mutation({
       query: (payload) => ({
@@ -31,8 +33,9 @@ export const apis = baseApi.injectEndpoints({
         method: "POST",
         data: payload,
       }),
-      invalidatesTags: () => [TagTypes.metaData],
+      invalidatesTags: [TagTypes.metaData],
     }),
+
     // UPDATE META DATA
     updateMetaData: builder.mutation({
       query: (payload) => ({
@@ -40,15 +43,16 @@ export const apis = baseApi.injectEndpoints({
         method: "PATCH",
         data: payload,
       }),
-      invalidatesTags: () => [TagTypes.metaData],
+      invalidatesTags: [TagTypes.metaData],
     }),
+
     // DELETE META DATA
     deleteMetaData: builder.mutation({
       query: (payload) => ({
         url: `${URL}/${Array.isArray(payload) ? payload.join(",") : payload}`,
         method: "DELETE",
       }),
-      invalidatesTags: () => [TagTypes.metaData],
+      invalidatesTags: [TagTypes.metaData],
     }),
   }),
 });

@@ -1,8 +1,9 @@
 "use client";
 
 import PropTypes from "prop-types";
-import Button from "@/components/ui/buttons/Button";
-import CustomNumberFieldForOtp from "@/shared/fields/CustomNumberFieldForOtp";
+import { FiArrowRight, FiShield } from "react-icons/fi";
+import ButtonSpinner from "@/components/ui/buttons/ButtonSpinner";
+import { OtpInputField } from "@/components/form";
 
 export default function ResetPasswordCode({
   email,
@@ -13,83 +14,68 @@ export default function ResetPasswordCode({
   onSubmit,
 }) {
   return (
-    <div className="flex flex-col justify-center items-center gap-10 p-5 pt-32 pb-60">
-      <header className="space-y-2 text-center">
-        <h2 className="text-xl font-bold">Enter Verification Code</h2>
-        <p className="font-medium text-[14px]">
-          We have Sent a Code to {email}
-        </p>
-      </header>
+    <div className="relative bg-[#161311]/90 backdrop-blur-2xl border border-primary/25 rounded-3xl p-7 sm:p-10 shadow-2xl shadow-black/80 overflow-hidden text-center max-w-md w-full mx-auto">
+      {/* TOP ACCENT LINE */}
+      <div
+        className="absolute inset-x-0 top-0 h-[2px] bg-linear-to-r from-transparent via-primary/70 to-transparent"
+        aria-hidden="true"
+      />
 
+      {/* ICON BADGE */}
+      <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center mx-auto mb-5 text-primary text-2xl shadow-lg shadow-primary/10">
+        <FiShield />
+      </div>
+
+      {/* HEADING */}
+      <div className="space-y-2 mb-8">
+        <h2 className="text-2xl sm:text-3xl font-serif text-heading-main font-normal tracking-wide">
+          Enter Verification Code
+        </h2>
+        <p className="text-xs sm:text-sm text-neutral-400 font-light max-w-xs mx-auto">
+          We have sent a 4-digit code to{" "}
+          <span className="font-semibold text-primary">{email}</span>
+        </p>
+      </div>
+
+      {/* FORM */}
       <form
         noValidate
         onSubmit={onSubmit}
-        className="flex flex-col justify-center items-center gap-3"
+        className="flex flex-col gap-6 justify-center items-center"
       >
-        <div className="flex gap-2">
-          <CustomNumberFieldForOtp
-            value={formData?.digit_1}
-            disable={false}
-            fieldClassName="w-12"
-            id="digit_1"
-            name="digit_1"
-            placeholder=""
-            onChange={(e) => onChange(e, "digit_2", "digit_1")}
-            wrapperClassName="w-12"
-            maxLength={1}
-          />
-          <CustomNumberFieldForOtp
-            value={formData?.digit_2}
-            disable={false}
-            fieldClassName="w-12"
-            id="digit_2"
-            name="digit_2"
-            placeholder=""
-            onChange={(e) => onChange(e, "digit_3", "digit_1")}
-            wrapperClassName="w-12"
-            maxLength={1}
-          />
-          <CustomNumberFieldForOtp
-            value={formData?.digit_3}
-            disable={false}
-            fieldClassName="w-12"
-            id="digit_3"
-            name="digit_3"
-            placeholder=""
-            onChange={(e) => onChange(e, "digit_4", "digit_2")}
-            wrapperClassName="w-12"
-            maxLength={1}
-          />
-          <CustomNumberFieldForOtp
-            value={formData?.digit_4}
-            disable={false}
-            fieldClassName="w-12"
-            id="digit_4"
-            name="digit_4"
-            placeholder=""
-            onChange={(e) => onChange(e, "digit_4", "digit_3")}
-            wrapperClassName="w-12"
-            maxLength={1}
-          />
-        </div>
+        <OtpInputField
+          length={4}
+          value={formData}
+          onChange={onChange}
+          disabled={isLoading}
+          error={!!(errors?.digit || errors?.verifyError)}
+        />
 
         {/* ERROR MESSAGE */}
         {(errors?.digit || errors?.verifyError) && (
-          <label className="label">
-            <span className="label-text-alt text-error">
-              {errors?.digit || errors?.verifyError}
-            </span>
-          </label>
+          <p role="alert" className="text-xs text-red-400 font-medium -mt-2">
+            {errors?.digit || errors?.verifyError}
+          </p>
         )}
 
         {/* SUBMIT BUTTON */}
-        <div className="flex justify-center items-center">
-          <Button
-            type="submit"
-            text="Submit"
-            isLoading={isLoading}
-          />
-        </div>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full py-3.5 px-6 rounded-full bg-linear-to-r from-[#e6aa38] via-primary to-[#b87c1e] text-black font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:shadow-primary/35 hover:brightness-110 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 cursor-pointer group"
+        >
+          {isLoading ? (
+            <>
+              <ButtonSpinner />
+              <span>Verifying...</span>
+            </>
+          ) : (
+            <>
+              <span>Verify & Continue</span>
+              <FiArrowRight className="text-lg group-hover:translate-x-1.5 transition-transform duration-300" />
+            </>
+          )}
+        </button>
       </form>
     </div>
   );

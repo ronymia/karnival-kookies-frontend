@@ -1,0 +1,15 @@
+import { z } from "zod";
+
+export const loginSchema = z.object({
+  email: z
+    .email("Please enter a valid email address")
+    .min(1, "Email is required"),
+  password: z
+    .string()
+    .min(1, "Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .regex(
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/,
+      "Password must contain uppercase, lowercase, and a number"
+    ),
+});

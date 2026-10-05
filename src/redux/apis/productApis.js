@@ -6,7 +6,7 @@ const URL = "/v1.0/products";
 
 export const apis = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // GET ALL PRODUCT
+    // GET ALL CLIENT PRODUCTS
     getAllClientProducts: builder.query({
       query: ({
         page,
@@ -32,17 +32,17 @@ export const apis = baseApi.injectEndpoints({
           searchTerm,
         },
       }),
-      providesTags: (result) => (result ? [TagTypes.products] : []),
+      providesTags: [TagTypes.products],
     }),
-    // GET ALL PRODUCT
+
+    // GET ALL PRODUCTS
     getAllProducts: builder.query({
       query: (arg = {}) => ({
         url: `${URL}`,
         method: "GET",
         params: arg,
       }),
-      providesTags: (result) => (result ? [TagTypes.products] : []),
-      keepUnusedDataFor: 0,
+      providesTags: [TagTypes.products],
     }),
 
     // GET PRICE BOUNDS OF PRODUCTS
@@ -52,7 +52,7 @@ export const apis = baseApi.injectEndpoints({
         method: "GET",
         params: arg,
       }),
-      keepUnusedDataFor: 0,
+      providesTags: [TagTypes.products],
     }),
 
     // GET PRODUCT BY ID
@@ -61,9 +61,9 @@ export const apis = baseApi.injectEndpoints({
         url: `${URL}/${id}`,
         method: "GET",
       }),
-      // providesTags: (result) => (result ? [TagTypes.products] : []),
-      keepUnusedDataFor: 0,
+      providesTags: [TagTypes.products],
     }),
+
     // CREATE PRODUCT
     createProducts: builder.mutation({
       query: (payload) => ({
@@ -71,8 +71,9 @@ export const apis = baseApi.injectEndpoints({
         method: "POST",
         data: payload,
       }),
-      invalidatesTags: () => [TagTypes.products],
+      invalidatesTags: [TagTypes.products],
     }),
+
     // UPDATE PRODUCT
     updateProducts: builder.mutation({
       query: (payload) => ({
@@ -80,16 +81,18 @@ export const apis = baseApi.injectEndpoints({
         method: "PUT",
         data: payload,
       }),
-      invalidatesTags: () => [TagTypes.products],
+      invalidatesTags: [TagTypes.products],
     }),
+
     // DELETE PRODUCT
     deleteProducts: builder.mutation({
       query: (payload) => ({
         url: `${URL}/${Array.isArray(payload) ? payload.join(",") : payload}`,
         method: "DELETE",
       }),
-      invalidatesTags: () => [TagTypes.products],
+      invalidatesTags: [TagTypes.products],
     }),
+
     // UPLOAD PRODUCT IMAGES
     uploadProductsImages: builder.mutation({
       query: (payload) => {

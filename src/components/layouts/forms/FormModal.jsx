@@ -1,10 +1,9 @@
 "use client";
 
-import ProductForm from "@/app/admin/all-products/ProductForm";
-import CategoryForm from "@/app/admin/categories/CategoryForm";
-import CouponForm from "@/app/admin/coupon-codes/CouponForm";
-import PackageForm from "@/app/admin/packages/PackageForm";
-import PackageView from "@/app/admin/packages/PackageView";
+import { ProductForm } from "@/features/products";
+import CategoryForm from "@/features/category/components/CategoryForm";
+import { CouponCodeForm } from "@/features/coupon-codes";
+import { PackageForm, PackageViewDrawer } from "@/features/packages";
 import Button from "@/components/ui/buttons/Button";
 import { useState } from "react";
 import { FiX } from "react-icons/fi";
@@ -44,7 +43,7 @@ export default function FormModal({
           case "productForm":
             return <ProductForm />;
           case "couponForm":
-            return <CouponForm />;
+            return <CouponCodeForm />;
           default:
             return "Invalid Form Type";
         }
